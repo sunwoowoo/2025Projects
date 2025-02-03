@@ -2,26 +2,59 @@ body{
     margin: 0;
     padding: 0;
 }
-header{
+
+main {
     width: 100%;
-    height: 200px;
-    background: red;
-}
-main{
-    width: 100%;
-    height: 600px;
-    background: white;
+    height: 100vh;
+    background: #f4f4f4;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-footer{
-    width: 100%;
-    height: 200px;
-    background: red;
+
+form {
+    width: 350px;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
-form{
-    width: 400px;
-    height: 400px;
-    background: aqua;
+
+form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.box {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.box:focus {
+    border-color: yellowgreen;
+    outline: none;
+    box-shadow: 0 0 5px rgba(154, 205, 50, 0.5);
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: yellowgreen;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #6b8e23;
 }
