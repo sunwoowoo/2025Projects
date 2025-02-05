@@ -11,7 +11,7 @@ import org.zerock.projects.dto.BoardDTO;
 import org.zerock.projects.service.BoardService;
 
 import java.util.List;
-
+//   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 @Controller
 @Log4j2
 @RequiredArgsConstructor
@@ -22,4 +22,5 @@ public class BoardController {
         List<BoardDTO> boards = boardService.findAllBoards();
         model.addAttribute("boards", boards);
     }
+
 }

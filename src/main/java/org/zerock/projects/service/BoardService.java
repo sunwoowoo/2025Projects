@@ -4,9 +4,9 @@ import org.zerock.projects.dto.BoardDTO;
 
 import java.util.List;
 
-
+//   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 public interface BoardService {
 
-    Long register(BoardDTO boardDTO);  // 메서드명은 소문자로 시작하는 것이 일반적
+    Long register(BoardDTO boardDTO);
     List<BoardDTO> findAllBoards(); // 추가: 전체 Board + Assembly 조회
 }

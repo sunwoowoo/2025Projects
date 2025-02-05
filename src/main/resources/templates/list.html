@@ -29,7 +29,7 @@
 
         <!-- 직원관리 (드롭다운) -->
         <div class="dropdown">
-            <a href="#">직원관리</a>
+            <a href="#">직원관리11221</a>
             <div class="dropdown-menu">
                 <a href="#">배차현황</a>
             </div>
@@ -43,14 +43,14 @@
     <tr>
         <th>번호</th>
         <th>공정 (Assembly)</th>
-        <th>진행률11</th>
+        <th>진행률</th>
         <th>설명</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="board, stat : ${boards}">
         <td th:text="${stat.count}"></td>
-        <td th:text="${board.assembly.Ano}"></td>
+        <a th:href="@{/assembly/{ano}(ano=${board.assembly.Ano})}" th:text="${board.assembly.title}"></a>
         <td th:text="${board.progress}"></td>
         <td th:text="${board.cf}"></td>
     </tr>

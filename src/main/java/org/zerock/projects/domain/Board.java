@@ -10,11 +10,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Builder
+//   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 public class Board extends BaseEntity{
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id; //  번호
-
 
     @ManyToOne
     @JoinColumn(name = "Ano")

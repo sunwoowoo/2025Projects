@@ -26,6 +26,7 @@ public class AssemblyRepositoryTests {
             // 1. Assembly 저장
             Assembly assembly = Assembly.builder()
                     .AtE(i % 2==0 )
+                    .title("조립" + i)
                     .SM(i % 3==0 )
                     .build();
             Assembly savedAssembly = assemblyRepository.save(assembly);

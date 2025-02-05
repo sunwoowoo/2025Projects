@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+//   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 public class BoardDTO {
 
     private Long id;

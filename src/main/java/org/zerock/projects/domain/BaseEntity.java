@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-
+//   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 @MappedSuperclass
 @EntityListeners(value = {AbstractMethodError.class})
 @Getter
