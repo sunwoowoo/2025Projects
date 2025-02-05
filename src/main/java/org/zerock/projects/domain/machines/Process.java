@@ -21,5 +21,15 @@ public class Process {
     private String description;     // 비고
 
     @OneToMany(mappedBy = "process")    // Process 안에 여러개의 task (task1, task2, task3 task4)
-    private List<PressTask> pressTasks;
+    private List<Task> tasks;
+
+    private int progress;
+
+    @lombok.Generated
+    public void setProgress(int progress) {
+        if (progress < 0 || progress > 100) {
+            throw new IllegalArgumentException("Progress must be between 0 and 100");
+        }
+        this.progress = progress;
+    }
 }

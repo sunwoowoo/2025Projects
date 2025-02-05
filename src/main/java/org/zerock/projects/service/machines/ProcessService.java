@@ -29,31 +29,59 @@ public class ProcessService {
     }
 
     // 공정 시작
-    public void assignToProcess(ProductionOrder order, ProcessType processType) {
-        Process process = processRepository.findByProcessType(processType);
+    public void assignToProcess(ProductionOrder order, ProcessType newProcessType) {
+        // 진행률 0%
+        order.setProgress(0);
+
+        // 주문제품 공정이 PRESSING으로 시작하지 않을 시 오류
+        if (order.getOrderStatus() == OrderStatus.PENDING && newProcessType != ProcessType.PRESSING) {
+            throw new IllegalStateException("A PENDING order must start with PRESSING process");
+        }
+
+        Process process = processRepository.findByProcessType(newProcessType);
 
         //공정단계가 null(주문이 대기상태 시)일 때
-        if (process == null && order.getOrderStatus() == OrderStatus.PENDING) {
-            // 프레싱 공정 시작(제 1단계 공정)
+        if (process == null) {
+            if (order.getOrderStatus() == OrderStatus.PENDING && newProcessType != ProcessType.PRESSING) {
+                throw new IllegalStateException("A PENDING order must start with PRESSING process");
+            }
             process = new Process();
-            process.setProcessType(ProcessType.PRESSING);
+            process.setProcessType(newProcessType);
             process = processRepository.save(process);
-        } else if (process == null) {       // 공정단계가 없는데 주문제품 상태가 '제작 중'으로 뜰 때 오류
-            throw new IllegalArgumentException("Invalid process type: " + processType);
+        } else if (order.getOrderStatus() == OrderStatus.PENDING && newProcessType != ProcessType.PRESSING) {
+            throw new IllegalStateException("A PENDING order must start with PRESSING process");
         }
+
 
         // Assign raw materials, components, and workers
         // 원자재, 부품, 직원, 설비 투입
         taskService.createTasksForProcess(order, process);
 
-        if (processType == ProcessType.ASSEMBLY) {  // 마지막 공정 ASSEMBLY(조립) 단계 완료 시
-            order.setOrderStatus(OrderStatus.COMPLETED);    // 주문 상태 : 완성(COMPLETED)
+        if (newProcessType == ProcessType.ASSEMBLY) {  // 마지막 공정 ASSEMBLY(조립) 단계 완료 시
+            order.setOrderStatus(OrderStatus.IN_PROGRESS);    // 주문 상태 : 완성(COMPLETED)
             order.setEndDate(LocalDate.now());          // 완성 날짜
         } else {
             order.setOrderStatus(OrderStatus.IN_PROGRESS);
         }
-        order.setProcessType(processType);
+        order.setProcessType(newProcessType);
         order.setStartDate(LocalDate.now());
         orderRepository.save(order);
+    }
+
+    public ProcessType getNextProcessType(ProcessType currentProcess) {
+        switch (currentProcess) {
+            case PRESSING: return ProcessType.WELDING;
+            case WELDING: return ProcessType.PAINTING;
+            case PAINTING: return ProcessType.ASSEMBLY;
+            case ASSEMBLY: return ProcessType.COMPLETED; // Indicates end of process
+            case COMPLETED: return null;
+            default: throw new IllegalStateException("Invalid process: " + currentProcess);
+        }
+    }
+
+    private Process createNewProcess(ProcessType processType) {
+        Process process = new Process();
+        process.setProcessType(processType);
+        return processRepository.save(process);
     }
 }
