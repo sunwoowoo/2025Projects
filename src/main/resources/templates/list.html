@@ -50,7 +50,7 @@
     <tbody>
     <tr th:each="board, stat : ${boards}">
         <td th:text="${stat.count}"></td>
-        <td th:text="${board.assembly}"></td>
+        <td th:text="${board.assembly.Ano}"></td>
         <td th:text="${board.progress}"></td>
         <td th:text="${board.cf}"></td>
     </tr>

@@ -27,14 +27,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDTO> findByAssemblyAno(Long ano) {
-        List<Board> boards = boardRepository.findByAssemblyAno(ano);
-        return boards.stream()
-                .map(board -> modelMapper.map(board, BoardDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<BoardDTO> findAllBoards() {
         List<Board> boards = boardRepository.findAllBy();
         return boards.stream()

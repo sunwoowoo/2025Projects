@@ -22,10 +22,4 @@ public class BoardController {
         List<BoardDTO> boards = boardService.findAllBoards();
         model.addAttribute("boards", boards);
     }
-    @GetMapping("/search")
-    public String getBoardsByAssemblyAno(@RequestParam("ano") Long ano, Model model) {
-        List<BoardDTO> boards = boardService.findByAssemblyAno(ano);
-        model.addAttribute("boards", boards);
-        return "html/searchResult";
-    }
 }
