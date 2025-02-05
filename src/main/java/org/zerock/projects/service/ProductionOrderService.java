@@ -1,0 +1,82 @@
+package org.zerock.projects.service;
+
+import net.datafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.zerock.projects.domain.OrderStatus;
+import org.zerock.projects.domain.ProductionOrder;
+import org.zerock.projects.domain.machines.Process;
+import org.zerock.projects.domain.machines.ProcessType;
+import org.zerock.projects.repository.ProductionOrderRepository;
+import org.zerock.projects.repository.machines.ProcessRepository;
+import org.zerock.projects.service.machines.ProcessService;
+
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ProductionOrderService {
+    @Autowired
+    private ProcessRepository processRepository;
+
+    @Autowired
+    private ProductionOrderRepository orderRepository;
+
+    @Autowired
+    private ProcessService processService;
+
+    // 주문제품 id로 품목 하나 찾기
+    public Optional<ProductionOrder> getOneOrder(Long id) {
+        return orderRepository.findById(id);
+    }
+
+    // 주문제품 전부 불러오기
+    public List<ProductionOrder> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    // 주문제품 추가(생성) - 새로 들어온 차량모델 한 종류, 여러 대 생성
+    public ProductionOrder createOrder(String carModel, int quantity) {
+        if (carModel == null || carModel.isEmpty()) {
+            throw new IllegalArgumentException("Car model cannot be null or empty");
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
+        ProductionOrder order = ProductionOrder.builder()
+                .carModel(carModel)
+                .quantity(quantity)
+                .orderStatus(OrderStatus.PENDING)
+                .build();
+        return orderRepository.save(order);
+    }
+
+    // 다음 제작진행으로 넘기기
+    public void moveToNextProcess(ProductionOrder order) {
+        ProcessType currentProcess = order.getProcessType();
+        switch (currentProcess) {
+            case PRESSING:
+                processService.assignToProcess(order, ProcessType.WELDING); // 차체용접
+                break;
+            case WELDING:
+                processService.assignToProcess(order, ProcessType.PAINTING); // 도장
+                break;
+            case PAINTING:
+                processService.assignToProcess(order, ProcessType.ASSEMBLY); // 조립
+                break;
+            case ASSEMBLY:
+                // 조립 완료 시 이 메소드 종료(break)
+                break;
+            default:
+                throw new IllegalStateException("Invalid process: " + currentProcess);
+        }
+    }
+
+    // 제작 중인 주문들 불러오기
+    public List<ProductionOrder> getOrdersInProgress() {
+        return orderRepository.findByOrderStatus(OrderStatus.IN_PROGRESS);
+    }
+}
