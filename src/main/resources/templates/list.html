@@ -3,58 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메인페이지 기본 css 적용</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <title>MAIN</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div class="topbar">
-    <!-- 햄버거 버튼 (체크박스) -->
-    <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="menu-btn">☰</label>
-
-    <!-- 네비게이션 메뉴 -->
-    <div class="menu">
-        <a href="#">대시보드(메인)</a>
-
-        <!-- 공정관리 (드롭다운) -->
-        <div class="dropdown">
-            <a href="#">공정관리</a>
-            <div class="dropdown-menu">
-                <a href="#">프레스222</a>
-                <a href="#">차체용접</a>
-                <a href="#">도장</a>
-                <a href="#">조립</a>
-            </div>
-        </div>
-
-        <!-- 직원관리 (드롭다운) -->
-        <div class="dropdown">
-            <a href="#">직원관리11221</a>
-            <div class="dropdown-menu">
-                <a href="#">배차현황</a>
-            </div>
+<header>
+    <div class="topbar">
+        <nav class="menu">
+            <a href="#">PRODUCTION</a>
+            <a href="#">STAFF</a>
+        </nav>
+        <div class="user-info">
+            <p>USER ID(SQL)</p>
+            <button type="submit" class="logout">Log out</button>
         </div>
     </div>
-</div>
+</header>
 
-<h1>Board List</h1>
-<table class="board-table">
-    <thead>
-    <tr>
-        <th>번호</th>
-        <th>공정 (Assembly)</th>
-        <th>진행률</th>
-        <th>설명</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="board, stat : ${boards}">
-        <td th:text="${stat.count}"></td>
-        <td th:text="${board.assembly.Ano}"></td>
-        <td th:text="${board.progress}"></td>
-        <td th:text="${board.cf}"></td>
-    </tr>
-    </tbody>
-</table>
+<main>
+    <h1>MANUFACTURING LIST</h1>
+
+    <table class="board-table">
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Assembly</th>
+            <th>Progress</th>
+            <th>Cmts</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board, stat : ${boards}">
+            <td th:text="${stat.count}"></td>
+            <td th:text="${board.assembly.Ano}" ></td>
+            <td th:text="${board.progress}" ></td>
+            <td th:text="${board.cf}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+    <footer>
+        <button class="btn2">주문 접수</button>
+        <!-- select 검색창 및 버튼 -->
+        <div class="search-container">
+            <select id="select" class="select" name="select" method="post">
+                <option value="No"> No </option>
+                <option value="Assembly"> Assembly </option>
+                <option value="Progress"> Progress </option>
+                <option value="Cmts"> Cmts </option>
+            </select>
+            <input type="text" class="search-box" placeholder="Search">
+            <button class="btn" type="submit">
+                <i class="fas fa-search"></i> <!-- Font Awesome 아이콘 -->
+            </button>
+        </div>
+    </footer>
+</main>
 </body>
 </html>
