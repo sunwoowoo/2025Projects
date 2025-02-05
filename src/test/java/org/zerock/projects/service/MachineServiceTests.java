@@ -30,7 +30,7 @@ public class MachineServiceTests {
 
     @Test
     public void testCreateOrder() {
-        ProductionOrder order = productionOrderService.createOrder("Model S", 10);
+        ProductionOrder order = productionOrderService.createOrder("Model Y", 10);
         assertNotNull(order.getId());
         assertEquals(OrderStatus.PENDING, order.getOrderStatus());
     }
