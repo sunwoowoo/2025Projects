@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>의장 공정 상세</title>
 </head>
 <body>
-  의장 공정
+<h1>의장 공정 상세</h1>
+
+<p><strong>공정 제목:</strong> <span th:text="${assembly.title}"></span></p>
+<p><strong>엔진 조립 여부:</strong>
+    <span id="engineStatus" th:text="${assembly.AtE} ? '조립 완료' : '미조립'"></span>
+    <button onclick="updateStatus('AtE')">변경</button>
+</p>
+<p><strong>시트 장착 여부:</strong>
+    <span id="seatStatus" th:text="${assembly.SM} ? '장착 완료' : '미장착'"></span>
+    <button onclick="updateStatus('SM')">변경</button>
+</p>
+<a href="/list">목록으로 돌아가기</a>
 </body>
+<script>
+    function updateStatus(type) {
+        const ano = 1;  // 변경할 assembly ID
+        let atE = document.getElementById("engineStatus").innerText === '조립 완료';
+        let sm = document.getElementById("seatStatus").innerText === '장착 완료';
+
+        if (type === 'AtE') atE = !atE;
+        if (type === 'SM') sm = !sm;
+
+        fetch('/assembly/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `ano=${ano}&atE=${atE}&sm=${sm}`
+        })
+            .then(response => response.text())
+            .then(() => location.reload());
+    }
+</script>
 </html>

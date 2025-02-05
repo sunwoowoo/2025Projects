@@ -50,7 +50,9 @@
     <tbody>
     <tr th:each="board, stat : ${boards}">
         <td th:text="${stat.count}"></td>
-        <a th:href="@{/assembly/{ano}(ano=${board.assembly.Ano})}" th:text="${board.assembly.title}"></a>
+        <td>
+            <a th:href="@{/assembly/{ano}(ano=${board.assembly.Ano})}" th:text="${board.assembly.title}"></a>
+        </td>
         <td th:text="${board.progress}"></td>
         <td th:text="${board.cf}"></td>
     </tr>
