@@ -26,46 +26,48 @@ public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수�
         this.taskRepository = taskRepository;
     }
 
-    public List<PressTask> getTasksByProcess(Long processId) {
+    public List<Task> getTasksByProcess(Long processId) {
         return taskRepository.findByProcessId(processId);
     }
 
     public void createTasksForProcess(ProductionOrder order, Process process) {
-        for (PressTaskType pressTaskType : getTaskTypesForProcess(process.getProcessType())) {
-            PressTask pressTask = new PressTask();
-            pressTask.setProcess(process);
-            pressTask.setPressTaskType(pressTaskType);
-            pressTask.setTaskStatus(TaskStatus.PENDING);
-            taskRepository.save(pressTask);
+        for (TaskType taskType : getTaskTypesForProcess(process.getProcessType())) {
+            Task task = new Task();
+            task.setProcess(process);
+            task.setTaskType(taskType);
+            task.setTaskStatus(TaskStatus.PENDING);
+            taskRepository.save(task);
 
             // Assign the task to a machine and worker
             TaskAssignment assignment = new TaskAssignment();
-            assignment.setPressTask(pressTask);
-            assignment.setMachine(getMachineForTaskType(pressTaskType));
+            assignment.setTask(task);
+            assignment.setMachine(getMachineForTaskType(taskType));
             assignment.setWorker(null);
             assignmentRepository.save(assignment);
         }
     }
 
-    private List<PressTaskType> getTaskTypesForProcess(ProcessType processType) {
+    private List<TaskType> getTaskTypesForProcess(ProcessType processType) {
         // Define which TaskTypes are associated with each ProcessType
         switch (processType) {
             case PRESSING:
-                return Arrays.asList(PressTaskType.SHEARING, PressTaskType.BENDING);
+                return Arrays.asList(TaskType.SHEARING, TaskType.BENDING);
             case WELDING:
-                return Arrays.asList(PressTaskType.FORMING);
+                return Arrays.asList(TaskType.FORMING);
             case PAINTING:
-                return Arrays.asList(PressTaskType.DRAWING);
+                return Arrays.asList(TaskType.DRAWING);
             case ASSEMBLY:
-                return Arrays.asList(PressTaskType.SQUEEZING);
+                return Arrays.asList(TaskType.SQUEEZING);
+            case COMPLETED:
+                return Collections.emptyList(); // No tasks for completed process
             default:
                 throw new IllegalArgumentException("Unknown process type: " + processType);
         }
     }
 
-    private Machine getMachineForTaskType(PressTaskType pressTaskType) {
+    private Machine getMachineForTaskType(TaskType taskType) {
         // Logic to determine which machine to use for each task type
-        switch (pressTaskType) {
+        switch (taskType) {
             case SHEARING:
             case BENDING:
                 return machineRepository.findByMachineType(MachineType.PRESSER);
@@ -76,8 +78,9 @@ public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수�
             case SQUEEZING:
                 return machineRepository.findByMachineType(MachineType.ASSEMBLER);
             default:
-                throw new IllegalArgumentException("Unknown task type: " + pressTaskType);
+                throw new IllegalArgumentException("Unknown task type: " + taskType);
         }
     }
     // Other CRUD methods
+
 }
