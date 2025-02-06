@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>도장 공정 상세</title>
+</head>
+<body>
+<h1>도장 공정 상세</h1>
+
+<p><strong>공정 제목:</strong> <span th:text="${painting.title}"></span></p>
+<p><strong>전처리 공정 여부:</strong>
+    <span id="preprocessingStatus" th:text="${painting.preprocessing} ? '도색 완료' : '도색 x'"></span>
+    <button onclick="updateStatus('preprocessing')">변경</button>
+</p>
+<p><strong>전착 공정 여부:</strong>
+    <span id="electrodepositionStatus" th:text="${painting.electrodeposition} ? '도색 완료' : '도색 x'"></span>
+    <button onclick="updateStatus('electrodeposition')">변경</button>
+</p>
+<p><strong>실링 공정 여부:</strong>
+    <span id="sealingStatus" th:text="${painting.sealing} ? '도색 완료' : '도색 x'"></span>
+    <button onclick="updateStatus('sealing')">변경</button>
+</p>
+<p><strong>중도 도장 & 상도 도장 공정 여부:</strong>
+    <span id="MTprocessesStatus" th:text="${painting.MTprocesses} ? '도색 완료' : '도색 x'"></span>
+    <button onclick="updateStatus('MTprocesses')">변경</button>
+</p>
+<a href="/list">목록으로 돌아가기</a>
+
+<script>
+    function updateStatus(type) {
+        const pno = 1;
+
+        // 공정 상태 확인 (각 공정별 상태를 제대로 불러오는지 확인)
+        let preprocessing = document.getElementById("preprocessingStatus").innerText === '도색 완료';
+        let electrodeposition = document.getElementById("electrodepositionStatus").innerText === '도색 완료';
+        let sealing = document.getElementById("sealingStatus").innerText === '도색 완료';
+        let MTprocesses = document.getElementById("MTprocessesStatus").innerText === '도색 완료';
+
+        console.log("Before update - preprocessing:", preprocessing); // 디버그용
+
+        // 각 공정에 맞는 상태를 토글
+        if (type === 'preprocessing') preprocessing = !preprocessing;
+        if (type === 'electrodeposition') electrodeposition = !electrodeposition;
+        if (type === 'sealing') sealing = !sealing;
+        if (type === 'MTprocesses') MTprocesses = !MTprocesses;
+
+        console.log("After update - preprocessing:", preprocessing); // 디버그용
+
+        // fetch 요청 보내기
+        fetch('/painting/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `pno=${pno}&preprocessing=${preprocessing}&electrodeposition=${electrodeposition}&sealing=${sealing}&MTprocesses=${MTprocesses}`
+        })
+            .then(response => response.text())
+            .then(() => location.reload()); // 페이지 새로고침
+    }
+</script>
+
+</script>
+
+</body>
+</html>

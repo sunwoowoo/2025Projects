@@ -1,4 +1,4 @@
-package org.zerock.projects.service;
+package org.zerock.projects.service.subprocesses;
 
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.zerock.projects.repository.BoardRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+//   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 @Service
 @Log4j2
 @RequiredArgsConstructor
