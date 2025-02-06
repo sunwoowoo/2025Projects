@@ -1,15 +1,14 @@
-package org.zerock.projects.service;
+package org.zerock.projects.service.subprocesses;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.zerock.projects.domain.Assembly;
+import org.zerock.projects.domain.subprocesses.Assembly;
 import org.zerock.projects.domain.Board;
 import org.zerock.projects.dto.AssemblyDTO;
-import org.zerock.projects.dto.BoardDTO;
-import org.zerock.projects.repository.AssemblyRepository;
+import org.zerock.projects.repository.subprocesses.AssemblyRepository;
 import org.zerock.projects.repository.BoardRepository;
 
 import javax.transaction.Transactional;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class AssemblyServiceImpl implements  AssemblyService  {
+public class AssemblyServiceImpl implements AssemblyService {
 
     private final ModelMapper modelMapper;
     private final AssemblyRepository assemblyRepository;

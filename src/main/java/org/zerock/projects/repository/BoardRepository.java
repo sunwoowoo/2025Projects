@@ -3,9 +3,9 @@ package org.zerock.projects.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import org.zerock.projects.domain.Assembly;
+import org.zerock.projects.domain.subprocesses.Assembly;
 import org.zerock.projects.domain.Board;
-import org.zerock.projects.domain.Painting;
+import org.zerock.projects.domain.subprocesses.Painting;
 
 import java.util.List;
 //   프레스 , 차제 , 도장 , 조립  의 통합 테이블

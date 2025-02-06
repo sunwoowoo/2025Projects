@@ -1,4 +1,4 @@
-package org.zerock.projects.service;
+package org.zerock.projects.service.subprocesses;
 
 import org.zerock.projects.dto.BoardDTO;
 

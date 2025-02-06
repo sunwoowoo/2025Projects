@@ -8,9 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.zerock.projects.domain.Assembly;
+import org.zerock.projects.domain.subprocesses.Assembly;
 import org.zerock.projects.domain.Board;
-import org.zerock.projects.domain.Painting;
+import org.zerock.projects.domain.subprocesses.Painting;
+import org.zerock.projects.repository.subprocesses.AssemblyRepository;
+import org.zerock.projects.repository.subprocesses.PaintingRepository;
 
 import javax.persistence.EntityManager;
 import java.util.List;

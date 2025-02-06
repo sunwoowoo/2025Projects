@@ -1,4 +1,4 @@
-package org.zerock.projects.domain;
+package org.zerock.projects.domain.subprocesses;
 
 import lombok.*;
 

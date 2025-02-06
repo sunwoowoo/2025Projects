@@ -1,4 +1,4 @@
-package org.zerock.projects.controller;
+package org.zerock.projects.controller.subprocesses;
 
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.zerock.projects.dto.AssemblyDTO;
-import org.zerock.projects.service.AssemblyService;
+import org.zerock.projects.service.subprocesses.AssemblyService;
 
 @Controller
 @Log4j2

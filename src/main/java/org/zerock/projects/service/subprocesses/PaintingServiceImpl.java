@@ -1,4 +1,4 @@
-package org.zerock.projects.service;
+package org.zerock.projects.service.subprocesses;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -6,10 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.Board;
-import org.zerock.projects.domain.Painting;
+import org.zerock.projects.domain.subprocesses.Painting;
 import org.zerock.projects.dto.PaintingDTO;
 import org.zerock.projects.repository.BoardRepository;
-import org.zerock.projects.repository.PaintingRepository;
+import org.zerock.projects.repository.subprocesses.PaintingRepository;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,10 +1,8 @@
 package org.zerock.projects.dto;
 
 import lombok.*;
-import org.zerock.projects.domain.Assembly;
-import org.zerock.projects.domain.Painting;
-
-import java.time.LocalDateTime;
+import org.zerock.projects.domain.subprocesses.Assembly;
+import org.zerock.projects.domain.subprocesses.Painting;
 
 @Data
 @Builder

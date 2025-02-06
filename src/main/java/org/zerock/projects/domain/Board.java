@@ -1,6 +1,8 @@
 package org.zerock.projects.domain;
 
 import lombok.*;
+import org.zerock.projects.domain.subprocesses.Assembly;
+import org.zerock.projects.domain.subprocesses.Painting;
 
 import javax.persistence.*;
 
@@ -18,10 +20,10 @@ public class Board {
 
     @ManyToOne
     @JoinColumn(name = "Ano")
-    private  Assembly assembly;//  조립
+    private Assembly assembly;//  조립
     @ManyToOne
     @JoinColumn(name = "Pno")
-    private  Painting painting;
+    private Painting painting;
     @Column(nullable = false)
     private String progress; //  진행율
 
