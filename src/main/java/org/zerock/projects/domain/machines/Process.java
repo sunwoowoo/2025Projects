@@ -1,7 +1,10 @@
 package org.zerock.projects.domain.machines;
 
 import lombok.*;
+<<<<<<< HEAD
 import org.zerock.projects.domain.ProductionOrder;
+=======
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,7 +29,11 @@ public class Process {
 
     private int progress;
 
+<<<<<<< HEAD
     @Generated
+=======
+    @lombok.Generated
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
     public void setProgress(int progress) {
         if (progress < 0 || progress > 100) {
             throw new IllegalArgumentException("Progress must be between 0 and 100");
@@ -43,7 +50,10 @@ public class Process {
         }
     }
 
+<<<<<<< HEAD
     public ProductionOrder getProductionOrder() {
         return null;
     }
+=======
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
 }

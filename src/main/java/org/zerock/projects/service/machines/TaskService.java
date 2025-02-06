@@ -1,7 +1,10 @@
 package org.zerock.projects.service.machines;
 
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.context.annotation.Lazy;
+=======
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.ProductionOrder;
@@ -16,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Service
+<<<<<<< HEAD
 public class TaskService {
 
     private final IProcessService processService;  //  수정 완료
@@ -37,6 +41,26 @@ public class TaskService {
         this.assignmentRepository = assignmentRepository;
         this.machineRepository = machineRepository;
         this.productionOrderRepository = productionOrderRepository;
+=======
+public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수정 필요.
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private TaskAssignmentRepository assignmentRepository;
+
+    @Autowired
+    MachineRepository machineRepository;
+
+    @Autowired
+    private ProcessService processService;
+
+    @Autowired
+    private ProductionOrderRepository productionOrderRepository;
+
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
     }
 
     public List<Task> getTasksByProcess(Long processId) {
@@ -51,6 +75,7 @@ public class TaskService {
             task.setTaskStatus(TaskStatus.PENDING);
             taskRepository.save(task);
 
+<<<<<<< HEAD
             // 기계 할당 시 예외 처리 추가
             Machine machine = machineRepository.findByMachineType(getMachineTypeForTask(taskType));
             if (machine == null) {
@@ -61,6 +86,12 @@ public class TaskService {
             TaskAssignment assignment = new TaskAssignment();
             assignment.setTask(task);
             assignment.setMachine(machine);
+=======
+            // Assign the task to a machine and worker
+            TaskAssignment assignment = new TaskAssignment();
+            assignment.setTask(task);
+            assignment.setMachine(getMachineForTaskType(taskType));
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
             assignment.setWorker(null);
             assignmentRepository.save(assignment);
         }
@@ -77,12 +108,17 @@ public class TaskService {
             case ASSEMBLY:
                 return Arrays.asList(TaskType.COMPONENT_FITTING, TaskType.FASTENING, TaskType.ELECTRICAL_WIRING, TaskType.QUALITY_CHECK);
             case COMPLETED:
+<<<<<<< HEAD
                 return Collections.emptyList();
+=======
+                return Collections.emptyList(); // No tasks for completed process
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
             default:
                 throw new IllegalArgumentException("Unknown process type: " + processType);
         }
     }
 
+<<<<<<< HEAD
     private MachineType getMachineTypeForTask(TaskType taskType) {
         switch (taskType) {
             case SHEARING:
@@ -94,6 +130,21 @@ public class TaskService {
                 return MachineType.PAINTER;
             case SQUEEZING:
                 return MachineType.ASSEMBLER;
+=======
+
+    private Machine getMachineForTaskType(TaskType taskType) {
+        // Logic to determine which machine to use for each task type
+        switch (taskType) {
+            case SHEARING:
+            case BENDING:
+                return machineRepository.findByMachineType(MachineType.PRESSER);
+            case FORMING:
+                return machineRepository.findByMachineType(MachineType.WELDER);
+            case DRAWING:
+                return machineRepository.findByMachineType(MachineType.PAINTER);
+            case SQUEEZING:
+                return machineRepository.findByMachineType(MachineType.ASSEMBLER);
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
             default:
                 throw new IllegalArgumentException("Unknown task type: " + taskType);
         }
@@ -107,19 +158,37 @@ public class TaskService {
         task.updateProgress(progress);
         taskRepository.save(task);
 
+<<<<<<< HEAD
         //  공정(progress) 업데이트
         Process process = task.getProcess();
         process.updateProgress();
         processService.saveProcess(process);  // `IProcessService` 사용
 
         // 주문(progress) 업데이트
+=======
+        // Update the associated process
+        Process process = task.getProcess();
+        process.updateProgress();
+        processService.saveProcess(process);
+
+        // Update the associated production order
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
         ProductionOrder order = process.getProductionOrder();
         order.setProgress(process.getProgress());
         productionOrderRepository.save(order);
 
+<<<<<<< HEAD
         // 공정 완료 시 다음 단계로 이동
+=======
+        // Check if the process is complete and move to the next if necessary
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
         if (process.getProgress() == 100) {
             processService.moveToNextProcess(order);
         }
     }
+<<<<<<< HEAD
+=======
+    // Other CRUD methods
+
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
 }

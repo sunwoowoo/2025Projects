@@ -1,5 +1,9 @@
 package org.zerock.projects.service;
 
+<<<<<<< HEAD
+=======
+import net.datafaker.Faker;
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.projects.domain.OrderStatus;

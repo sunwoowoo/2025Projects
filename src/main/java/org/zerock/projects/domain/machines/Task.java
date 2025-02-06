@@ -26,7 +26,11 @@ public class Task {
 
     private int progress;
 
+<<<<<<< HEAD
     @Generated
+=======
+    @lombok.Generated
+>>>>>>> 036a988685483223a9afbfa600f7d689f15189fc
     public void setProgress(int progress) {
         if (progress < 0 || progress > 100) {
             throw new IllegalArgumentException("Progress must be between 0 and 100");
