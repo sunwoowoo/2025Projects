@@ -37,7 +37,7 @@ public class ProductionOrderService {
         return orderRepository.findAll();
     }
 
-    // 주문제품 추가(생성) - 새로 들어온 차량모델 한 종류, 여러 대 생성
+    // 주문제품 추가(생성) - 새로 들어온 차량모델 한 종류, 수량 생성
     public ProductionOrder createOrder(String carModel, int quantity) {
         if (carModel == null || carModel.isEmpty()) {
             throw new IllegalArgumentException("Car model cannot be null or empty");
@@ -56,23 +56,43 @@ public class ProductionOrderService {
 
     // 다음 제작진행으로 넘기기
     public void moveToNextProcess(ProductionOrder order) {
-        ProcessType currentProcess = order.getProcessType();
-        switch (currentProcess) {
-            case PRESSING:
-                processService.assignToProcess(order, ProcessType.WELDING); // 차체용접
-                break;
-            case WELDING:
-                processService.assignToProcess(order, ProcessType.PAINTING); // 도장
-                break;
-            case PAINTING:
-                processService.assignToProcess(order, ProcessType.ASSEMBLY); // 조립
-                break;
-            case ASSEMBLY:
-                // 조립 완료 시 이 메소드 종료(break)
-                break;
-            default:
-                throw new IllegalStateException("Invalid process: " + currentProcess);
+        ProcessType nextProcess = processService.getNextProcessType(order.getProcessType());
+        if (nextProcess != null) {
+            processService.assignToProcess(order, nextProcess);
+            updateOrderStatus(order);
+        } else {
+            completeOrder(order);
+            orderRepository.save(order);
         }
+
+    }
+
+    // 제작 과정 상태 완료 표시
+    public void updateOrderStatus(ProductionOrder order) {
+        if (order.getProcessType() == ProcessType.COMPLETED && order.getProgress() == 100) {
+            completeOrder(order);
+        } else {
+            order.setEndDate(null); // Clear end date if not completed
+        }
+        orderRepository.save(order);
+    }
+
+    // 주문 제작 완료
+    private void completeOrder(ProductionOrder order) {
+        order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setProcessType(ProcessType.COMPLETED);
+        order.setProgress(100);
+        order.setEndDate(LocalDate.now());
+        orderRepository.save(order);
+    }
+
+    // 진행률 갱신
+    public void updateProgress(Long orderId, int progress) {
+        ProductionOrder order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        order.setProgress(progress);
+        updateOrderStatus(order);
+        orderRepository.save(order);
     }
 
     // 제작 중인 주문들 불러오기
@@ -80,3 +100,4 @@ public class ProductionOrderService {
         return orderRepository.findByOrderStatus(OrderStatus.IN_PROGRESS);
     }
 }
+

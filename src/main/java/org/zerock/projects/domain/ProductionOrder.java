@@ -32,5 +32,7 @@ public class ProductionOrder {      // 들어온 주문
     // 제작진행상황 ( 프레싱, 용접, 도장, 조립)
     @Enumerated(EnumType.STRING)
     private ProcessType processType; // Track the current process (e.g., Pressing, Welding, Painting, Assembling)
+
+    private int progress;
 }
 
