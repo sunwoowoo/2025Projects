@@ -138,3 +138,22 @@ body {
       z-index: 3; /* '직원관리' 메뉴가 드롭다운 위로 오도록 설정 */
   }
 }
+/* 그래프 (김선우)*/
+.progress-bar {
+    width: 100px; /* 진행 바 길이 */
+    height: 20px; /* 진행 바 높이 */
+    background-color: #e0e0e0; /* 배경색 */
+    border-radius: 10px; /* 둥근 모서리 */
+    overflow: hidden; /* 초과된 부분 숨김 */
+    position: relative;
+    border: 1px solid #ccc;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #4caf50; /* 진행 바 색상 */
+    transition: width 0.3s ease-in-out; /* 부드러운 애니메이션 */
+}
+
+
+
