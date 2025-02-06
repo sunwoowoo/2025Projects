@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<main>
+    <form action="/sign/login" method="post">
+        <table>
+            <tr>
+                <td><input type="text" name="userId" required placeholder="아이디를 입력하세요." class="box"></td>
+            </tr>
+            <tr>
+                <td><input type="password" name="password" required placeholder="비밀번호를 입력하세요." class="box"></td>
+            </tr>
+        </table>
+        <input type="submit" value="Log in" class="btn">
+
+        <!-- 로그인 실패 시 에러 메시지 표시 -->
+        <div>
+            <!-- 오류 메시지가 있을 때만 표시 -->
+            <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+        </div>
+    </form>
+
+
+</main>
+</body>
+</html>

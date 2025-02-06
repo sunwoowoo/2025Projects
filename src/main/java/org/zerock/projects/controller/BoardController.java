@@ -16,10 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private  final BoardService boardService;
-    @GetMapping("/list")
-    public void getAllBoards(Model model) {
+    @GetMapping("/board/list")
+    public String getAllBoards(Model model) {
         List<BoardDTO> boards = boardService.findAllBoards();
+        log.info("Boards size: {}", boards.size());  // 데이터 개수 확인
+        log.info("Boards content: {}", boards);  // 데이터 내용 확인
         model.addAttribute("boards", boards);
+        return "board/list";
     }
+
 
 }

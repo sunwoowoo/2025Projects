@@ -3,7 +3,6 @@ package org.zerock.projects.domain;
 import lombok.*;
 import org.zerock.projects.domain.subprocesses.Assembly;
 import org.zerock.projects.domain.subprocesses.Painting;
-import org.zerock.projects.domain.machines.Process;
 
 import javax.persistence.*;
 
