@@ -1,5 +1,9 @@
 package org.zerock.projects.controller.machines;
 
+import org.zerock.projects.domain.machines.TaskStatus;
+
+import javax.persistence.*;
+
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

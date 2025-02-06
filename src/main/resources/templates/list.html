@@ -3,73 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>list</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <title>MAIN</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div class="topbar">
-    <!-- 햄버거 버튼 (체크박스) -->
-    <input type="checkbox" id="menu-toggle">
-    <label for="menu-toggle" class="menu-btn">☰</label>
-
-    <!-- 네비게이션 메뉴 -->
-    <div class="menu">
-        <a href="#">대시보드(메인)</a>
-
-        <!-- 공정관리 (드롭다운) -->
-        <div class="dropdown">
-            <a href="#">공정관리</a>
-            <div class="dropdown-menu">
-                <a href="#">프레스</a>
-                <a href="#">차체용접</a>
-                <a href="#">도장</a>
-                <a href="#">조립</a>
-            </div>
-        </div>
-
-        <!-- 직원관리 (드롭다운) -->
-        <div class="dropdown">
-            <a href="#">직원관리11221</a>
-            <div class="dropdown-menu">
-                <a href="#">배차현황</a>
-            </div>
+<header>
+    <div class="topbar">
+        <nav class="menu">
+            <a href="#">PRODUCTION</a>
+            <a href="#">MENU1</a>
+            <a href="#">MENU2</a>
+            <a href="#">STAFF</a>
+        </nav>
+        <div class="user-info">
+            <p>USER ID(SQL)</p>
+            <button type="submit" class="logout">Log out</button>
         </div>
     </div>
-</div>
+</header>
 
-<h1>Board List</h1>
-<table class="board-table">
-    <thead>
-    <tr>
-        <th>____ 번호___________ </th>
-        <th>___ _공정 (Assembly)_______ </th>
-        <th>___- 진행률____________ </th>
-        <th>____- 진행률 (막대 그래프)____ </th>
-        <th>___- 설명 </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="board, stat : ${boards}">
-        <td th:text="${stat.count}"></td>
-        <td>
-            <a th:href="@{/assembly/{ano}(ano=${board.assembly.Ano})}" th:text="${board.assembly.title}"></a>
-            <a th:href="@{/painting/{pno}(pno=${board.painting.Pno})}" th:text="${board.painting.title}"></a>
-        </td>
-        <td>
-            <span th:if="${board.assembly.atE and board.assembly.SM}" th:text="'100%'"></span>
-            <span th:if="${board.assembly.atE != board.assembly.SM}" th:text="'50%'"></span>
-            <span th:if="${!board.assembly.atE and !board.assembly.SM}" th:text="'0%'"></span>
-        </td>
-        <td>
-            <div class="progress-bar">
-                <div class="progress-fill"
-                     th:style="'width:' + (${board.assembly.atE and board.assembly.SM} ? '100%' :
-                                         (${board.assembly.atE != board.assembly.SM} ? '50%' : '0%'))"></div>
-            </div>
-        </td>
-        <td th:text="${board.cf}"></td>
-    </tr>
-    </tbody>
-</table>
+<main>
+    <h1>MANUFACTURING LIST</h1>
+
+    <table class="board-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Order Status</th>
+            <th>Process Type</th>
+            <th>Progress</th>
+            <th>Quantity</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order, stat : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.car_model}"></td>
+            <td th:text="${order.order_status}"></td>
+            <td th:text="${order.process_type}"></td>
+            <td th:text="${order.progress}"></td>
+            <td th:text="${order.quantity}"></td>
+            <td th:text="${order.start_date}"></td>
+            <td th:text="${order.end_date}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <hr>
+    <footer>
+        <button class="btn2">주문 접수</button>
+        <!-- select 검색창 및 버튼 -->
+        <div class="search-container">
+            <select id="select" class="select" name="select" method="post">
+                <option value="ID"> ID </option>
+                <option value="Model"> Model </option>
+                <option value="Order Status"> Order Status </option>
+                <option value="Process Type"> Process Type </option>
+                <option value="Progress"> Progress </option>
+                <option value="Quantity"> Quantity </option>
+            </select>
+            <input type="text" class="search-box" placeholder="Search">
+            <button class="btn" type="submit">
+                <i class="fas fa-search"></i> <!-- Font Awesome 아이콘 -->
+            </button>
+        </div>
+    </footer>
+</main>
 </body>
 </html>

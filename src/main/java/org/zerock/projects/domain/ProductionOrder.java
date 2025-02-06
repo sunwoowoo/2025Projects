@@ -26,6 +26,8 @@ public class ProductionOrder {      // 들어온 주문
     private LocalDate startDate;
     // 생산완료날짜
     private LocalDate endDate;
+    // 진행율
+    private int progress;
     // 주문제품상태 (대기, 제작중, 완료)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;    // PENDING, IN_PROGRESS, COMPLETED

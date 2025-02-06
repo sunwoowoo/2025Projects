@@ -11,9 +11,9 @@ public class ProductionOrderController {
     @Autowired
     private ProductionOrderService service;
 
-    @GetMapping("/orders")
+    @GetMapping("/list")
     public String getAllOrders(Model model) {
-        model.addAttribute("orders", service.getAllOrders());
-        return "orders";
+        model.addAttribute("production_order", service.getAllOrders());
+        return "list";
     }
 }

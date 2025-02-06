@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private  final BoardService boardService;
-    @GetMapping("/list")
+    @GetMapping("/board")
     public void getAllBoards(Model model) {
         List<BoardDTO> boards = boardService.findAllBoards();
         model.addAttribute("boards", boards);
