@@ -1,133 +1,104 @@
-/* 기본 설정 */
+/* 기본 스타일 */
 body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #DCDCDC; /* 배경색 연한 회색 */
-    color: white; /* 전체 폰트 색상 흰색 */
-    font-family: Arial, sans-serif; /* 전체 폰트 스타일 통일 */
+}
+
+/* 헤더 스타일 */
+header {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
 }
 
 /* 상단 바 스타일 */
 .topbar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-between; /* 양쪽 정렬 */
-    background: black; /* 상단 바 배경색 검정 */
-    padding: 10px 20px;
+    padding: 10px;
 }
 
-/* 네비게이션 메뉴 스타일 */
+/* 메뉴 스타일 */
 .menu {
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
 .menu a {
-    color: white; /* 메뉴 글자 색상 흰색 */
+    color: white;
     text-decoration: none;
-    font-size: 16px;
 }
 
-/* 로그인 정보 스타일 */
+/* 유저 정보 및 로그아웃 버튼 스타일 */
 .user-info {
+    margin-left: 700px;
     display: flex;
-    gap: 15px;
-    color: white; /* 로그인 정보 색상 흰색 */
-    font-size: 14px;
+    gap: 10px;
+    align-items: center;
 }
 
-.logout {
+.topbar .logout {
+    background-color: transparent;
+    color: white;
     border: 1px solid white;
-    height: 25px;
-    border-radius: 3px;
-    margin-top: 9px;
-    background-color: black;
-    color: white;
-}
-
-/* 메인 컨텐츠 스타일 */
-main {
-    text-align: left; /* 모든 콘텐츠 왼쪽 정렬 */
-}
-
-/* 제목 스타일 */
-h1 {
-    text-align: center; /* 제목 가운데 정렬 */
-    color: black; /* 제목 색상 검정 */
-}
-
-/* 테이블 스타일 (고정 레이아웃, 왼쪽 정렬) */
-.board-table {
-    width: 100vw;
-    border-collapse: collapse;
-    color: black; /* 테이블 텍스트 검정 */
-    table-layout: fixed; /* 테이블 크기 고정 */
-}
-
-/* 테이블 헤더 스타일 */
-.board-table th {
-    padding: 10px;
-    background-color: black; /* 헤더 배경색 검정 */
-    color: white; /* 헤더 글씨 흰색 */
-    text-align: center;
-    white-space: nowrap; /* 줄바꿈 방지 */
-    font-style: normal;
-    font-size: 16px;
-}
-
-/* 테이블 데이터 스타일 */
-.board-table td {
-    padding: 10px;
-    text-align: center;
-    white-space: nowrap; /* 줄바꿈 방지 */
-    overflow: hidden; /* 넘치는 내용 숨김 */
-    text-overflow: ellipsis; /* 내용이 길 경우 '...' 표시 */
-    color: black; /* 테이블 데이터 텍스트 검정 */
-    background-color: white; /* 테이블 데이터 배경 흰색 */
-}
-
-/* 검색 컨테이너 스타일 */
-.search-container {
-    display: flex;  /* 가로로 배치 */
-    gap: 0;  /* 여백 제거 */
-    align-items: center;  /* 높이 맞추기 */
-    margin-top:5px;
-}
-
-/* 검색박스 스타일 */
-.search-box {
-    width: 200px;
-    height: 30px; /* 높이 맞춤 */
-    margin: 0;  /* 여백 제거 */
-    padding: 0 10px; /* 텍스트 입력을 위한 여백 추가 */
-    font-size: 14px;
-    border-radius: 3px;  /* 둥근 모서리 */
-}
-
-/* 버튼 스타일 */
-.btn {
-    height: 30px;
-    width: 40px; /* 버튼 크기 조정 */
-    padding: 0;
-    margin-left: 5px; /* 버튼과 검색창 사이 여백 */
-    background-color: black;
-    color: white;
+    padding: 5px 10px;
     cursor: pointer;
+}
+
+h2 {
+    color:rgba(0, 0, 0, 0.5);
+    text-align:right;
+    margin-bottom: 0;
+    margin-right:10px;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
     text-align: center;
-    border-radius: 3px; /* 둥근 모서리 */
+    border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.btn i {
-    font-size: 18px; /* 아이콘 크기 설정 */
-    vertical-align: middle; /* 아이콘을 세로로 가운데 정렬 */
+th {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.select {
-    height:30px;
-    padding:3px;
-    margin: 0 10px;
+/* 진행률 표시 */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.btn2 {
-    margin:10px;
+.progress-bar {
+    height: 10px;
+    width: 50%;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: width 0.5s ease-in-out;
 }
+
+.progress-bar span {
+    font-size: 14px;
+}
+
+/* 팝업 스타일 */
+#orderPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.5);
+

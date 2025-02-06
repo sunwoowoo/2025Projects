@@ -1,6 +1,7 @@
 package org.zerock.projects.service.machines;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.ProductionOrder;
@@ -15,24 +16,27 @@ import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Service
-public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수정 필요.
-    @Autowired
-    private TaskRepository taskRepository;
+public class TaskService {
+
+    private final IProcessService processService;  //  수정 완료
+    private final TaskRepository taskRepository;
+    private final TaskAssignmentRepository assignmentRepository;
+    private final MachineRepository machineRepository;
+    private final ProductionOrderRepository productionOrderRepository;
 
     @Autowired
-    private TaskAssignmentRepository assignmentRepository;
+    public TaskService(
+            @Lazy  IProcessService processService,
+            TaskRepository taskRepository,
+            TaskAssignmentRepository assignmentRepository,
+            MachineRepository machineRepository,
+            ProductionOrderRepository productionOrderRepository) {
 
-    @Autowired
-    MachineRepository machineRepository;
-
-    @Autowired
-    private ProcessService processService;
-
-    @Autowired
-    private ProductionOrderRepository productionOrderRepository;
-
-    public TaskService(TaskRepository taskRepository) {
+        this.processService = processService;
         this.taskRepository = taskRepository;
+        this.assignmentRepository = assignmentRepository;
+        this.machineRepository = machineRepository;
+        this.productionOrderRepository = productionOrderRepository;
     }
 
     public List<Task> getTasksByProcess(Long processId) {
@@ -47,10 +51,16 @@ public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수�
             task.setTaskStatus(TaskStatus.PENDING);
             taskRepository.save(task);
 
+            // 기계 할당 시 예외 처리 추가
+            Machine machine = machineRepository.findByMachineType(getMachineTypeForTask(taskType));
+            if (machine == null) {
+                throw new EntityNotFoundException("Machine not found for task type: " + taskType);
+            }
+
             // Assign the task to a machine and worker
             TaskAssignment assignment = new TaskAssignment();
             assignment.setTask(task);
-            assignment.setMachine(getMachineForTaskType(taskType));
+            assignment.setMachine(machine);
             assignment.setWorker(null);
             assignmentRepository.save(assignment);
         }
@@ -67,25 +77,23 @@ public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수�
             case ASSEMBLY:
                 return Arrays.asList(TaskType.COMPONENT_FITTING, TaskType.FASTENING, TaskType.ELECTRICAL_WIRING, TaskType.QUALITY_CHECK);
             case COMPLETED:
-                return Collections.emptyList(); // No tasks for completed process
+                return Collections.emptyList();
             default:
                 throw new IllegalArgumentException("Unknown process type: " + processType);
         }
     }
 
-
-    private Machine getMachineForTaskType(TaskType taskType) {
-        // Logic to determine which machine to use for each task type
+    private MachineType getMachineTypeForTask(TaskType taskType) {
         switch (taskType) {
             case SHEARING:
             case BENDING:
-                return machineRepository.findByMachineType(MachineType.PRESSER);
+                return MachineType.PRESSER;
             case FORMING:
-                return machineRepository.findByMachineType(MachineType.WELDER);
+                return MachineType.WELDER;
             case DRAWING:
-                return machineRepository.findByMachineType(MachineType.PAINTER);
+                return MachineType.PAINTER;
             case SQUEEZING:
-                return machineRepository.findByMachineType(MachineType.ASSEMBLER);
+                return MachineType.ASSEMBLER;
             default:
                 throw new IllegalArgumentException("Unknown task type: " + taskType);
         }
@@ -99,21 +107,19 @@ public class TaskService {  // 공정 하위 단계인 Task 관련 Service. 수�
         task.updateProgress(progress);
         taskRepository.save(task);
 
-        // Update the associated process
+        //  공정(progress) 업데이트
         Process process = task.getProcess();
         process.updateProgress();
-        processService.saveProcess(process);
+        processService.saveProcess(process);  // `IProcessService` 사용
 
-        // Update the associated production order
+        // 주문(progress) 업데이트
         ProductionOrder order = process.getProductionOrder();
         order.setProgress(process.getProgress());
         productionOrderRepository.save(order);
 
-        // Check if the process is complete and move to the next if necessary
+        // 공정 완료 시 다음 단계로 이동
         if (process.getProgress() == 100) {
             processService.moveToNextProcess(order);
         }
     }
-    // Other CRUD methods
-
 }
