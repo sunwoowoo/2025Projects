@@ -18,7 +18,7 @@ public class TaskAssignment {   // Task에 필요한 자원 투입 (수정 필�
 
     @ManyToOne
     @JoinColumn(name = "task_id")
-    private PressTask pressTask;
+    private Task task;
 
     @ManyToOne
     @JoinColumn(name = "machine_id")

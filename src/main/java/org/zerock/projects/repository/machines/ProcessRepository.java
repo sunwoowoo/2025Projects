@@ -6,9 +6,10 @@ import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long> {
     // 공정단계별로 찾기 (프레싱, 차체용접, 도장, 조립)
-    Process findByProcessType(ProcessType processType);
+    Optional<Process> findByProcessType(ProcessType processType);
 }
