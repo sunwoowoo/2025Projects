@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 @Log4j2
-@ExtendWith(SpringExtension.class)
 public class AssemblyRepositoryTests {
 
     @Autowired
@@ -55,15 +54,15 @@ public class AssemblyRepositoryTests {
             // 2. Board 저장 (Assembly 연결 , Painting)
             Board board = Board.builder()
                     .assembly(savedAssembly)
-                    .painting(savedPainting)// 엔티티 객체 그대로 사용
-                    .progress(i * 10 + "%")
+                    .painting(savedPainting)
+                    .progress("" + i * 10 + "%")
                     .cf("결과 " + i)
                     .build();
             Board savedBoard = boardRepository.save(board); // 철자 수정
 
-            log.info("Inserted Board ID: " + savedBoard.getId() +
+            log.info("Inserted Board ID: " + savedBoard.getBno() +
                     ", Assembly ID: " + savedAssembly.getAno() +
-                    ", Progress: " + board.getProgress());
+                    ", painting: " + board.getPainting());
         });
 
     }
@@ -74,10 +73,9 @@ public class AssemblyRepositoryTests {
 
         log.info("===== 전체 Board 데이터 조회 =====");
         boards.forEach(board -> log.info("Board ID: {}, Assembly ID: {}, Painting Color: {}, Progress: {}",
-                board.getId(),
+                board.getBno(),
                 board.getAssembly().getAno(),
-                board.getPainting().getPno(),
-                board.getProgress()));
+                board.getPainting().getPno()));
 
         assertFalse(boards.isEmpty(), "데이터가 존재해야 합니다.");
     }

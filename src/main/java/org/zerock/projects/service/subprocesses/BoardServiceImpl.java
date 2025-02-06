@@ -23,7 +23,7 @@ public class BoardServiceImpl implements BoardService {
     public Long register(BoardDTO boardDTO) {
         Board board = modelMapper.map(boardDTO, Board.class);
         Board savedBoard = boardRepository.save(board); // JPA 저장
-        return savedBoard.getId();
+        return savedBoard.getBno();
     }
 
     @Override

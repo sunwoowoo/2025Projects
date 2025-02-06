@@ -3,6 +3,7 @@ package org.zerock.projects.domain;
 import lombok.*;
 import org.zerock.projects.domain.subprocesses.Assembly;
 import org.zerock.projects.domain.subprocesses.Painting;
+import org.zerock.projects.domain.machines.Process;
 
 import javax.persistence.*;
 
@@ -16,7 +17,7 @@ import javax.persistence.*;
 public class Board {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long id; //  번호
+    private Long bno; //  번호
 
     @ManyToOne
     @JoinColumn(name = "Ano")
@@ -24,6 +25,7 @@ public class Board {
     @ManyToOne
     @JoinColumn(name = "Pno")
     private Painting painting;
+
     @Column(nullable = false)
     private String progress; //  진행율
 

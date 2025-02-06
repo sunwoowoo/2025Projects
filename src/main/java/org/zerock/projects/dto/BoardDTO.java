@@ -12,7 +12,7 @@ import org.zerock.projects.domain.subprocesses.Painting;
 //   프레스 , 차제 , 도장 , 조립  의 통합 테이블
 public class BoardDTO {
 
-    private Long id;
+    private Long bno;
 
     private Assembly assembly; // 조립
     private Painting painting; // 도장
