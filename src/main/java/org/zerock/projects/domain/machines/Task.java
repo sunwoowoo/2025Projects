@@ -33,4 +33,18 @@ public class Task {
         }
         this.progress = progress;
     }
+
+    public void updateProgress(int newProgress) {
+        setProgress(newProgress);
+        if (newProgress == 100) {
+            this.taskStatus = TaskStatus.COMPLETED;
+        } else if (newProgress > 0) {
+            this.taskStatus = TaskStatus.IN_PROGRESS;
+        } else {
+            this.taskStatus = TaskStatus.PENDING;
+        }
+        if (this.process != null) {
+            this.process.updateProgress();
+        }
+    }
 }

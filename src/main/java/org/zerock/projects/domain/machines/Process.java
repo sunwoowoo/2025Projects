@@ -32,4 +32,14 @@ public class Process {
         }
         this.progress = progress;
     }
+
+    public void updateProgress() {
+        if (tasks == null || tasks.isEmpty()) {
+            this.progress = 0;
+        } else {
+            int totalProgress = tasks.stream().mapToInt(Task::getProgress).sum();
+            this.progress = totalProgress / tasks.size();
+        }
+    }
+
 }

@@ -7,8 +7,10 @@ import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
+import org.zerock.projects.domain.machines.Task;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
+import org.zerock.projects.repository.machines.TaskRepository;
 import org.zerock.projects.service.machines.ProcessService;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,6 +28,9 @@ public class ProductionOrderService {
 
     @Autowired
     private ProcessService processService;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     // 주문제품 id로 품목 하나 찾기
     public Optional<ProductionOrder> getOneOrder(Long id) {
@@ -69,6 +74,13 @@ public class ProductionOrderService {
 
     // 제작 과정 상태 완료 표시
     public void updateOrderStatus(ProductionOrder order) {
+        Process currentProcess = processService.getCurrentProcess(order);
+        if (currentProcess != null) {
+            order.setProgress(currentProcess.getProgress());
+            if (currentProcess.getProgress() == 100) {
+                moveToNextProcess(order);
+            }
+        }
         if (order.getProcessType() == ProcessType.COMPLETED && order.getProgress() == 100) {
             completeOrder(order);
         } else {
@@ -87,12 +99,19 @@ public class ProductionOrderService {
     }
 
     // 진행률 갱신
-    public void updateProgress(Long orderId, int progress) {
+    public void updateProgress(Long orderId, Long taskId, int progress) {
         ProductionOrder order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        order.setProgress(progress);
-        updateOrderStatus(order);
-        orderRepository.save(order);
+        Process currentProcess = processService.getCurrentProcess(order);
+        if (currentProcess != null) {
+            Task task = currentProcess.getTasks().stream()
+                    .filter(t -> t.getId().equals(taskId))
+                    .findFirst()
+                    .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+            task.updateProgress(progress);
+            taskRepository.save(task);
+            updateOrderStatus(order);
+        }
     }
 
     // 제작 중인 주문들 불러오기

@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
+import org.zerock.projects.domain.machines.*;
 import org.zerock.projects.domain.machines.Process;
-import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
+import org.zerock.projects.repository.machines.TaskRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,6 +18,9 @@ import java.util.List;
 public class ProcessService {
     @Autowired
     private ProcessRepository processRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Autowired
     private TaskService taskService;
@@ -38,20 +43,15 @@ public class ProcessService {
             throw new IllegalStateException("A PENDING order must start with PRESSING process");
         }
 
-        Process process = processRepository.findByProcessType(newProcessType);
-
-        //공정단계가 null(주문이 대기상태 시)일 때
-        if (process == null) {
-            if (order.getOrderStatus() == OrderStatus.PENDING && newProcessType != ProcessType.PRESSING) {
-                throw new IllegalStateException("A PENDING order must start with PRESSING process");
-            }
-            process = new Process();
-            process.setProcessType(newProcessType);
-            process = processRepository.save(process);
-        } else if (order.getOrderStatus() == OrderStatus.PENDING && newProcessType != ProcessType.PRESSING) {
-            throw new IllegalStateException("A PENDING order must start with PRESSING process");
-        }
-
+        Process process = processRepository.findByProcessType(newProcessType)
+                .orElseGet(() -> {
+                    if (order.getOrderStatus() == OrderStatus.PENDING && newProcessType != ProcessType.PRESSING) {
+                        throw new IllegalStateException("A PENDING order must start with PRESSING process");
+                    }
+                    Process newProcess = new Process();
+                    newProcess.setProcessType(newProcessType);
+                    return processRepository.save(newProcess);
+                });
 
         // Assign raw materials, components, and workers
         // 원자재, 부품, 직원, 설비 투입
@@ -68,6 +68,7 @@ public class ProcessService {
         orderRepository.save(order);
     }
 
+
     public ProcessType getNextProcessType(ProcessType currentProcess) {
         switch (currentProcess) {
             case PRESSING: return ProcessType.WELDING;
@@ -79,9 +80,24 @@ public class ProcessService {
         }
     }
 
-    private Process createNewProcess(ProcessType processType) {
-        Process process = new Process();
-        process.setProcessType(processType);
-        return processRepository.save(process);
+    public void addTaskToProcess(Process process, TaskType taskType, String description, int duration) {
+        Task task = Task.builder()
+                .taskType(taskType)
+                .taskStatus(TaskStatus.PENDING)
+                .process(process)
+                .description(description)
+                .duration(duration)
+                .progress(0)
+                .build();
+
+        process.getTasks().add(task);
+        taskRepository.save(task);
+        process.updateProgress();
+        processRepository.save(process);
+    }
+
+    public Process getCurrentProcess(ProductionOrder order) {
+        return processRepository.findByProcessType(order.getProcessType())
+                .orElseThrow(() -> new EntityNotFoundException("Current process not found for type: " + order.getProcessType()));
     }
 }
