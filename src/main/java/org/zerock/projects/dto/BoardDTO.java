@@ -2,6 +2,7 @@ package org.zerock.projects.dto;
 
 import lombok.*;
 import org.zerock.projects.domain.Assembly;
+import org.zerock.projects.domain.Painting;
 
 import java.time.LocalDateTime;
 
@@ -16,9 +17,9 @@ public class BoardDTO {
     private Long id;
 
     private Assembly assembly; // 조립
+    private Painting painting; // 도장
     private String progress;  // 진행율
     private String cf;  // 결합 여부
 
-    private LocalDateTime reDate;
-    private LocalDateTime modDate;
+
 }

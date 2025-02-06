@@ -6,10 +6,14 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.zerock.projects.domain.Assembly;
+import org.zerock.projects.domain.Board;
 import org.zerock.projects.dto.AssemblyDTO;
+import org.zerock.projects.dto.BoardDTO;
 import org.zerock.projects.repository.AssemblyRepository;
+import org.zerock.projects.repository.BoardRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +23,7 @@ public class AssemblyServiceImpl implements  AssemblyService  {
 
     private final ModelMapper modelMapper;
     private final AssemblyRepository assemblyRepository;
+    private final BoardRepository boardRespository;
 
     @Override
     public Long register(AssemblyDTO assemblyDTO) {
@@ -32,20 +37,20 @@ public class AssemblyServiceImpl implements  AssemblyService  {
         Optional<Assembly> result = assemblyRepository.findById(ano);
         return result.map(assembly -> modelMapper.map(assembly, AssemblyDTO.class)).orElse(null);
     }
-//    조립 테이블 실시간 수정
+//    조립 컬럼 실시간 수정
     @Transactional
     @Override
     public void updateAssembly(Long ano, boolean atE, boolean sm) {
 
-        Optional<Assembly> optionalAssembly = assemblyRepository.findById(ano);
-        if(optionalAssembly.isPresent()){
-            Assembly assembly = optionalAssembly.get();
-            assembly.setAtE(atE);
-            assembly.setSM(sm);
-            assemblyRepository.save(assembly);
-        }
-        else {
-            throw new IllegalArgumentException("해당 ano의 Assembly 를 찾을 수 없다");
+      Assembly assembly = assemblyRepository.findById(ano).orElseThrow(() -> new IllegalArgumentException("Assembly not found : " + ano));
+      assembly.setAtE(atE);
+      assembly.setSM(sm);
+      assemblyRepository.save(assembly);
+
+        List<Board> boardList = boardRespository.findAllByAssembly(assembly);
+        for (Board board : boardList) {
+            board.updateProgress();
+            boardRespository.save(board);
         }
     }
 }
