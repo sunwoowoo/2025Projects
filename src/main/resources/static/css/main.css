@@ -13,8 +13,24 @@ header {
     height: 50px;
     display: flex;
     align-items: center;
+/* 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
+/* 헤더 스타일 */
+header {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+/* 상단 바 스타일 */
 /* 상단 바 스타일 */
 .topbar {
     display: flex;
@@ -27,9 +43,21 @@ header {
 .menu {
     display: flex;
     gap: 20px;
+    display: flex;
+    gap: 20px;
 }
 
 .menu a {
+    color: white;
+    text-decoration: none;
+}
+
+/* 유저 정보 및 로그아웃 버튼 스타일 */
+.user-info {
+    margin-left: 700px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
     color: white;
     text-decoration: none;
 }
@@ -55,8 +83,46 @@ h2 {
     text-align:right;
     margin-bottom: 0;
     margin-right:10px;
+.topbar .logout {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
+h2 {
+    color:rgba(0, 0, 0, 0.5);
+    text-align:right;
+    margin-bottom: 0;
+    margin-right:10px;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 8px;
+    text-align: center;
+    color:rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+th {
+    background-color:rgba(0, 0, 0, 0.5);
+    padding: 8px;
+    text-align: center;
+    color:white;
+}
+
+/* 진행률 표시 */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 /* 테이블 스타일 */
 table {
     width: 100%;

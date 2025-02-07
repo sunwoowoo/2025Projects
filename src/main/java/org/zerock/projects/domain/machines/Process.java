@@ -1,7 +1,10 @@
 package org.zerock.projects.domain.machines;
 
 import lombok.*;
+<<<<<<< HEAD
 import lombok.extern.log4j.Log4j2;
+=======
+>>>>>>> 1240204c22387519ba467394aa2e224ce2b1a583
 import org.zerock.projects.domain.ProductionOrder;
 
 import javax.persistence.*;
@@ -30,6 +33,7 @@ public class Process {
     @Enumerated(EnumType.STRING)
     private ProcessType type;  // 프레싱(PRESSING), 차체용접(WELDING), 도장(PAINTING), 조립(ASSEMBLYING)
 
+<<<<<<< HEAD
     private boolean completed;
 
     public void addTask(TaskType taskType) {
@@ -37,6 +41,12 @@ public class Process {
             throw new IllegalArgumentException(
                     "Cannot add task type " + taskType + " to process type " + this.type
             );
+=======
+    @Generated
+    public void setProgress(int progress) {
+        if (progress < 0 || progress > 100) {
+            throw new IllegalArgumentException("Progress must be between 0 and 100");
+>>>>>>> 1240204c22387519ba467394aa2e224ce2b1a583
         }
         Task task = Task.builder()
                 .taskType(taskType)
@@ -46,4 +56,21 @@ public class Process {
                 .build();
         tasks.add(task);
     }
+<<<<<<< HEAD
+=======
+
+    public void updateProgress() {
+        if (tasks == null || tasks.isEmpty()) {
+            this.progress = 0;
+        } else {
+            int totalProgress = tasks.stream().mapToInt(Task::getProgress).sum();
+            this.progress = totalProgress / tasks.size();
+        }
+    }
+
+    public ProductionOrder getProductionOrder() {
+        ProductionOrder productionOrder = new ProductionOrder();
+        return productionOrder;
+    }
+>>>>>>> 1240204c22387519ba467394aa2e224ce2b1a583
 }
