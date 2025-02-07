@@ -50,11 +50,4 @@ public class ProductionOrderController {
         log.info("Simulation completed");
         return "redirect:/orders/orderlist";
     }
-
-    @GetMapping(value = "/order-progress/{orderId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamOrderProgress(@PathVariable Long orderId) {
-        SseEmitter emitter = new SseEmitter();
-        // Store emitter somewhere to be used by the simulator
-        return emitter;
-    }
 }

@@ -18,6 +18,9 @@ public enum TaskType {
     COMPLETED;
 
     public static List<TaskType> getTasksForProcess(Process process) {
+        if (process == null || process.getType() == null) {
+            throw new IllegalArgumentException("Process or ProcessType is null");
+        }
         ProcessType processType = process.getType();
         switch (processType) {
             case PRESSING:

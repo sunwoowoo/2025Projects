@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
+import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.domain.machines.Task;
 import org.zerock.projects.domain.machines.TaskType;
 import org.zerock.projects.repository.ProductionOrderRepository;
@@ -86,6 +87,7 @@ public class ManufacturingSimulator {
         // Add validation at the start
         if (order.getProcessType() == null && order.getOrderStatus() == OrderStatus.PENDING) {
             order.setOrderStatus(OrderStatus.IN_PROGRESS);
+            order.setProcessType(ProcessType.PRESSING);
             order.setStartDate(LocalDate.now());
         } else {
             log.error("ProcessType is null for order ID: {}", order.getId());
@@ -104,7 +106,7 @@ public class ManufacturingSimulator {
 
             // Create initial task
             Task initialTask = new Task();
-            initialTask.setTaskType(TaskType.getTasksForProcess(order.getProcesses().get(0)).get(0));
+            initialTask.setTaskType(TaskType.getTasksForProcess(initialProcess).get(0));
             initialTask.setProcess(initialProcess);
             initialTask.setProgress(0);
             initialTask.setCompleted(false);
