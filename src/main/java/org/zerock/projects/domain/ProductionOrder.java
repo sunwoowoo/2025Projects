@@ -1,6 +1,7 @@
 package org.zerock.projects.domain;
 
 import lombok.*;
+import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 
 import javax.persistence.*;
@@ -11,13 +12,13 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
 @Builder
 public class ProductionOrder {      // 들어온 주문
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     // 차량 모델
     private String carModel;
     // 수량
@@ -33,6 +34,10 @@ public class ProductionOrder {      // 들어온 주문
     @Enumerated(EnumType.STRING)
     private ProcessType processType; // Track the current process (e.g., Pressing, Welding, Painting, Assembling)
 
-    private int progress;
+    int progress;
+
+    @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Process> processes = new ArrayList<>();
 }
 
