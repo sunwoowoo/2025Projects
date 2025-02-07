@@ -22,10 +22,12 @@ public class Task {
     private TaskType taskType;  // 각 공정별 task 종류
 
     private boolean completed;
+
+    @Column(nullable = false, columnDefinition = "int default 0")
     private int progress;
 
     private void validateTaskType() {
-        if (!TaskType.belongsToProcess(taskType, process.getType())) {
+        if (!TaskType.belongsToProcess(taskType, process)) {
             throw new IllegalStateException(
                     "Task type " + taskType + " is not valid for process type " + process.getType()
             );

@@ -17,7 +17,8 @@ public enum TaskType {
 
     COMPLETED;
 
-    public static List<TaskType> getTasksForProcess(ProcessType processType) {
+    public static List<TaskType> getTasksForProcess(Process process) {
+        ProcessType processType = process.getType();
         switch (processType) {
             case PRESSING:
                 return List.of(SHEARING, BENDING, DRAWING, FORMING, SQUEEZING);
@@ -32,7 +33,7 @@ public enum TaskType {
         }
     }
 
-    public static boolean belongsToProcess(TaskType taskType, ProcessType processType) {
-        return getTasksForProcess(processType).contains(taskType);
+    public static boolean belongsToProcess(TaskType taskType, Process process) {
+        return getTasksForProcess(process).contains(taskType);
     }
 }

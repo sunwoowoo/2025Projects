@@ -8,14 +8,32 @@
 </head>
 <body>
     <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Car Model</th>
+                <th>Quantity</th>
+                <th>Order Status</th>
+                <th>Process Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Progress</th>
+                <th>Simulate</th>
+            </tr>
+        </thead>
         <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
             <td th:text="${order.carModel}"></td>
             <td th:text="${order.quantity}"></td>
             <td th:text="${order.orderStatus}"></td>
             <td th:text="${order.processType}"></td>
             <td th:text="${order.startDate}"></td>
             <td th:text="${order.endDate}"></td>
-            <td th:text="${order.progress}"></td>
+            <td th:text="${order.progress + '%'}"></td>
+            <td>
+            <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
+               th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
+            </td>
         </tr>
     </table>
 

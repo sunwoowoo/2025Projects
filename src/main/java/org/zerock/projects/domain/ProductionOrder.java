@@ -34,7 +34,8 @@ public class ProductionOrder {      // 들어온 주문
     @Enumerated(EnumType.STRING)
     private ProcessType processType; // Track the current process (e.g., Pressing, Welding, Painting, Assembling)
 
-    int progress;
+    @Column(nullable = false, columnDefinition = "double default 0.0")
+    double progress;
 
     @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL)
     @Builder.Default
