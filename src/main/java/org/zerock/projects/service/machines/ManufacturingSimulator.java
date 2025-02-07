@@ -89,6 +89,7 @@ public class ManufacturingSimulator {
             order.setOrderStatus(OrderStatus.IN_PROGRESS);
             order.setProcessType(ProcessType.PRESSING);
             order.setStartDate(LocalDate.now());
+            log.info("Order ID {}'s Status is {} in {} process.", order.getId(), order.getOrderStatus(), order.getProcessType());
         } else {
             log.error("ProcessType is null for order ID: {}", order.getId());
             throw new IllegalStateException("ProcessType must be set before starting production");
