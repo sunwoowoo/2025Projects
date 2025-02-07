@@ -9,27 +9,30 @@ import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 
 import java.time.LocalDate;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2
 public class ProductionOrderRepositoryTests {
     @Autowired
-    ProductionOrderRepository productionOrderRepository;
+    private ProductionOrderRepository productionOrderRepository;
 
     @Test
-    public void generateMockOrders() {
-        Faker faker = new Faker();
-        int n_orders = 20;
-        for (int i = 0; i < n_orders; i++) {
-            // order 객체 생성
-            ProductionOrder order = new ProductionOrder();
-            // 가상 오더 생성
-            order.setCarModel(faker.options().option("Model S", "Model 3", "Model X", "Model Y"));
-            order.setQuantity(faker.number().numberBetween(1, 100));
-            order.setStartDate(LocalDate.now());
-            order.setEndDate(LocalDate.now().plusDays(faker.number().numberBetween(1, 30)));
-            order.setOrderStatus(faker.options().option(OrderStatus.PENDING, OrderStatus.IN_PROGRESS, OrderStatus.COMPLETED));
-            productionOrderRepository.save(order);
-        }
+    public void testOrderInsert() {
+        IntStream.rangeClosed(1, 20).forEach(i -> {
+            ProductionOrder order = ProductionOrder.builder()
+                    .carModel("Model X")
+                    .quantity(15)
+                    .orderStatus(OrderStatus.PENDING)
+                    .processType(null)
+                    .processes(null)
+                    .progress(0)
+                    .startDate(null)
+                    .endDate(null)
+                    .build();
+
+            ProductionOrder result = productionOrderRepository.save(order);
+            log.info("id: " + result.getId());
+        });
     }
 }
