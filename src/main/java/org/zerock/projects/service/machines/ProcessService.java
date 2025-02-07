@@ -20,18 +20,15 @@ public class ProcessService implements IProcessService {
 
     private final ProcessRepository processRepository;
     private final TaskRepository taskRepository;
-    private final TaskService taskService;
     private final ProductionOrderRepository orderRepository;
 
     @Autowired
     public ProcessService(
             ProcessRepository processRepository,
             @Lazy TaskRepository taskRepository,
-            TaskService taskService,
             ProductionOrderRepository orderRepository) {
         this.processRepository = processRepository;
         this.taskRepository = taskRepository;
-        this.taskService = taskService;
         this.orderRepository = orderRepository;
     }
 
@@ -57,7 +54,7 @@ public class ProcessService implements IProcessService {
 
         taskService.createTasksForProcess(order, process);
 
-        if (newProcessType == ProcessType.ASSEMBLY) {
+        if (newProcessType == ProcessType.ASSEMBLING) {
             order.setOrderStatus(OrderStatus.COMPLETED);
             order.setEndDate(LocalDate.now());
         } else {
@@ -74,8 +71,8 @@ public class ProcessService implements IProcessService {
         switch (currentProcess) {
             case PRESSING: return ProcessType.WELDING;
             case WELDING: return ProcessType.PAINTING;
-            case PAINTING: return ProcessType.ASSEMBLY;
-            case ASSEMBLY: return ProcessType.COMPLETED;
+            case PAINTING: return ProcessType.ASSEMBLING;
+            case ASSEMBLING: return ProcessType.COMPLETED;
             case COMPLETED: return null;
             default: throw new IllegalStateException("Invalid process: " + currentProcess);
         }
@@ -85,10 +82,7 @@ public class ProcessService implements IProcessService {
     public void addTaskToProcess(Process process, TaskType taskType, String description, int duration) {
         Task task = Task.builder()
                 .taskType(taskType)
-                .taskStatus(TaskStatus.PENDING)
                 .process(process)
-                .description(description)
-                .duration(duration)
                 .progress(0)
                 .build();
 

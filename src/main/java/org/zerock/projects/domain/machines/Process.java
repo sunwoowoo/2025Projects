@@ -31,21 +31,8 @@ public class Process {
     @Enumerated(EnumType.STRING)
     private ProcessType type;  // 프레싱(PRESSING), 차체용접(WELDING), 도장(PAINTING), 조립(ASSEMBLYING)
 
-    @Generated
-    public void setProgress(int progress) {
-        if (progress < 0 || progress > 100) {
-            throw new IllegalArgumentException("Progress must be between 0 and 100");
-        }
-        this.progress = progress;
-    }
+    int progress;
 
-    public void updateProgress() {
-        if (tasks == null || tasks.isEmpty()) {
-            this.progress = 0;
-        } else {
-            int totalProgress = tasks.stream().mapToInt(Task::getProgress).sum();
-            this.progress = totalProgress / tasks.size();
-        }
     private boolean completed;
 
     public void addTask(TaskType taskType) {
