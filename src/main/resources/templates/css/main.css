@@ -52,9 +52,9 @@ header {
 
 h2 {
     color:rgba(0, 0, 0, 0.5);
-    text-align:right;
+    text-align:left;
     margin-bottom: 0;
-    margin-right:10px;
+    margin-left:10px;
 }
 
 /* 테이블 스타일 */
@@ -67,7 +67,8 @@ td {
     padding: 8px;
     text-align: center;
     color:rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 th {
@@ -75,6 +76,8 @@ th {
     padding: 8px;
     text-align: center;
     color:white;
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 /* 진행률 표시 */
@@ -94,22 +97,4 @@ th {
 
 .progress-bar span {
     font-size: 14px;
-}
-
-/* 팝업 스타일 */
-#orderPopup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.top-text {
-    background-color: rgba(0, 0, 0, 0.5);
-    color:white;
-    padding:10px;
-    text-align:center;
 }
