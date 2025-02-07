@@ -63,14 +63,18 @@ table {
     border-collapse: collapse;
 }
 
-th, td {
+td {
     padding: 8px;
     text-align: center;
+    color:rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 th {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color:rgba(0, 0, 0, 0.5);
+    padding: 8px;
+    text-align: center;
+    color:white;
 }
 
 /* 진행률 표시 */
