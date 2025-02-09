@@ -32,13 +32,13 @@ public class ProductionOrderController {
     @Autowired
     ProductionOrderRepository productionOrderRepository;
 
-    @GetMapping("/orderlist")
+    @GetMapping("/productionorder")
     public String list(Model model) {
         List<ProductionOrderDTO> productionOrderDTO = productionOrderService.getAllOrders().stream()
                 .map(ProductionOrderDTO::fromEntity)
                 .collect(Collectors.toList());
         model.addAttribute("orders", productionOrderDTO);
-        return "orderlist";
+        return "productionorder";
     }
 
     @GetMapping("/simulate/{orderId}")
@@ -49,14 +49,6 @@ public class ProductionOrderController {
         log.info("Order found: {} : {}", orderId, order);
         simulator.simulateProductionOrder(order);
         log.info("Simulation completed");
-        return "redirect:/orders/orderlist";
-    }
-
-    @PostMapping("/simulate/{orderId}")
-    public ProductionOrder simulateOrder2(@PathVariable Long orderId) {
-        ProductionOrder order = productionOrderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        simulator.simulateProductionOrder(order);
-        return order;
+        return "redirect:/orders/productionorder";
     }
 }
