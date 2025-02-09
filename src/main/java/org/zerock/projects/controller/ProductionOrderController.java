@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.zerock.projects.domain.ProductionOrder;
@@ -49,5 +50,13 @@ public class ProductionOrderController {
         simulator.simulateProductionOrder(order);
         log.info("Simulation completed");
         return "redirect:/orders/orderlist";
+    }
+
+    @PostMapping("/simulate/{orderId}")
+    public ProductionOrder simulateOrder2(@PathVariable Long orderId) {
+        ProductionOrder order = productionOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        simulator.simulateProductionOrder(order);
+        return order;
     }
 }

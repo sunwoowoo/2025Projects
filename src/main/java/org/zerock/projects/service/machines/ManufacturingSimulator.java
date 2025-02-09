@@ -13,6 +13,7 @@ import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.domain.machines.Task;
 import org.zerock.projects.domain.machines.TaskType;
 import org.zerock.projects.repository.ProductionOrderRepository;
+import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.repository.machines.TaskRepository;
 
 import java.time.LocalDate;
@@ -29,7 +30,9 @@ public class ManufacturingSimulator {
     @Autowired
     private ProductionOrderRepository productionOrderRepository;
 
-    @Transactional
+    @Autowired
+    private ProcessRepository processRepository;
+
     public void updateTaskProgress(Task task) {
         log.info("Starting updateTaskProgress for task type: {}, current progress: {}",
                 task.getTaskType(), task.getProgress());
@@ -42,6 +45,7 @@ public class ManufacturingSimulator {
         log.info("Increment: {}, New progress: {}", increment, newProgress);
 
         task.setProgress(newProgress);
+        taskRepository.save(task);
 
         if (newProgress == 100) {
             log.info("Task reached 100%. Marking as completed.");
@@ -54,8 +58,8 @@ public class ManufacturingSimulator {
                 List<TaskType> processTaskTypes = TaskType.getTasksForProcess(process);
                 int currentIndex = processTaskTypes.indexOf(task.getTaskType());
 
-                log.info("Current task index: {}, Total tasks in process: {}",
-                        currentIndex, processTaskTypes.size());
+                log.info("Current task index: {}, name : {}, Total tasks in process: {}",
+                        currentIndex, processTaskTypes.get(currentIndex), processTaskTypes.size());
 
                 if (currentIndex < processTaskTypes.size() - 1) {
                     TaskType nextTaskType = processTaskTypes.get(currentIndex + 1);
@@ -69,7 +73,7 @@ public class ManufacturingSimulator {
                     nextTask.setCompleted(false);
                     taskRepository.save(nextTask);
 
-                    log.info("New task created with ID: {}", nextTask.getId());
+                    log.info("New task created with ID: {}, Type : {}", nextTask.getId(), nextTask.getTaskType());
                 } else {
                     taskRepository.save(task);
                 }
@@ -82,13 +86,13 @@ public class ManufacturingSimulator {
         }
     }
 
-    @Transactional
     public void simulateProductionOrder(ProductionOrder order) {
         // Add validation at the start
         if (order.getProcessType() == null && order.getOrderStatus() == OrderStatus.PENDING) {
             order.setOrderStatus(OrderStatus.IN_PROGRESS);
             order.setProcessType(ProcessType.PRESSING);
             order.setStartDate(LocalDate.now());
+            productionOrderRepository.save(order);
             log.info("Order ID {}'s Status is {} in {} process.", order.getId(), order.getOrderStatus(), order.getProcessType());
         } else {
             log.error("ProcessType is null for order ID: {}", order.getId());
@@ -104,6 +108,7 @@ public class ManufacturingSimulator {
             Process initialProcess = new Process();
             initialProcess.setType(order.getProcessType());  // Use the ProcessType from the order
             initialProcess.setProductionOrder(order);
+            processRepository.save(initialProcess);
 
             // Create initial task
             Task initialTask = new Task();
@@ -111,9 +116,11 @@ public class ManufacturingSimulator {
             initialTask.setProcess(initialProcess);
             initialTask.setProgress(0);
             initialTask.setCompleted(false);
+            taskRepository.save(initialTask);
 
             // Add task to process
             initialProcess.getTasks().add(initialTask);
+            processRepository.save(initialProcess);
 
             // Add process to order
             order.getProcesses().add(initialProcess);
@@ -125,12 +132,14 @@ public class ManufacturingSimulator {
 
         for (Process process : order.getProcesses()) {
             log.info("Process ID: {}, Number of tasks: {}", process.getId(), process.getTasks().size());
-            log.info("Current Process: {}", process);
+            log.info("Current Process - ID: {}, Type: {}", process.getId(), process.getType());
             for (Task task : process.getTasks()) {
-                log.info("Current Task: {}", task);
+                log.info("Current Task: - ID: {}, Type: {}", task.getId(), task.getTaskType());
                 while (!task.isCompleted()) {
                     updateTaskProgress(task);
+                    log.info("Task started: ID: {}, Type: {}", task.getId(), task.getTaskType());
                     if (task.isCompleted()) {
+                        log.info("Task {} Completed", task.getTaskType());
                         break;
                     }
                     try {
@@ -146,5 +155,4 @@ public class ManufacturingSimulator {
         productionOrderRepository.save(order);
         log.info("Production is completed!");
     }
-
 }
