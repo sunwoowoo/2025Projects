@@ -25,10 +25,6 @@ public class Process {
     @JoinColumn(name = "production_order_id")
     private ProductionOrder productionOrder;
 
-    @ManyToOne
-    @JoinColumn(name = "material_id")
-    private Material material;
-
     @OneToMany(mappedBy = "process")    // Process 안에 여러개의 task (task1, task2, task3 task4)
     @Builder.Default
     private List<Task> tasks = new ArrayList<>();

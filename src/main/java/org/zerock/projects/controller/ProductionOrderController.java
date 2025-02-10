@@ -2,18 +2,13 @@ package org.zerock.projects.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.bind.annotation.*;
 import org.zerock.projects.domain.ProductionOrder;
+import org.zerock.projects.domain.OrderStatus;  // OrderStatus import 추가
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
@@ -27,13 +22,15 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequestMapping("/orders")
 public class ProductionOrderController {
+
     @Autowired
     private ManufacturingSimulator simulator;
     @Autowired
-    ProductionOrderService productionOrderService;
+    private ProductionOrderService productionOrderService;
     @Autowired
-    ProductionOrderRepository productionOrderRepository;
+    private ProductionOrderRepository productionOrderRepository;
 
+    // 주문 리스트 화면
     @GetMapping("/productionorder")
     public String list(Model model) {
         List<ProductionOrderDTO> productionOrderDTO = productionOrderService.getAllOrders().stream()
@@ -43,6 +40,7 @@ public class ProductionOrderController {
         return "productionorder";
     }
 
+    // 주문 시뮬레이션
     @GetMapping("/simulate/{orderId}")
     public String simulateOrder(@PathVariable Long orderId) {
         log.info("Simulating order with ID: {}", orderId);
@@ -53,4 +51,27 @@ public class ProductionOrderController {
         log.info("Simulation completed");
         return "redirect:/orders/productionorder";
     }
+
+    @PostMapping("/create")
+    public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
+        log.info("Received new order: {}", orderDTO);
+
+        // orderDTO에서 orderStatus 값이 Enum 값이라면 바로 사용
+        OrderStatus orderStatus = orderDTO.getOrderStatus();
+
+        // DTO -> Entity 변환
+        ProductionOrder productionOrder = orderDTO.toEntity();
+        productionOrder.setOrderStatus(orderStatus);
+
+        // DB에 저장
+        ProductionOrder savedOrder = productionOrderRepository.save(productionOrder);
+
+        // 저장된 주문을 DTO로 변환 후 반환
+        ProductionOrderDTO savedOrderDTO = ProductionOrderDTO.fromEntity(savedOrder);
+
+        // 성공적으로 저장된 주문 정보 반환
+        ResponseEntity.ok(savedOrderDTO);
+        return "redirect:/orders/productionorder";
+    }
+
 }

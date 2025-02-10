@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
+import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.domain.machines.TaskType;
@@ -77,5 +78,10 @@ public class ProductionOrderService {
                         .progress(0.0)
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    //팝업주문 저장
+    public void saveOrder(ProductionOrder productionOrder){
+        productionOrderRepository.save(productionOrder);
     }
 }

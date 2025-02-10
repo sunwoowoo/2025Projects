@@ -39,5 +39,12 @@ public class ProductionOrder {      // 들어온 주문
     @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Process> processes = new ArrayList<>();
+
+    public ProductionOrder(Long id, String carModel, int quantity, OrderStatus orderStatus){
+        this.id=id;
+        this.carModel=carModel;
+        this.quantity = quantity;
+        this.orderStatus = orderStatus;
+    }
 }
 

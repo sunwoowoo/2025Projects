@@ -1,108 +1,63 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html lang="ko">
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문제작</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
-=======
-<html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAIN</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .board-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .board-table th, .board-table td {
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: silver;
-            border-radius: 5px;
-            height: 50px;
-            padding: 0;
-        }
-        .menu {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0;
-            height: 100%;
-            width: 100%;
-        }
-        .menu a {
-            text-decoration: none;
-            padding: 15px 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-        .menu a.active {
-            font-weight: bold;
-            color: black;
-            background-color: white;
-            border-radius: 0;
-            margin-bottom: 0;
-        }
-        .search-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .search-box-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .btn2 {
-            margin-left: auto;
-            padding: 8px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-    </style>
->>>>>>> 971e7ccbe01e580b330ae420bfcd8f555144c7d9
 </head>
 <body>
 <header>
     <div class="topbar">
         <nav class="menu">
-<<<<<<< HEAD
             <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
             <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
             <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
-=======
-            <a href="#" class="active">홈</a>
-            <a href="#">주문제작</a>
-            <a href="#">자재관리</a>
->>>>>>> 971e7ccbe01e580b330ae420bfcd8f555144c7d9
         </nav>
     </div>
 </header>
 
 <main>
-    <h2>주문제작 리스트</h2>
+    <div class="header-container">
+        <h2>주문제작 리스트</h2>
+        <button class="btn2" id="orderBtn">주문 접수</button>
+    </div>
+
+    <!-- 주문 접수 팝업 -->
+    <div id="orderPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <div class="popup-title">
+                <h3>주문 추가</h3>
+            </div>
+            <form id="orderForm" method="post" action="/orders/create">
+                <div class="form-group">
+                    <label for="carModel">Model:</label>
+                    <input type="text" id="carModel" name="carModel" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="orderStatus">Order Status:</label>
+                    <select id="orderStatus" name="orderStatus">
+                        <option value="PENDING">Pending</option>
+                        <option value="PROCESSING">Processing</option>
+                        <option value="COMPLETED">Completed</option>
+                    </select>
+                </div>
+
+                <button type="submit">주문 추가</button>
+                <button type="button" id="cancelBtn">취소</button>
+            </form>
+        </div>
+    </div>
+
     <table class="board-table">
         <thead>
         <tr>
@@ -114,54 +69,32 @@
             <th>Quantity</th>
             <th>Start Date</th>
             <th>End Date</th>
-<<<<<<< HEAD
-=======
             <th>Simulate</th>
->>>>>>> 971e7ccbe01e580b330ae420bfcd8f555144c7d9
         </tr>
         </thead>
         <tbody>
-            <tr th:each="order, stat : ${orders}">
-                <td th:text="${order.id}"></td>
-                <td><a href="#" th:text="${order.carModel}"></a></td>
-                <td th:text="${order.orderStatus}"></td>
-                <td th:text="${order.processType}"></td>
-<<<<<<< HEAD
-                <td class="bar">
-                    <progress th:value="${order.progress}" max="100"></progress>
-                    <span th:text="${order.progress}+'%'"></span>
-=======
-                <td class="progress-cell">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar"
-                             th:style="'width:' + ${order.progress} + '%; background-color:' + (${order.progress} &lt; 50 ? 'red' : 'green')">
-                        </div>
+        <tr th:each="order, stat : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td><a href="#" th:text="${order.carModel}"></a></td>
+            <td th:text="${order.orderStatus}"></td>
+            <td th:text="${order.processType}"></td>
+            <td class="progress-cell">
+                <div class="progress-bar-container">
+                    <div class="progress-bar"
+                         th:style="'width:' + ${order.progress} + '%; background-color:' + (${order.progress} < 50 ? 'red' : 'green')">
                     </div>
-                    <span class="progress-text" th:text="${order.progress} + '%'"</span>
->>>>>>> 971e7ccbe01e580b330ae420bfcd8f555144c7d9
-                </td>
-                <td th:text="${order.quantity}"></td>
-                <td th:text="${order.startDate}"></td>
-                <td th:text="${order.endDate}"></td>
-<<<<<<< HEAD
-=======
-                <td>
-                    <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
-                       th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
-                </td>
-            </tr>
-            <tr>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
->>>>>>> 971e7ccbe01e580b330ae420bfcd8f555144c7d9
-            </tr>
-            </tbody>
+                </div>
+                <span class="progress-text" th:text="${order.progress} + '%'"</span>
+            </td>
+            <td th:text="${order.quantity}"></td>
+            <td th:text="${order.startDate}"></td>
+            <td th:text="${order.endDate}"></td>
+            <td>
+                <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
+                   th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
+            </td>
+        </tr>
+        </tbody>
     </table>
 
     <footer>
@@ -180,9 +113,10 @@
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-            <button class="btn2" id="orderBtn">주문 접수</button>
         </div>
     </footer>
 </main>
+
+<script th:src="@{/js/order.js}"></script>
 </body>
 </html>
