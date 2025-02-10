@@ -67,13 +67,9 @@ public class ProductionOrderService {
         return result;
     }
 
+    // 주문 삭제
     public void removeOrder(Long id) {
         productionOrderRepository.deleteById(id);
-    }
-
-    //팝업주문 저장
-    public void saveOrder(ProductionOrder productionOrder){
-        productionOrderRepository.save(productionOrder);
     }
 
     //팝업주문 저장

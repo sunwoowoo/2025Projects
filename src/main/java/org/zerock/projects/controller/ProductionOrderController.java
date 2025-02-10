@@ -3,6 +3,9 @@ package org.zerock.projects.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +26,6 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequestMapping("/orders")
 public class ProductionOrderController {
-
     @Autowired
     private ManufacturingSimulator simulator;
     @Autowired
@@ -41,7 +43,7 @@ public class ProductionOrderController {
         return "productionorder";
     }
 
-    // 주문 시뮬레이션
+    // 제작 시뮬레이션
     @GetMapping("/simulate/{orderId}")
     public String simulateOrder(@PathVariable Long orderId) {
         log.info("Simulating order with ID: {}", orderId);
@@ -53,6 +55,7 @@ public class ProductionOrderController {
         return "redirect:/orders/productionorder";
     }
 
+    // 주문 생성
     @PostMapping("/create")
     public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
         log.info("Received new order: {}", orderDTO);
@@ -72,6 +75,14 @@ public class ProductionOrderController {
 
         // 성공적으로 저장된 주문 정보 반환
         ResponseEntity.ok(savedOrderDTO);
+        return "redirect:/orders/productionorder";
+    }
+
+    @PostMapping("/remove")
+    public String removeOrder(ProductionOrderDTO orderDTO) {
+        log.info("Order to delete: {}", orderDTO);
+
+        productionOrderService.removeOrder(orderDTO.getId());
         return "redirect:/orders/productionorder";
     }
 
