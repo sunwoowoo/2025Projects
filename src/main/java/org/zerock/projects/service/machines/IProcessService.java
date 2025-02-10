@@ -5,5 +5,4 @@ import org.zerock.projects.domain.machines.Process;
 
 public interface IProcessService {
     void saveProcess(Process process);
-    void moveToNextProcess(ProductionOrder order);
 }

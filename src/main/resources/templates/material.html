@@ -1,73 +1,70 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAIN</title>
-    <!-- Font Awesome CDN -->
+    <title>자재관리</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
 </head>
 <body>
 <header>
     <div class="topbar">
         <nav class="menu">
-            <a href="/list">PRODUCTION</a>
-            <a href="/material">MATERIAL</a>
+            <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
+            <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
+            <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
         </nav>
-        <div class="user-info">
-            <p>USER ID(SQL)</p>
-            <button type="submit" class="logout">Log out</button>
-        </div>
     </div>
 </header>
 
 <main>
-    <h1>MANUFACTURING LIST</h1>
-
+    <h2>자재관리 리스트</h2>
     <table class="board-table">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Model</th>
-            <th>Order Status</th>
-            <th>Process Type</th>
-            <th>Progress</th>
-            <th>Quantity</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>고유번호</th> <!--id : bno-->
+            <th>자재명</th> <!--name : -->
+            <th>카테고리</th> <!--category : -->
+            <th>필요수량</th> <!--quantity :  number-->
+            <th>단가</th> <!--price : number 000,000 -->
+            <th>창고</th>
+            <th>재고</th> <!--재고수량 : number-->
         </tr>
         </thead>
         <tbody>
-        <tr th:each="order, stat : ${orders}">
-            <td th:text="${order.id}"></td>
-            <td><a href="#" th:text="${order.carModel}"></a></td>
-            <td th:text="${order.orderStatus}"></td>
-            <td th:text="${order.processType}"></td>
-            <td th:text="${order.progress}"></td>
-            <td th:text="${order.quantity}"></td>
-            <td th:text="${order.startDate}"></td>
-            <td th:text="${order.endDate}"></td>
+        <tr th:each="material : ${materials}">
+            <td th:text="${material.mid}"></td>
+            <td th:text="${material.mname}"></td>
+            <td th:text="${material.mcategory}"></td>
+            <td th:text="${material.mquantity}"></td>
+            <td th:text="${material.mprice}"></td>
+            <td th:text="${material.mwarehouse}"></td>
+            <td th:text="${material.mstockstatus}"></td>
         </tr>
         </tbody>
     </table>
-    <hr>
+
     <footer>
-        <button class="btn2">주문 접수</button>
-        <!-- select 검색창 및 버튼 -->
         <div class="search-container">
-            <select id="select" class="select" name="select" method="post">
-                <option value="ID"> ID </option>
-                <option value="Model"> Model </option>
-                <option value="Order Status"> Order Status </option>
-                <option value="Process Type"> Process Type </option>
-                <option value="Progress"> Progress </option>
-                <option value="Quantity"> Quantity </option>
-            </select>
-            <input type="text" class="search-box" placeholder="Search">
-            <button class="btn" type="submit">
-                <i class="fas fa-search"></i> <!-- Font Awesome 아이콘 -->
-            </button>
+            <div class="search-box-group">
+                <select id="searchType" class="select">
+                    <option value="id">고유번호</option>
+                    <option value="name">자재명</option>
+                    <option value="category">카테고리</option>
+                    <option value="quantity">수량</option>
+                    <option value="price">단가</option>
+                    <option value="stockStatus">재고</option>
+                </select>
+                <input type="text" id="searchInput" class="search-box" placeholder="Search">
+                <button class="btn" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <button class="btn2" id="orderBtn">자재추가</button>
         </div>
     </footer>
 </main>

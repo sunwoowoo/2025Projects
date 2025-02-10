@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 public class ProductionOrderController {
     private final ProductionOrderService productionOrderService;
 
-    @GetMapping("/orderlist")
+    @GetMapping("/productionorder")
     public String list(Model model) {
         List<ProductionOrderDTO> productionOrderDTO = productionOrderService.getAllOrders().stream()
                 .map(ProductionOrderDTO::fromEntity)
                 .collect(Collectors.toList());
         model.addAttribute("orders", productionOrderDTO);
-        return "orderlist";
+        return "productionorder";
     }
 }

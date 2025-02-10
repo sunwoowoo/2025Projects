@@ -1,181 +1,69 @@
-/* 기본 스타일 */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+        .board-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-/* 헤더 스타일 */
-header {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 10px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-/* 기본 스타일 */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+        .board-table th, .board-table td {
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
 
-/* 헤더 스타일 */
-header {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 10px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-}
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: silver;
+            border-radius: 5px;
+            height: 50px;
+        }
 
-/* 상단 바 스타일 */
-/* 상단 바 스타일 */
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-}
+        .menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
 
-/* 메뉴 스타일 */
-.menu {
-    display: flex;
-    gap: 20px;
-    display: flex;
-    gap: 20px;
-}
+        .menu a {
+            text-decoration: none;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
 
-.menu a {
-    color: white;
-    text-decoration: none;
-}
+        .menu a.active {
+            font-weight: bold;
+            color: black;
+            background-color: white;
+        }
 
-/* 유저 정보 및 로그아웃 버튼 스타일 */
-.user-info {
-    margin-left: 700px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-}
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 10px;
+        }
 
-/* 유저 정보 및 로그아웃 버튼 스타일 */
-.user-info {
-    margin-left: 700px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
+        .search-box-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
 
-.topbar .logout {
-    background-color: transparent;
-    color: white;
-    border: 1px solid white;
-    padding: 5px 10px;
-    cursor: pointer;
-}
+        .btn2 {
+            margin-left: auto;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-h2 {
-    color:rgba(0, 0, 0, 0.5);
-    text-align:right;
-    margin-bottom: 0;
-    margin-right:10px;
-.topbar .logout {
-    background-color: transparent;
-    color: white;
-    border: 1px solid white;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-h2 {
-    color:rgba(0, 0, 0, 0.5);
-    text-align:right;
-    margin-bottom: 0;
-    margin-right:10px;
-}
-
-/* 테이블 스타일 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-td {
-    padding: 8px;
-    text-align: center;
-    color:rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-th {
-    background-color:rgba(0, 0, 0, 0.5);
-    padding: 8px;
-    text-align: center;
-    color:white;
-}
-
-/* 진행률 표시 */
-.progress-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-/* 테이블 스타일 */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-td {
-    padding: 8px;
-    text-align: center;
-    color:rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-th {
-    background-color:rgba(0, 0, 0, 0.5);
-    padding: 8px;
-    text-align: center;
-    color:white;
-}
-
-/* 진행률 표시 */
-.progress-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.progress-bar {
-    height: 10px;
-    width: 50%;
-    border-radius: 5px;
-    margin-right: 10px;
-    transition: width 0.5s ease-in-out;
-}
-
-.progress-bar span {
-    font-size: 14px;
-}
-
-/* 팝업 스타일 */
-#orderPopup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.top-text {
-    background-color: rgba(0, 0, 0, 0.5);
-    color:white;
-    padding:10px;
-    text-align:center;
-}
+        .

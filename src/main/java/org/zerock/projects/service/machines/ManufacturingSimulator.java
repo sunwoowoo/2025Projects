@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.Task;
-import org.zerock.projects.domain.machines.TaskType;
 import org.zerock.projects.repository.machines.TaskRepository;
+import org.zerock.projects.domain.machines.TaskType;
 
 import java.util.List;
 import java.util.Random;

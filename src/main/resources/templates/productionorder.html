@@ -3,82 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAIN</title>
+    <title>주문제작</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .board-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .board-table th, .board-table td {
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: silver;
-            border-radius: 5px;
-            height: 50px;
-            padding: 0;
-        }
-        .menu {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0;
-            height: 100%;
-            width: 100%;
-        }
-        .menu a {
-            text-decoration: none;
-            padding: 15px 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-        .menu a.active {
-            font-weight: bold;
-            color: black;
-            background-color: white;
-            border-radius: 0;
-            margin-bottom: 0;
-        }
-        .search-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .search-box-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .btn2 {
-            margin-left: auto;
-            padding: 8px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <header>
     <div class="topbar">
         <nav class="menu">
-            <a href="#" class="active">홈</a>
-            <a href="#">주문제작</a>
-            <a href="#">자재관리</a>
+            <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
+            <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
+            <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
         </nav>
     </div>
 </header>
@@ -104,27 +39,13 @@
                 <td><a href="#" th:text="${order.carModel}"></a></td>
                 <td th:text="${order.orderStatus}"></td>
                 <td th:text="${order.processType}"></td>
-                <td class="progress-cell">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar"
-                             th:style="'width:' + ${order.progress} + '%; background-color:' + (${order.progress} &lt; 50 ? 'red' : 'green')">
-                        </div>
-                    </div>
-                    <span class="progress-text" th:text="${order.progress} + '%'"</span>
+                <td class="bar">
+                    <progress th:value="${order.progress}" max="100"></progress>
+                    <span th:text="${order.progress}+'%'"></span>
                 </td>
                 <td th:text="${order.quantity}"></td>
                 <td th:text="${order.startDate}"></td>
                 <td th:text="${order.endDate}"></td>
-            </tr>
-            <tr>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
             </tr>
             </tbody>
     </table>

@@ -1,6 +1,7 @@
 package org.zerock.projects.domain.machines;
 
 import lombok.*;
+import org.zerock.projects.domain.Material;
 import org.zerock.projects.domain.ProductionOrder;
 import lombok.extern.log4j.Log4j2;
 import org.zerock.projects.domain.ProductionOrder;
@@ -23,6 +24,10 @@ public class Process {
     @ManyToOne
     @JoinColumn(name = "production_order_id")
     private ProductionOrder productionOrder;
+
+    @ManyToOne
+    @JoinColumn(name = "material_id")
+    private Material material;
 
     @OneToMany(mappedBy = "process")    // Process 안에 여러개의 task (task1, task2, task3 task4)
     @Builder.Default

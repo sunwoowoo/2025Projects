@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
-import org.zerock.projects.domain.machines.TaskType;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
+import org.zerock.projects.domain.machines.TaskType;
 
 import java.util.List;
 
