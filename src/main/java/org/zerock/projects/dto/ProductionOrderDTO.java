@@ -1,7 +1,9 @@
 package org.zerock.projects.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductionOrderDTO {
     private Long id;
     private String carModel;

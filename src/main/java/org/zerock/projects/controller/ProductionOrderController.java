@@ -14,6 +14,7 @@ import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
