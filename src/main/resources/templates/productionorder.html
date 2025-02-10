@@ -26,6 +26,25 @@
         <button class="btn2" id="orderBtn">주문 접수</button>
         <button class="btn2" id="removeBtn">삭제</button>
     </div>
+    <!-- 검색 폼 -->
+    <form action="/orders/productionorder" method="get">
+        <div class="search-container">
+            <div class="search-box-group">
+                <select id="searchType" name="types" class="select">
+                    <option value="id" th:selected="${types != null and types.contains('id')}">ID</option>
+                    <option value="carModel" th:selected="${types != null and types.contains('carModel')}">Model</option>
+                    <option value="orderStatus" th:selected="${types != null and types.contains('orderStatus')}">Order Status</option>
+                    <option value="processType" th:selected="${types != null and types.contains('processType')}">Process Type</option>
+                    <option value="progress" th:selected="${types != null and types.contains('progress')}">Progress</option>
+                    <option value="quantity" th:selected="${types != null and types.contains('quantity')}">Quantity</option>
+                </select>
+                <input type="text" name="keyword" id="searchInput" class="search-box" placeholder="Search">
+                <button class="btn" type="submit" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
 
     <!-- 주문 접수 팝업 -->
     <div id="orderPopup" class="popup" style="display: none;">
@@ -74,18 +93,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="order, stat : ${orders}">
+        <tr th:each="order : ${orders}">
             <td th:text="${order.id}"></td>
             <td><a href="#" th:text="${order.carModel}"></a></td>
             <td th:text="${order.orderStatus}"></td>
             <td th:text="${order.processType}"></td>
-            <td class="progress-cell">
-                <div class="progress-bar-container">
-                    <div class="progress-bar"
-                         th:style="'width:' + ${order.progress} + '%; background-color:' + (${order.progress} < 50 ? 'red' : 'green')">
-                    </div>
-                </div>
-                <span class="progress-text" th:text="${order.progress} + '%'"></span>
+            <td class="bar">
+                <progress th:value="${order.progress}" max="100"></progress>
+                <span th:text="${order.progress} + '%'"></span>
             </td>
             <td th:text="${order.quantity}"></td>
             <td th:text="${order.startDate}"></td>
@@ -98,26 +113,23 @@
         </tbody>
     </table>
 
-    <footer>
-        <form id="btnForm">
-        <div class="search-container">
-            <div class="search-box-group">
-                <select id="searchType" class="select">
-                    <option value="id">ID</option>
-                    <option value="carModel">Model</option>
-                    <option value="orderStatus">Order Status</option>
-                    <option value="processType">Process Type</option>
-                    <option value="progress">Progress</option>
-                    <option value="quantity">Quantity</option>
-                </select>
-                <input type="text" id="searchInput" class="search-box" placeholder="Search">
-                <button class="btn" id="searchBtn">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-        </form>
-    </footer>
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+    <span th:if="${currentPage > 1}">
+        <!-- 이전 페이지 링크 -->
+        <a th:href="@{/orders/productionorder(page=${currentPage - 1}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}">Previous</a>
+    </span>
+        <!-- 페이지 번호 링크들 -->
+        <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{/orders/productionorder(page=${pageNum}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}"
+           th:text="${pageNum}"
+           th:classappend="${pageNum == currentPage ? 'active' : ''}"></a>
+    </span>
+        <span th:if="${currentPage < totalPages}">
+        <!-- 다음 페이지 링크 -->
+        <a th:href="@{/orders/productionorder(page=${currentPage + 1}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}">Next</a>
+    </span>
+    </div>
 </main>
 
 <script th:src="@{/js/order.js}"></script>

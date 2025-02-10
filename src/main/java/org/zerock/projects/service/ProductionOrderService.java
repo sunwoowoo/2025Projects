@@ -14,6 +14,8 @@ import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.domain.machines.TaskType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -61,10 +63,8 @@ public class ProductionOrderService {
         }
     }
 
-    public List<ProductionOrder> getAllOrders() {
-        List<ProductionOrder> result = productionOrderRepository.findAll();
-        result.forEach(order -> log.info(order));
-        return result;
+    public Page<ProductionOrder> getAllOrders(Pageable pageable) {
+        return productionOrderRepository.findAll(pageable);
     }
 
     // 주문 삭제

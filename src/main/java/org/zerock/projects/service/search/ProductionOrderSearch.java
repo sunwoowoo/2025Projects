@@ -1,0 +1,49 @@
+package org.zerock.projects.service.search;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.zerock.projects.domain.ProductionOrder;
+import org.zerock.projects.domain.machines.ProcessType;
+import org.zerock.projects.repository.ProductionOrderRepository;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ProductionOrderSearch {
+
+    private final ProductionOrderRepository productionOrderRepository;
+
+
+    // 특정 차량 모델, 공정 타입, 진행률을 기준으로 조회
+    public List<ProductionOrder> searchByCarModelProcessTypeProgress(String carModel, ProcessType processType, double progress) {
+        return productionOrderRepository.findByCarModelAndProcessTypeAndProgress(carModel, processType, progress);
+    }
+
+    // 여러 개의 차량 모델을 기준으로 조회
+    public List<ProductionOrder> searchByCarModels(List<String> carModels) {
+        return productionOrderRepository.findByCarModelIn(carModels);
+    }
+
+    // 특정 키워드가 포함된 차량 모델을 검색하고, OrderId 기준으로 내림차순 정렬 (페이징 포함)
+    public Page<ProductionOrder> searchByCarModelKeyword(String keyword, Pageable pageable) {
+        return productionOrderRepository.findByCarModelContainingOrderByIdDesc(keyword, pageable);
+    }
+
+    // 특정 차량 모델과 공정 타입을 기준으로 JPQL 조회
+    public List<ProductionOrder> searchFromCarModelProcessType(String carModel, ProcessType processType) {
+        return productionOrderRepository.findFromCarModelProcessType(carModel, processType);
+    }
+
+    // 특정 공정 타입에 포함된 주문을 조회 (IN 조건 사용)
+    public Page<ProductionOrder> searchFromProcessTypes(List<ProcessType> processTypes, Pageable pageable) {
+        return productionOrderRepository.findFromProcessTypes(processTypes, pageable);  // 쿼리 메소드 호출
+    }
+
+    // 특정 키워드가 포함된 차량 모델을 검색 (LIKE 사용, 페이징 포함)
+    public Page<ProductionOrder> searchByKeyword(String keyword, Pageable pageable) {
+        return productionOrderRepository.findKeyword(keyword, pageable);
+    }
+}

@@ -12,10 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.OrderStatus;  // OrderStatus import 추가
+import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
+import org.zerock.projects.service.search.ProductionOrderSearch;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/orders")
 public class ProductionOrderController {
     @Autowired
+    ProductionOrderSearch productionOrderSearch;
+    @Autowired
     private ManufacturingSimulator simulator;
     @Autowired
     private ProductionOrderService productionOrderService;
@@ -35,11 +39,41 @@ public class ProductionOrderController {
 
     // 주문 리스트 화면
     @GetMapping("/productionorder")
-    public String list(Model model) {
-        List<ProductionOrderDTO> productionOrderDTO = productionOrderService.getAllOrders().stream()
+    public String list(@RequestParam(required = false, defaultValue = "") String types,
+                       @RequestParam(required = false, defaultValue = "") String keyword,
+                       @RequestParam(defaultValue = "1") int page,
+                       Model model) {
+        int pageSize = 10; // 한 페이지에 10개씩 표시
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<ProductionOrder> orderPage;
+        // 검색 조건 처리
+        if (types != null && keyword != null && !keyword.isEmpty()) {
+            switch (types) {
+                case "carModel":
+                    orderPage = productionOrderSearch.searchByKeyword(keyword, pageable);
+                    break;
+                case "processType":
+                    ProcessType processType = ProcessType.valueOf(keyword.toUpperCase());
+                    orderPage = productionOrderSearch.searchFromProcessTypes(List.of(processType), pageable);
+                    break;
+                default:
+                    orderPage = productionOrderService.getAllOrders(pageable);
+            }
+        } else {
+            orderPage = productionOrderService.getAllOrders(pageable);
+        }
+
+        // DTO 변환 후 모델에 추가
+        List<ProductionOrderDTO> orders = orderPage.stream()
                 .map(ProductionOrderDTO::fromEntity)
                 .collect(Collectors.toList());
-        model.addAttribute("orders", productionOrderDTO);
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("types", types);
+        model.addAttribute("keyword", keyword);
+
         return "productionorder";
     }
 
