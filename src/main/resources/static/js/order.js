@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const cancelBtn = document.getElementById('cancelBtn');
     const orderForm = document.getElementById('orderForm');
     const orderTable = document.querySelector('.board-table tbody');
+    let selectedRows = [];
 
     // 주문 접수 버튼 클릭 시 팝업 열기
     orderBtn.addEventListener('click', function() {
@@ -74,4 +75,24 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('서버와의 연결에 문제가 발생했습니다.');
         });
     });
+
+    //행 선택 동작 함수
+    document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
+        row.addEventListener("click", function(event) {
+            //단일행 선택 동작
+            if (selectedRows.includes(this)) {
+                //선택 해제
+                selectedRows = selectedRows.filter(r => r != this);
+                this.classList.remove('selected');
+                console.log("selected Rows", selectedRows);
+            } else {
+                //행 선택
+                selectedRows.forEach(r => r.classList.remove('selected'));
+                selectedRows = [this];
+                this.classList.add('selected');
+                console.log("selected Rows", this);
+            }
+        });
+    });
+
 });

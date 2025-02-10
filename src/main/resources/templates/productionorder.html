@@ -23,8 +23,10 @@
 <main>
     <div class="header-container">
         <h2>주문제작 리스트</h2>
-        <button class="btn2" id="orderBtn">주문 접수</button>
-        <button class="btn2" id="removeBtn">삭제</button>
+        <form id="btnForm">
+            <button class="btn2" id="orderBtn">주문 접수</button>
+            <button class="btn2" id="removeBtn">삭제</button>
+        </form>
     </div>
     <!-- 검색 폼 -->
     <form action="/orders/productionorder" method="get">
@@ -134,39 +136,4 @@
 
 <script th:src="@{/js/order.js}"></script>
 </body>
-<script th:inline="javascript">
-    const formObj = document.querySelector('#btnForm');
-    const selectedRows = [];
-
-    //삭제 버튼 동작
-    document.querySelector(".removeBtn").addEventListener("click", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        formObj.action = `/memberboard/remove`;
-        formObj.method = 'post';
-        formObj.submit();
-    }, false);
-
-    //행 선택 동작 함수
-    function addRowEventListeners() {
-        document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
-            row.addEventListener("click", function(event) {
-                //단일행 선택 동작
-                if (selectedRows.includes(this)) {
-                    //선택 해제
-                    selectedRows = selectedRows.filter(r => r != this);
-                    this.classList.remove('selected');
-                    console.log("selected Rows", selectedRows);
-                } else {
-                    //행 선택
-                    selectedRows.forEach(r => r.classList.remove('selected'));
-					selectedRows = [this];
-					this.classList.add('selected');
-					console.log("selected Rows", this);
-                }
-            }
-        }
-    }
-</script>
 </html>

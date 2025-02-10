@@ -167,3 +167,8 @@ form button:hover {
     border-radius: 5px;
     font-weight: bold;
 }
+
+.board-table > tbody > tr.selected {
+    background-color: royalblue !important;
+    color: white;
+}
