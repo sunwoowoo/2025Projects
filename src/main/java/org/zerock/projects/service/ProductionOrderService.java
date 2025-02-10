@@ -1,6 +1,7 @@
 package org.zerock.projects.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,18 +9,18 @@ import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.domain.machines.TaskType;
+import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Log4j2
 @Service
 @Transactional
 public class ProductionOrderService {
+    private final ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     private ProcessRepository processRepository;
 
@@ -64,18 +65,13 @@ public class ProductionOrderService {
         return result;
     }
 
-    public void createOrders() {
-        Random random = new Random();
-        List<ProductionOrder> orders = IntStream.range(0, 10)
-                .mapToObj(i -> ProductionOrder.builder()
-                        .carModel("Model " + (char)('A' + i % 3))
-                        .quantity(random.nextInt(50) + 1)
-                        .orderStatus(null)
-                        .processType(null)
-                        .startDate(null)
-                        .endDate(null)
-                        .progress(0.0)
-                        .build())
-                .collect(Collectors.toList());
+    public Long addOrder(ProductionOrderDTO productionOrderDTO) {
+        ProductionOrder productionOrder = modelMapper.map(productionOrderDTO, ProductionOrder.class);
+        Long id = productionOrderRepository.save(productionOrder).getId();
+        return id;
+    }
+
+    public void removeOrder(Long id) {
+        productionOrderRepository.deleteById(id);
     }
 }

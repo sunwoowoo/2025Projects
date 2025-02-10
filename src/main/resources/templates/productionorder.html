@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -113,7 +112,7 @@
                              th:style="'width:' + ${order.progress} + '%; background-color:' + (${order.progress} &lt; 50 ? 'red' : 'green')">
                         </div>
                     </div>
-                    <span class="progress-text" th:text="${order.progress} + '%'"</span>
+                    <span class="progress-text" th:text="${order.progress} + '%'"></span>
                 </td>
                 <td th:text="${order.quantity}"></td>
                 <td th:text="${order.startDate}"></td>
@@ -123,20 +122,11 @@
                        th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
                 </td>
             </tr>
-            <tr>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-            </tr>
             </tbody>
     </table>
 
     <footer>
+        <form id="btnForm">
         <div class="search-container">
             <div class="search-box-group">
                 <select id="searchType" class="select">
@@ -153,8 +143,45 @@
                 </button>
             </div>
             <button class="btn2" id="orderBtn">주문 접수</button>
+            <button class="btn2" id="removeBtn">삭제</button>
         </div>
+        </form>
     </footer>
 </main>
 </body>
+<script th:inline="javascript">
+    const formObj = document.querySelector('#btnForm');
+    const selectedRows = [];
+
+    //삭제 버튼 동작
+    document.querySelector(".removeBtn").addEventListener("click", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        formObj.action = `/memberboard/remove`;
+        formObj.method = 'post';
+        formObj.submit();
+    }, false);
+
+    //행 선택 동작 함수
+    function addRowEventListeners() {
+        document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
+            row.addEventListener("click", function(event) {
+                //단일행 선택 동작
+                if (selectedRows.includes(this)) {
+                    //선택 해제
+                    selectedRows = selectedRows.filter(r => r != this);
+                    this.classList.remove('selected');
+                    console.log("selected Rows", selectedRows);
+                } else {
+                    //행 선택
+                    selectedRows.forEach(r => r.classList.remove('selected'));
+					selectedRows = [this];
+					this.classList.add('selected');
+					console.log("selected Rows", this);
+                }
+            }
+        }
+    }
+</script>
 </html>
