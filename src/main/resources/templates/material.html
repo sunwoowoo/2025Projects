@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -21,17 +21,53 @@
 </header>
 
 <main>
-    <h2>자재관리 리스트</h2>
+    <div class="header-container">
+        <h2>자재관리 리스트</h2>
+        <button class="btn2" id="orderBtn">자재 관리</button>
+    </div>
+
+    <!-- 주문 접수 팝업 -->
+    <div id="orderPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <div class="popup-title">
+                <h3>자재 추가</h3>
+            </div>
+            <form id="orderForm" method="post" action="/orders/create2">
+                <div class="form-group">
+                    <label for="">Model:</label>
+                    <input type="text" id="carModel" name="carModel" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="orderStatus">Order Status:</label>
+                    <select id="orderStatus" name="orderStatus">
+                        <option value="PENDING">Pending</option>
+                        <option value="PROCESSING">Processing</option>
+                        <option value="COMPLETED">Completed</option>
+                    </select>
+                </div>
+
+                <button type="submit">자재 추가</button>
+                <button type="button" id="cancelBtn">취소</button>
+            </form>
+        </div>
+    </div>
+
     <table class="board-table">
         <thead>
         <tr>
-            <th>고유번호</th> <!--id : bno-->
-            <th>자재명</th> <!--name : -->
-            <th>카테고리</th> <!--category : -->
-            <th>필요수량</th> <!--quantity :  number-->
-            <th>단가</th> <!--price : number 000,000 -->
+            <th>고유번호</th>
+            <th>자재명</th>
+            <th>카테고리</th>
+            <th>필요수량</th>
+            <th>단가</th>
             <th>창고</th>
-            <th>재고</th> <!--재고수량 : number-->
+            <th>재고</th>
         </tr>
         </thead>
         <tbody>
@@ -43,6 +79,7 @@
             <td th:text="${material.mprice}"></td>
             <td th:text="${material.mwarehouse}"></td>
             <td th:text="${material.mstockstatus}"></td>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -51,21 +88,22 @@
         <div class="search-container">
             <div class="search-box-group">
                 <select id="searchType" class="select">
-                    <option value="id">고유번호</option>
-                    <option value="name">자재명</option>
-                    <option value="category">카테고리</option>
-                    <option value="quantity">수량</option>
-                    <option value="price">단가</option>
-                    <option value="stockStatus">재고</option>
+                    <option value="mid">고유번호</option>
+                    <option value="mname">자재명</option>
+                    <option value="mcategory">카테고리</option>
+                    <option value="mprice">단가</option>
+                    <option value="mwarehouse">창고</option>
+                    <option value="mstockstatus">재고</option>
                 </select>
                 <input type="text" id="searchInput" class="search-box" placeholder="Search">
                 <button class="btn" id="searchBtn">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-            <button class="btn2" id="orderBtn">자재추가</button>
         </div>
     </footer>
 </main>
+
+<script th:src="@{/js/order2.js}"></script>
 </body>
 </html>
