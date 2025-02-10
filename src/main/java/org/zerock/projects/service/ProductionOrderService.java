@@ -12,6 +12,9 @@ import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.domain.machines.TaskType;
 
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Log4j2
 @Service
@@ -24,7 +27,7 @@ public class ProductionOrderService {
     private ProductionOrderRepository productionOrderRepository;
 
     private void createTasksForProcess(Process process) {
-        List<TaskType> taskTypes = TaskType.getTasksForProcess(process.getType());
+        List<TaskType> taskTypes = TaskType.getTasksForProcess(process);
 
         for (TaskType taskType : taskTypes) {
             process.addTask(taskType);
@@ -59,5 +62,20 @@ public class ProductionOrderService {
         List<ProductionOrder> result = productionOrderRepository.findAll();
         result.forEach(order -> log.info(order));
         return result;
+    }
+
+    public void createOrders() {
+        Random random = new Random();
+        List<ProductionOrder> orders = IntStream.range(0, 10)
+                .mapToObj(i -> ProductionOrder.builder()
+                        .carModel("Model " + (char)('A' + i % 3))
+                        .quantity(random.nextInt(50) + 1)
+                        .orderStatus(null)
+                        .processType(null)
+                        .startDate(null)
+                        .endDate(null)
+                        .progress(0.0)
+                        .build())
+                .collect(Collectors.toList());
     }
 }

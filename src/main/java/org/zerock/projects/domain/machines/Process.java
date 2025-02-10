@@ -41,7 +41,7 @@ public class Process {
     private boolean completed;
 
     public void addTask(TaskType taskType) {
-        if (!TaskType.belongsToProcess(taskType, this.type)) {
+        if (!TaskType.belongsToProcess(taskType, this)) {
             throw new IllegalArgumentException(
                     "Cannot add task type " + taskType + " to process type " + this.type
             );

@@ -9,6 +9,7 @@ import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 
 import java.time.LocalDate;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -19,14 +20,15 @@ public class ProductionOrderRepositoryTests {
 
     @Test
     public void testOrderInsert() {
+        Random random = new Random();
         IntStream.rangeClosed(1, 20).forEach(i -> {
             ProductionOrder order = ProductionOrder.builder()
-                    .carModel("Model X")
-                    .quantity(15)
+                    .carModel("Model " + (char)('A' + i % 3))
+                    .quantity(random.nextInt(50) + 1)
                     .orderStatus(OrderStatus.PENDING)
                     .processType(null)
                     .processes(null)
-                    .progress(0)
+                    .progress(0.0)
                     .startDate(null)
                     .endDate(null)
                     .build();

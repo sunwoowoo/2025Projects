@@ -21,7 +21,7 @@ public class ProductionOrderDTO {
     private LocalDate endDate;
     private OrderStatus orderStatus;
     private ProcessType processType;
-    private int progress;
+    private double progress;
     private List<ProcessDTO> processes;
 
     // Constructor for entity conversion
