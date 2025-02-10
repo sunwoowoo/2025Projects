@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const cancelBtn = document.getElementById('cancelBtn');
     const orderForm = document.getElementById('orderForm');
     const orderTable = document.querySelector('.board-table tbody');
+    const deleteBtn = document.getElementById('deleteBtn');
     let selectedRows = [];
+    const btnForm = document.querySelector('#btnForm');
 
     // 주문 접수 버튼 클릭 시 팝업 열기
     orderBtn.addEventListener('click', function() {
@@ -76,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    //행 선택 동작 함수
+    //행 선택 동작
     document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
         row.addEventListener("click", function(event) {
             //단일행 선택 동작
@@ -95,4 +97,32 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // 행 삭제 버튼
+    deleteBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Delete Button clicked:")
+
+    		 if (selectedRows.length == 0) {	// 선택한 행이 없을 시
+    			 alert("항목을 선택해주세요.");
+    		 } else {
+    			 if (confirm("정말 삭제하시겠습니까?")) {
+    				 for (i = 0; i < selectedRows.length; i++) {	// 모든 선택된 행
+    					 const orderId = selectedRows[i].children[0].textContent;
+    					 selectedRows[i].remove();
+    					 console.log("Deleting an order with ID:", orderId);
+
+    					 // Set hidden input value
+                         document.querySelector("#orderId").value = orderId;
+
+    				 	 btnForm.action = `/orders/remove`;
+    				 	 btnForm.method = 'post';
+    				 	 btnForm.submit();
+    				 }
+    				 selectedRows = [];	// 선택된 행들 집합 리셋
+    			 } else {
+    			    selectedRows = [];	// 선택된 행들 집합 리셋
+    			 }
+    		 }
+    	  }, false);
 });

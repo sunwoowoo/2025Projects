@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.OrderStatus;  // OrderStatus import 추가
 import org.zerock.projects.domain.machines.ProcessType;
@@ -113,10 +114,13 @@ public class ProductionOrderController {
     }
 
     @PostMapping("/remove")
-    public String removeOrder(ProductionOrderDTO orderDTO) {
-        log.info("Order to delete: {}", orderDTO);
+    public String removeOrder(Long id, RedirectAttributes redirectAttributes) {
+        log.info("Order to delete with ID: {}", id);
 
-        productionOrderService.removeOrder(orderDTO.getId());
+        productionOrderService.removeOrder(id);
+
+        redirectAttributes.addFlashAttribute("result", "removed");
+
         return "redirect:/orders/productionorder";
     }
 

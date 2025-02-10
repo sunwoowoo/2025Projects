@@ -23,9 +23,10 @@
 <main>
     <div class="header-container">
         <h2>주문제작 리스트</h2>
-        <form id="btnForm">
+        <form id="btnForm", method="post">
+            <input type="hidden" name="id" id="orderId">
             <button class="btn2" id="orderBtn">주문 접수</button>
-            <button class="btn2" id="removeBtn">삭제</button>
+            <button class="btn2" id="deleteBtn">삭제</button>
         </form>
     </div>
     <!-- 검색 폼 -->
