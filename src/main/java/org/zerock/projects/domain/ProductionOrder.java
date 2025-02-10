@@ -28,16 +28,13 @@ public class ProductionOrder {      // 들어온 주문
     // 생산완료날짜
     private LocalDate endDate;
     // 진행율
-    private int progress;
+    private double progress;
     // 주문제품상태 (대기, 제작중, 완료)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;    // PENDING, IN_PROGRESS, COMPLETED
     // 제작진행상황 ( 프레싱, 용접, 도장, 조립)
     @Enumerated(EnumType.STRING)
     private ProcessType processType; // Track the current process (e.g., Pressing, Welding, Painting, Assembling)
-
-    @Column(nullable = false, columnDefinition = "double default 0.0")
-    double progress;
 
     @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL)
     @Builder.Default
