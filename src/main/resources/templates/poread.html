@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <h1>주문 상세</h1>
+    </div>
+</header>
+    <table>
+        <tr>
+            <th>MODEL</th>
+            <td th:text="${poread.carModel}"></td> <!-- poread.carModel -->
+        </tr>
+        <tr>
+            <th>ORDER STATUS</th>
+            <td th:text="${poread.orderStatus}"></td> <!-- poread.orderStatus -->
+        </tr>
+        <tr>
+            <th>PROCESS TYPE</th>
+            <td th:text="${poread.processType}"></td> <!-- poread.processType -->
+        </tr>
+        <tr>
+            <th>PROGRESS</th>
+            <td th:text="${poread.progress}"></td> <!-- poread.progress -->
+        </tr>
+        <tr>
+            <th>QUANTITY</th>
+            <td th:text="${poread.quantity}"></td> <!-- poread.quantity -->
+        </tr>
+        <tr>
+            <th>STARTDATE</th>
+            <td th:text="${poread.startDate}"></td> <!-- poread.startDate -->
+        </tr>
+        <tr>
+            <th>ENDDATE</th>
+            <td th:text="${poread.endDate}"></td> <!-- poread.endDate -->
+        </tr>
+    </table>
+<form>
+    <div class="btn">
+        <button type="button" class="btn-class modify-btn"
+                th:data-id="${poread.id}"
+                onclick="window.location.href='/orders/modify/' + this.getAttribute('data-id');">Modify</button>
+        <button type="button" class="btn-class delete-btn" th:data-id="${poread.id}">Delete</button>
+        <button type="button" class="btn-class back-btn" onclick="window.history.back();">Back</button>
+    </div>
+</form>
+
+<script>
+
+</script>
+</body>
+</html>

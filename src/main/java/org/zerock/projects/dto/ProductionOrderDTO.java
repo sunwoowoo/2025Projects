@@ -43,14 +43,4 @@ public class ProductionOrderDTO {
                 .build();
         return dto;
     }
-
-    // toEntity 메소드 추가: DTO를 엔티티로 변환
-    public ProductionOrder toEntity() {
-        return ProductionOrder.builder()
-                .carModel(this.carModel)
-                .quantity(this.quantity)
-                .orderStatus(this.orderStatus)
-                .build();
-    }
-
 }

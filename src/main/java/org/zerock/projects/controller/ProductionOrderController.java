@@ -3,24 +3,21 @@ package org.zerock.projects.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.ProductionOrder;
-import org.zerock.projects.domain.OrderStatus;  // OrderStatus import 추가
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,29 +87,6 @@ public class ProductionOrderController {
         return "redirect:/orders/productionorder";
     }
 
-    // 주문 생성
-    @PostMapping("/create")
-    public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
-        log.info("Received new order: {}", orderDTO);
-
-        // orderDTO에서 orderStatus 값이 Enum 값이라면 바로 사용
-        OrderStatus orderStatus = orderDTO.getOrderStatus();
-
-        // DTO -> Entity 변환
-        ProductionOrder productionOrder = orderDTO.toEntity();
-        productionOrder.setOrderStatus(orderStatus);
-
-        // DB에 저장
-        ProductionOrder savedOrder = productionOrderRepository.save(productionOrder);
-
-        // 저장된 주문을 DTO로 변환 후 반환
-        ProductionOrderDTO savedOrderDTO = ProductionOrderDTO.fromEntity(savedOrder);
-
-        // 성공적으로 저장된 주문 정보 반환
-        ResponseEntity.ok(savedOrderDTO);
-        return "redirect:/orders/productionorder";
-    }
-
     @PostMapping("/remove")
     public String removeOrder(Long id, RedirectAttributes redirectAttributes) {
         log.info("Order to delete with ID: {}", id);
@@ -124,4 +98,28 @@ public class ProductionOrderController {
         return "redirect:/orders/productionorder";
     }
 
+    @GetMapping("/productionorder/{orderId}")
+    public String read(@PathVariable Long orderId, Model model) {
+        ProductionOrderDTO productionOrderDTO = productionOrderService.readOne(orderId);
+
+        log.info(productionOrderDTO);
+
+        model.addAttribute("poread", productionOrderDTO);
+        return "poread";
+    }
+
+    // 수정 페이지로 이동하는 메소드
+    @GetMapping("/modify/{orderId}")
+    public String modifyOrder(@PathVariable Long orderId, Model model) {
+        ProductionOrder productionOrder = productionOrderService.getOrderById(orderId);
+        ProductionOrderDTO productionOrderDTO = ProductionOrderDTO.fromEntity(productionOrder);
+        model.addAttribute("poread", productionOrderDTO);
+        return "modify";
+    }
+
+    @PostMapping("/modify/{orderId}")
+    public String updateOrder(@PathVariable Long orderId, @ModelAttribute ProductionOrderDTO orderDTO) {
+        productionOrderService.updateOrder(orderId, orderDTO);
+        return "redirect:/orders/productionorder/" + orderId;  // 수정된 주문 상세 페이지로 리디렉션
+    }
 }

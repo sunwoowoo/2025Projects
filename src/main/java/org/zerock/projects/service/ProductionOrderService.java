@@ -31,6 +31,13 @@ public class ProductionOrderService {
     @Autowired
     private ProductionOrderRepository productionOrderRepository;
 
+    public ProductionOrderDTO readOne(Long orderId){
+        ProductionOrder order = productionOrderRepository.findById(orderId)
+                .orElseThrow(()-> new RuntimeException("Order not found with ID:"+ orderId));
+
+        return ProductionOrderDTO.fromEntity(order);
+    }
+
     private void createTasksForProcess(Process process) {
         List<TaskType> taskTypes = TaskType.getTasksForProcess(process);
 
@@ -75,5 +82,33 @@ public class ProductionOrderService {
     //팝업주문 저장
     public void saveOrder(ProductionOrder productionOrder){
         productionOrderRepository.save(productionOrder);
+    }
+
+    // 수정페이지 save 메소드 추가
+    public ProductionOrder save(ProductionOrder order) {
+        return productionOrderRepository.save(order);  // JpaRepository의 save 메소드 사용
+    }
+
+    // 주문 ID로 주문 조회
+    public ProductionOrder getOrderById(Long id) {
+        return productionOrderRepository.findById(id).orElse(null);  // ID에 해당하는 주문을 찾고, 없으면 null 반환
+    }
+
+    public void updateOrder(Long orderId, ProductionOrderDTO orderDTO) {
+        // 주문을 ID로 찾아오기
+        ProductionOrder order = productionOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // 주문 정보 업데이트
+        order.setCarModel(orderDTO.getCarModel());
+        order.setOrderStatus(orderDTO.getOrderStatus());
+        order.setProcessType(orderDTO.getProcessType());
+        order.setProgress(orderDTO.getProgress());
+        order.setQuantity(orderDTO.getQuantity());
+        order.setStartDate(orderDTO.getStartDate());
+        order.setEndDate(orderDTO.getEndDate());
+
+        // 수정된 주문 저장
+        productionOrderRepository.save(order);
     }
 }

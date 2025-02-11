@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 수정 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <h1>주문 수정</h1>
+    </div>
+</header>
+<form th:action="@{/modify/{orderId}(orderId=${poread.id})}" method="post">
+    <table>
+        <tr>
+            <th>MODEL</th>
+            <td>
+                <input type="text" name="carModel" th:value="${poread.carModel}" required>
+            </td>
+        </tr>
+        <tr>
+            <th>ORDER STATUS</th>
+            <td>
+                <input type="text" name="orderStatus" th:value="${poread.orderStatus}" required>
+            </td>
+        </tr>
+        <tr>
+            <th>PROCESS TYPE</th>
+            <td>
+                <input type="text" name="processType" th:value="${poread.processType}" required>
+            </td>
+        </tr>
+        <tr>
+            <th>PROGRESS</th>
+            <td>
+                <input type="text" name="progress" th:value="${poread.progress}" required>
+            </td>
+        </tr>
+        <tr>
+            <th>QUANTITY</th>
+            <td>
+                <input type="number" name="quantity" th:value="${poread.quantity}" required>
+            </td>
+        </tr>
+        <tr>
+            <th>STARTDATE</th>
+            <td>
+                <input type="date" name="startDate" th:value="${poread.startDate}" required>
+            </td>
+        </tr>
+        <tr>
+            <th>ENDDATE</th>
+            <td>
+                <input type="date" name="endDate" th:value="${poread.endDate}" required>
+            </td>
+        </tr>
+    </table>
+    <div class="btn">
+        <input type="submit" value="Save Changes">
+    </div>
+</form>
+<div class="btn">
+    <input type="button" value="Back" onclick="window.history.back()">
+</div>
+</body>
+</html>
