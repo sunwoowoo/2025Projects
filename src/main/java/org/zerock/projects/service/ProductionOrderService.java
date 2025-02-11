@@ -1,26 +1,30 @@
 package org.zerock.projects.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
+import org.zerock.projects.domain.machines.TaskType;
+import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.domain.machines.TaskType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Log4j2
 @Service
 @Transactional
 public class ProductionOrderService {
+    private final ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     private ProcessRepository processRepository;
 
@@ -66,25 +70,13 @@ public class ProductionOrderService {
         }
     }
 
-    public List<ProductionOrder> getAllOrders() {
-        List<ProductionOrder> result = productionOrderRepository.findAll();
-        result.forEach(order -> log.info(order));
-        return result;
+    public Page<ProductionOrder> getAllOrders(Pageable pageable) {
+        return productionOrderRepository.findAll(pageable);
     }
 
-    public void createOrders() {
-        Random random = new Random();
-        List<ProductionOrder> orders = IntStream.range(0, 10)
-                .mapToObj(i -> ProductionOrder.builder()
-                        .carModel("Model " + (char)('A' + i % 3))
-                        .quantity(random.nextInt(50) + 1)
-                        .orderStatus(null)
-                        .processType(null)
-                        .startDate(null)
-                        .endDate(null)
-                        .progress(0.0)
-                        .build())
-                .collect(Collectors.toList());
+    // 주문 삭제
+    public void removeOrder(Long id) {
+        productionOrderRepository.deleteById(id);
     }
 
     //팝업주문 저장
@@ -92,5 +84,31 @@ public class ProductionOrderService {
         productionOrderRepository.save(productionOrder);
     }
 
+    // 수정페이지 save 메소드 추가
+    public ProductionOrder save(ProductionOrder order) {
+        return productionOrderRepository.save(order);  // JpaRepository의 save 메소드 사용
+    }
 
+    // 주문 ID로 주문 조회
+    public ProductionOrder getOrderById(Long id) {
+        return productionOrderRepository.findById(id).orElse(null);  // ID에 해당하는 주문을 찾고, 없으면 null 반환
+    }
+
+    public void updateOrder(Long orderId, ProductionOrderDTO orderDTO) {
+        // 주문을 ID로 찾아오기
+        ProductionOrder order = productionOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // 주문 정보 업데이트
+        order.setCarModel(orderDTO.getCarModel());
+        order.setOrderStatus(orderDTO.getOrderStatus());
+        order.setProcessType(orderDTO.getProcessType());
+        order.setProgress(orderDTO.getProgress());
+        order.setQuantity(orderDTO.getQuantity());
+        order.setStartDate(orderDTO.getStartDate());
+        order.setEndDate(orderDTO.getEndDate());
+
+        // 수정된 주문 저장
+        productionOrderRepository.save(order);
+    }
 }

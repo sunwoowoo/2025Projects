@@ -3,41 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>주문 상세 페이지</title>
-    <style>
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: silver;
-            border-radius: 5px;
-            height: 50px;
-            color: white;
-        }
-
-        table {
-            border: 1px solid black;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        th, td {
-            border: 1px solid black;
-            width: 50%;
-            height: 80px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        p {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
 </head>
 <body>
 <header>
     <div class="topbar">
         <h1>주문 상세</h1>
     </div>
+</header>
     <table>
         <tr>
             <th>MODEL</th>
@@ -68,6 +42,18 @@
             <td th:text="${poread.endDate}"></td> <!-- poread.endDate -->
         </tr>
     </table>
-    <p><a href="/orders/productionorder">주문 목록으로 돌아가기</a></p>
+<form>
+    <div class="btn">
+        <button type="button" class="btn-class modify-btn"
+                th:data-id="${poread.id}"
+                onclick="window.location.href='/orders/modify/' + this.getAttribute('data-id');">Modify</button>
+        <button type="button" class="btn-class delete-btn" th:data-id="${poread.id}">Delete</button>
+        <button type="button" class="btn-class back-btn" onclick="window.history.back();">Back</button>
+    </div>
+</form>
+
+<script>
+
+</script>
 </body>
 </html>

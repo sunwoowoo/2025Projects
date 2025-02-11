@@ -1,7 +1,9 @@
 package org.zerock.projects.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductionOrderDTO {
     private Long id;
     private String carModel;
@@ -39,14 +43,4 @@ public class ProductionOrderDTO {
                 .build();
         return dto;
     }
-
-    // toEntity 메소드 추가: DTO를 엔티티로 변환
-    public ProductionOrder toEntity() {
-        return ProductionOrder.builder()
-                .carModel(this.carModel)
-                .quantity(this.quantity)
-                .orderStatus(this.orderStatus)
-                .build();
-    }
-
 }
