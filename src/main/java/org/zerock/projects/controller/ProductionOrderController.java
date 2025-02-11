@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.ProductionOrder;
-import org.zerock.projects.domain.OrderStatus;  // OrderStatus import 추가
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
@@ -20,7 +18,6 @@ import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
