@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세 페이지</title>
+    <style>
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: silver;
+            border-radius: 5px;
+            height: 50px;
+            color: white;
+        }
+
+        table {
+            border: 1px solid black;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            width: 50%;
+            height: 80px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <h1>주문 상세</h1>
+    </div>
+    <table>
+        <tr>
+            <th>MODEL</th>
+            <td th:text="${poread.carModel}"></td> <!-- poread.carModel -->
+        </tr>
+        <tr>
+            <th>ORDER STATUS</th>
+            <td th:text="${poread.orderStatus}"></td> <!-- poread.orderStatus -->
+        </tr>
+        <tr>
+            <th>PROCESS TYPE</th>
+            <td th:text="${poread.processType}"></td> <!-- poread.processType -->
+        </tr>
+        <tr>
+            <th>PROGRESS</th>
+            <td th:text="${poread.progress}"></td> <!-- poread.progress -->
+        </tr>
+        <tr>
+            <th>QUANTITY</th>
+            <td th:text="${poread.quantity}"></td> <!-- poread.quantity -->
+        </tr>
+        <tr>
+            <th>STARTDATE</th>
+            <td th:text="${poread.startDate}"></td> <!-- poread.startDate -->
+        </tr>
+        <tr>
+            <th>ENDDATE</th>
+            <td th:text="${poread.endDate}"></td> <!-- poread.endDate -->
+        </tr>
+    </table>
+    <p><a href="/orders/productionorder">주문 목록으로 돌아가기</a></p>
+</body>
+</html>
