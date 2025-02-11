@@ -84,7 +84,7 @@ public class ProductionOrderController {
         log.info("Order found: {} : {}", orderId, order);
         simulator.simulateProductionOrder(order);
         log.info("Simulation completed");
-        return "/orders/productionorder";
+        return "redirect:/orders/productionorder";
     }
 
     @GetMapping("/productionorder/{orderId}")
