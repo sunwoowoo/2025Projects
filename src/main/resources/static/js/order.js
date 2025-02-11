@@ -99,8 +99,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // 아무 화면 누를 시 선택 해제
     window.addEventListener('click', function(event) {
-        // Deselect all rows
+        // 모든 행 비선택
         selectedRows.forEach(row => row.classList.remove('selected'));
         selectedRows = [];
         console.log("Selected Rows Cleared:", selectedRows);

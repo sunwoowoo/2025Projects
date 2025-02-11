@@ -1,3 +1,11 @@
+/* 검색, 주문접수, 삭제 버튼 div */
+.navigator {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 5px;
+}
+
 /* 팝업 기본 스타일 */
 .popup {
     position: fixed;
@@ -7,6 +15,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;  /* 기본적으로 숨김 */
+    z-index: 10;
 }
 
 /* 팝업 내용 */
@@ -168,6 +177,18 @@ form button:hover {
     font-weight: bold;
 }
 
+#btnForm {
+    width: 200px;
+    height: 49px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#btnForm > .btn-group > #orderBtn {
+    width: 190px;
+}
+
 .board-table > tbody > tr.selected {
     background-color: royalblue !important;
     color: white;
@@ -191,6 +212,7 @@ form button:hover {
     font-weight: bold;
     border-radius: 10px;
     transition: width 0.5s ease-in-out;
+    z-index: 1;
     position: absolute;
     left: 0;
     top: 0;
