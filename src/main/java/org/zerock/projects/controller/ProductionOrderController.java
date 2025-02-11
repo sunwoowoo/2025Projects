@@ -87,30 +87,17 @@ public class ProductionOrderController {
         log.info("Order found: {} : {}", orderId, order);
         simulator.simulateProductionOrder(order);
         log.info("Simulation completed");
-        return "redirect:/orders/productionorder";
+        return "/orders/productionorder";
     }
 
-    // 주문 생성
-    @PostMapping("/create")
-    public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
-        log.info("Received new order: {}", orderDTO);
+    @GetMapping("/productionorder/{orderId}")
+    public String read(@PathVariable Long orderId, Model model){
+        ProductionOrderDTO productionOrderDTO = productionOrderService.readOne(orderId);
 
-        // orderDTO에서 orderStatus 값이 Enum 값이라면 바로 사용
-        OrderStatus orderStatus = orderDTO.getOrderStatus();
+        log.info(productionOrderDTO);
 
-        // DTO -> Entity 변환
-        ProductionOrder productionOrder = orderDTO.toEntity();
-        productionOrder.setOrderStatus(orderStatus);
-
-        // DB에 저장
-        ProductionOrder savedOrder = productionOrderRepository.save(productionOrder);
-
-        // 저장된 주문을 DTO로 변환 후 반환
-        ProductionOrderDTO savedOrderDTO = ProductionOrderDTO.fromEntity(savedOrder);
-
-        // 성공적으로 저장된 주문 정보 반환
-        ResponseEntity.ok(savedOrderDTO);
-        return "redirect:/orders/productionorder";
+        model.addAttribute("poread",productionOrderDTO);
+        return "poread";
     }
 
     @PostMapping("/remove")
