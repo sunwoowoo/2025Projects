@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductionOrderRepository extends JpaRepository<ProductionOrder, Long> {
     //  특정 차량 모델, 공정 타입, 진행률을 기준으로 조회
@@ -28,4 +27,7 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     //  특정 키워드가 포함된 차량 모델을 검색 (LIKE 사용)
     @Query("SELECT b FROM ProductionOrder b WHERE b.carModel LIKE CONCAT('%', :keyword, '%')")
     Page<ProductionOrder> findKeyword(@Param("keyword") String keyword, Pageable pageable);
+    // 주문 상태에 따라 검색
+    @Query("SELECT b FROM ProductionOrder b WHERE b.orderStatus IN :orderStatus")
+    Page<ProductionOrder> findByOrderStatus(@Param("orderStatus") List<OrderStatus> orderStatus, Pageable pageable);
 }
