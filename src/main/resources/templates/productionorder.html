@@ -75,7 +75,11 @@
         <tbody>
         <tr th:each="order, stat : ${orders}">
             <td th:text="${order.id}"></td>
-            <td><a href="#" th:text="${order.carModel}"></a></td>
+            <td>
+                <a th:href="@{/orders/productionorder/{orderId}(orderId=${order.id})}"
+                   th:text="${order.carModel}">
+                </a>
+            </td>
             <td th:text="${order.orderStatus}"></td>
             <td th:text="${order.processType}"></td>
             <td class="progress-cell">
@@ -83,8 +87,8 @@
                     <div class="progress-bar"
                          th:style="'width:' + ${order.progress} + '%; background-color:' + (${order.progress} < 50 ? 'red' : 'green')">
                     </div>
+                    <span class="progress-bar-text" th:text="${order.progress} + '%'"></span>
                 </div>
-                <span class="progress-text" th:text="${order.progress} + '%'"</span>
             </td>
             <td th:text="${order.quantity}"></td>
             <td th:text="${order.startDate}"></td>

@@ -3,12 +3,10 @@ package org.zerock.projects.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.projects.domain.ProductionOrder;
-import org.zerock.projects.domain.OrderStatus;  // OrderStatus import 추가
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
@@ -49,29 +47,16 @@ public class ProductionOrderController {
         log.info("Order found: {} : {}", orderId, order);
         simulator.simulateProductionOrder(order);
         log.info("Simulation completed");
-        return "redirect:/orders/productionorder";
+        return "/orders/productionorder";
     }
 
-    @PostMapping("/create")
-    public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
-        log.info("Received new order: {}", orderDTO);
+    @GetMapping("/productionorder/{orderId}")
+    public String read(@PathVariable Long orderId, Model model){
+        ProductionOrderDTO productionOrderDTO = productionOrderService.readOne(orderId);
 
-        // orderDTO에서 orderStatus 값이 Enum 값이라면 바로 사용
-        OrderStatus orderStatus = orderDTO.getOrderStatus();
+        log.info(productionOrderDTO);
 
-        // DTO -> Entity 변환
-        ProductionOrder productionOrder = orderDTO.toEntity();
-        productionOrder.setOrderStatus(orderStatus);
-
-        // DB에 저장
-        ProductionOrder savedOrder = productionOrderRepository.save(productionOrder);
-
-        // 저장된 주문을 DTO로 변환 후 반환
-        ProductionOrderDTO savedOrderDTO = ProductionOrderDTO.fromEntity(savedOrder);
-
-        // 성공적으로 저장된 주문 정보 반환
-        ResponseEntity.ok(savedOrderDTO);
-        return "redirect:/orders/productionorder";
+        model.addAttribute("poread",productionOrderDTO);
+        return "poread";
     }
-
 }

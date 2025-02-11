@@ -167,3 +167,39 @@ form button:hover {
     border-radius: 5px;
     font-weight: bold;
 }
+
+/* 프로그래스 바 컨테이너 */
+.progress-bar-container {
+    width: 100%; /* 프로그레스 바의 너비 */
+    height: 15px; /* 프로그레스 바의 높이 */
+    background-color: #ddd; /* 배경색 */
+    border-radius: 10px;
+    overflow: hidden; /* 바 안으로 텍스트가 넘어가지 않도록 */
+    position: relative;
+}
+
+/* 프로그래스 바 */
+.progress-bar {
+    height: 100%;
+    text-align: center;
+    line-height: 20px; /* 텍스트가 세로로 중앙에 오도록 설정 */
+    font-weight: bold;
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* 프로그래스 바 안의 텍스트 */
+.progress-bar-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    line-height: 20px; /* 텍스트 세로 정렬 */
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    z-index: 1; /* 프로그레스 바 위에 텍스트가 오도록 설정 */
+    overflow: hidden; /* 텍스트가 길어질 경우 잘리도록 */
+}

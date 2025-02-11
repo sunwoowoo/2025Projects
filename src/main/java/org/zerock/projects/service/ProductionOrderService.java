@@ -27,6 +27,13 @@ public class ProductionOrderService {
     @Autowired
     private ProductionOrderRepository productionOrderRepository;
 
+    public ProductionOrderDTO readOne(Long orderId){
+        ProductionOrder order = productionOrderRepository.findById(orderId)
+                .orElseThrow(()-> new RuntimeException("Order not found with ID:"+ orderId));
+
+        return ProductionOrderDTO.fromEntity(order);
+    }
+
     private void createTasksForProcess(Process process) {
         List<TaskType> taskTypes = TaskType.getTasksForProcess(process);
 
@@ -84,4 +91,6 @@ public class ProductionOrderService {
     public void saveOrder(ProductionOrder productionOrder){
         productionOrderRepository.save(productionOrder);
     }
+
+
 }
