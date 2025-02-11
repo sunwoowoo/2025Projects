@@ -81,12 +81,14 @@ document.addEventListener("DOMContentLoaded", function() {
     //행 선택 동작
     document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
         row.addEventListener("click", function(event) {
+            event.stopPropagation();
             //단일행 선택 동작
             if (selectedRows.includes(this)) {
                 //선택 해제
                 selectedRows = selectedRows.filter(r => r != this);
                 this.classList.remove('selected');
                 console.log("selected Rows", selectedRows);
+
             } else {
                 //행 선택
                 selectedRows.forEach(r => r.classList.remove('selected'));
@@ -95,6 +97,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("selected Rows", this);
             }
         });
+    });
+
+    window.addEventListener('click', function(event) {
+        // Deselect all rows
+        selectedRows.forEach(row => row.classList.remove('selected'));
+        selectedRows = [];
+        console.log("Selected Rows Cleared:", selectedRows);
     });
 
     // 행 삭제 버튼
