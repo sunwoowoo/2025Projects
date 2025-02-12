@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const orderForm = document.getElementById('orderForm');
     const orderTable = document.querySelector('.board-table tbody');
     const deleteBtn = document.getElementById('deleteBtn');
+    const graphBtn = document.getElementById('graphBtn');
+    const graphPopup = document.getElementById('graphPopup');
     let selectedRows = [];
     const btnForm = document.querySelector('#btnForm');
 
@@ -12,6 +14,11 @@ document.addEventListener("DOMContentLoaded", function() {
     orderBtn.addEventListener('click', function(event) {
         event.preventDefault();
         orderPopup.style.display = 'block';  // 팝업 표시
+    });
+
+    // 그래프 버튼 클릭 시 팝업 열기
+    graphBtn.addEventListener('click', function(event) {
+        graphPopup.style.display = 'block'; //팝업 표시
     });
 
     // 취소 버튼 클릭 시 팝업 닫기
@@ -23,6 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener('click', function(event) {
         if (event.target === orderPopup) {
             orderPopup.style.display = 'none';  // 팝업 외부 클릭 시 팝업을 닫기
+        }
+        if (event.target === graphPopup) {
+            graphPopup.style.display = 'none';
         }
     });
 

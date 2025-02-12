@@ -2,6 +2,7 @@
 .navigator {
     display: flex;
     justify-content: center;
+    align-items: flex-end;
     gap: 30px;
     margin: 5px;
 }
@@ -86,7 +87,7 @@ form input, form select {
 
 /* 버튼 스타일 */
 form button {
-    width: 100%; /* 버튼도 너비에 맞게 설정 */
+    width: 33%; /* 버튼도 너비에 맞게 설정 */
     padding: 10px;
     background-color: #4CAF50;
     color: white;
@@ -186,7 +187,7 @@ form button:hover {
 }
 
 #btnForm {
-    width: 200px;
+    width: 300px;
     height: 49px;
     display: flex;
     /* justify-content: center; */
