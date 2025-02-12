@@ -47,7 +47,7 @@
         </form>
 
         <!--  주문 접수, 삭제 버튼 폼  -->
-        <form id="btnForm", method="post">
+        <form id="btnForm">
             <div>
                 <input type="hidden" name="id" id="orderId">
                 <button id="orderBtn">주문 접수</button>
@@ -62,7 +62,7 @@
             <div class="popup-title">
                 <h3>주문 추가</h3>
             </div>
-            <form id="orderForm" method="post" action="/orders/create">
+            <form id="orderForm" action="/orders/create" method="post">
                 <div class="form-group">
                     <label for="carModel">Model:</label>
                     <input type="text" id="carModel" name="carModel" required>

@@ -47,6 +47,7 @@ public class ProductionOrderSearch {
         return productionOrderRepository.findKeyword(keyword, pageable);
     }
 
+    // 주문 현황에 따라 검색
     public Page<ProductionOrder> searchByStatus(List<OrderStatus> orderStatuses, Pageable pageable) {
         return productionOrderRepository.findByOrderStatus(orderStatuses, pageable);
     }

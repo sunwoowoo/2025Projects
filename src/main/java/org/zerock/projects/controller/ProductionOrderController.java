@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.OrderStatus;
@@ -19,7 +21,10 @@ import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -113,4 +118,20 @@ public class ProductionOrderController {
         return "redirect:/orders/productionorder";
     }
 
+    @PostMapping("/create")
+    public String createOrder(@Valid ProductionOrder productionOrder, BindingResult  bindingResult
+    , RedirectAttributes redirectAttributes) {
+        log.info("productionorder POST create..........");
+
+        if(bindingResult.hasErrors()) {
+            log.info("has errors..............");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/orders/create";
+        }
+
+        log.info("ProductionOrder: {}", productionOrder);
+        productionOrderService.saveOrder(productionOrder);
+
+        return "redirect:/orders/productionorder";
+    }
 }
