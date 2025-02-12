@@ -134,4 +134,9 @@ public class ProductionOrderController {
 
         return "redirect:/orders/productionorder";
     }
+
+    @GetMapping("/productiongraph")
+    public String showGraph() {
+        return "productiongraph";
+    }
 }

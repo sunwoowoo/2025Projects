@@ -253,3 +253,7 @@ nav {
     justify-content: center;
     margin-top: 15px;
 }
+
+#graphPopup > #container {
+    height: 400px;
+}
