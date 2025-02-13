@@ -135,21 +135,6 @@ public class ProductionOrderController {
         return "redirect:/orders/productionorder";
     }
 
-    @GetMapping("/productiongraph")
-    public String showGraph(Model model) {
-        log.info("showing graph");
-
-        List<ProductionOrder> orders = productionOrderService.getAllOrdersAsEntity();
-
-        // Convert to DTOs or create a specific graph data structure
-        List<ProductionOrderDTO> orderDTOs = orders.stream()
-                .map(ProductionOrderDTO::fromEntity)
-                .collect(Collectors.toList());
-
-        model.addAttribute("orders", orderDTOs);
-        return "productiongraph";
-    }
-
     @GetMapping("/api/productiongraph")
     @ResponseBody
     public List<ProductionOrderDTO> getGraphData() {
