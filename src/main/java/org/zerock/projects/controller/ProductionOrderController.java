@@ -111,15 +111,26 @@ public class ProductionOrderController {
     // 수정 페이지로 이동하는 메소드
     @GetMapping("/modify/{orderId}")
     public String modifyOrder(@PathVariable Long orderId, Model model) {
-        ProductionOrder productionOrder = productionOrderService.getOrderById(orderId);
-        ProductionOrderDTO productionOrderDTO = ProductionOrderDTO.fromEntity(productionOrder);
-        model.addAttribute("poread", productionOrderDTO);
-        return "modify";
+        try {
+            ProductionOrder productionOrder = productionOrderService.getOrderById(orderId);
+            ProductionOrderDTO productionOrderDTO = ProductionOrderDTO.fromEntity(productionOrder);
+            model.addAttribute("poread", productionOrderDTO);
+            return "modify";
+        } catch (Exception e) {
+            log.error("Error occurred while fetching order with ID: {}", orderId, e);
+            return "error"; // error.html로 페이지를 리턴하거나 적절한 처리를 합니다.
+        }
     }
 
     @PostMapping("/modify/{orderId}")
     public String updateOrder(@PathVariable Long orderId, @ModelAttribute ProductionOrderDTO orderDTO) {
-        productionOrderService.updateOrder(orderId, orderDTO);
-        return "redirect:/orders/productionorder/" + orderId;  // 수정된 주문 상세 페이지로 리디렉션
+        try {
+            // 모델과 수량만 수정하도록 처리
+            productionOrderService.updateOrder(orderId, orderDTO);
+            return "redirect:/orders/productionorder/" + orderId;
+        } catch (Exception e) {
+            log.error("Error while updating order: ", e);
+            return "error"; // 예외 발생 시 error 페이지로 리디렉션
+        }
     }
 }

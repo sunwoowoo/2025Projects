@@ -12,48 +12,48 @@
         <h1>주문 상세</h1>
     </div>
 </header>
-    <table>
-        <tr>
-            <th>MODEL</th>
-            <td th:text="${poread.carModel}"></td> <!-- poread.carModel -->
-        </tr>
-        <tr>
-            <th>ORDER STATUS</th>
-            <td th:text="${poread.orderStatus}"></td> <!-- poread.orderStatus -->
-        </tr>
-        <tr>
-            <th>PROCESS TYPE</th>
-            <td th:text="${poread.processType}"></td> <!-- poread.processType -->
-        </tr>
-        <tr>
-            <th>PROGRESS</th>
-            <td th:text="${poread.progress}"></td> <!-- poread.progress -->
-        </tr>
-        <tr>
-            <th>QUANTITY</th>
-            <td th:text="${poread.quantity}"></td> <!-- poread.quantity -->
-        </tr>
-        <tr>
-            <th>STARTDATE</th>
-            <td th:text="${poread.startDate}"></td> <!-- poread.startDate -->
-        </tr>
-        <tr>
-            <th>ENDDATE</th>
-            <td th:text="${poread.endDate}"></td> <!-- poread.endDate -->
-        </tr>
-    </table>
-<form>
-    <div class="btn">
-        <button type="button" class="btn-class modify-btn"
-                th:data-id="${poread.id}"
-                onclick="window.location.href='/orders/modify/' + this.getAttribute('data-id');">Modify</button>
-        <button type="button" class="btn-class delete-btn" th:data-id="${poread.id}">Delete</button>
-        <button type="button" class="btn-class back-btn" onclick="window.history.back();">Back</button>
-    </div>
-</form>
+<table>
+    <tr>
+        <th>MODEL</th>
+        <td th:text="${poread.carModel}"></td>
+    </tr>
+    <tr>
+        <th>ORDER STATUS</th>
+        <td th:text="${poread.orderStatus}"></td>
+    </tr>
+    <tr>
+        <th>PROCESS TYPE</th>
+        <td th:text="${poread.processType}"></td>
+    </tr>
+    <tr>
+        <th>PROGRESS</th>
+        <td th:text="${poread.progress}"></td>
+    </tr>
+    <tr>
+        <th>QUANTITY</th>
+        <td th:text="${poread.quantity}"></td>
+    </tr>
+    <tr>
+        <th>STARTDATE</th>
+        <td th:text="${poread.startDate}"></td>
+    </tr>
+    <tr>
+        <th>ENDDATE</th>
+        <td th:text="${poread.endDate}"></td>
+    </tr>
+</table>
 
-<script>
+<div class="btn">
+    <!-- Modify 버튼은 <a> 태그로 대체하여 GET 방식으로 페이지 이동 -->
+    <a th:href="@{/orders/modify/{orderId}(orderId=${poread.id})}" class="btn-class modify-btn">Modify</a>
 
-</script>
+    <!-- Delete 버튼은 POST 방식으로 처리 -->
+    <form method="post" th:action="@{/orders/remove}">
+        <input type="hidden" name="id" th:value="${poread.id}"/> <!-- 삭제할 주문 ID -->
+        <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
+
+    <button type="button" class="btn-class back-btn" onclick="window.location.href='/orders/productionorder';">Back</button>
+</div>
 </body>
 </html>

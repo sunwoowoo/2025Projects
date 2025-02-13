@@ -75,8 +75,9 @@ public class ProductionOrderService {
     }
 
     // 주문 삭제
+    @Transactional
     public void removeOrder(Long id) {
-        productionOrderRepository.deleteById(id);
+         productionOrderRepository.deleteById(id);
     }
 
     //팝업주문 저장
@@ -94,21 +95,15 @@ public class ProductionOrderService {
         return productionOrderRepository.findById(id).orElse(null);  // ID에 해당하는 주문을 찾고, 없으면 null 반환
     }
 
+    @Transactional
     public void updateOrder(Long orderId, ProductionOrderDTO orderDTO) {
         // 주문을 ID로 찾아오기
         ProductionOrder order = productionOrderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new RuntimeException("Order not found:"+ orderId));
 
-        // 주문 정보 업데이트
+        // 주문 정보 업데이트 (carModel , quantity)
         order.setCarModel(orderDTO.getCarModel());
-        order.setOrderStatus(orderDTO.getOrderStatus());
-        order.setProcessType(orderDTO.getProcessType());
-        order.setProgress(orderDTO.getProgress());
         order.setQuantity(orderDTO.getQuantity());
-        order.setStartDate(orderDTO.getStartDate());
-        order.setEndDate(orderDTO.getEndDate());
 
-        // 수정된 주문 저장
-        productionOrderRepository.save(order);
     }
 }
