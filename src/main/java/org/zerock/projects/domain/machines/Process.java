@@ -16,12 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@ToString(exclude = "productionOrder")
 public class Process {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_order_id")
     private ProductionOrder productionOrder;
 
