@@ -75,15 +75,8 @@ public class ProductionOrderService {
         return productionOrderRepository.findAll(pageable);
     }
 
-    public List<ProductionOrderDTO> getAllOrdersAsDTO(Pageable pageable) {
-        return productionOrderRepository.findAll(pageable)
-                .stream()
-                .map(order -> new ProductionOrderDTO(
-                        order.getCarModel(),
-                        order.getQuantity(),
-                        order.getOrderStatus()
-                ))
-                .collect(Collectors.toList());
+    public List<ProductionOrder> getAllOrdersAsEntity() {
+        return productionOrderRepository.findAll();
     }
 
     // 주문 삭제

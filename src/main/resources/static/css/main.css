@@ -248,12 +248,24 @@ form button:hover {
     overflow: hidden; /* 텍스트가 길어질 경우 잘리도록 */
 }
 
+/* 검색, 주문접수, 삭제, 그래프 버튼 영역 */
 nav {
     display: flex;
     justify-content: center;
     margin-top: 15px;
 }
 
-#graphPopup > #container {
-    height: 400px;
+/* 그래프 팝업 크기 설정 */
+#graphPopup > .popup-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    height: 85%
+}
+
+#graphPopup > .popup-content > #container {
+    width: 100%;
+    height: 90%;
 }

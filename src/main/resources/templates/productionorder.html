@@ -95,17 +95,12 @@
     <div id="graphPopup" class="popup" style="display: none;">
         <div class="popup-content">
             <div class="popup-title">
-                <h3>기간별 생산량</h3>
+                <h3>모델별 주문량</h3>
             </div>
             <div id="container">
-
             </div>
         </div>
     </div>
-
-    <!-- Hidden div to store data -->
-    <div id="productionOrderData" style="display: none;"
-         th:data-orders="${orders}"></div>
 
     <table class="board-table">
         <thead>
@@ -173,5 +168,39 @@
     </nav>
 </main>
 <script th:src="@{/js/order.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+   var orderData = /*[[${orders}]]*/ [];
+   /*]]>*/
+
+   window.createGraph = function() {
+       const categories = orderData.map(order => order.carModel);
+       const quantities = orderData.map(order => order.quantity);
+
+       Highcharts.chart('container', {
+           chart: {
+               type: 'bar'
+           },
+           title: {
+               text: '모델별 주문량'
+           },
+           xAxis: {
+               categories: categories,
+               title: {
+                   text: '차량 모델'
+               }
+           },
+           yAxis: {
+               title: {
+                   text: '주문량'
+               }
+           },
+           series: [{
+               name: '주문량',
+               data: quantities
+           }]
+       });
+   };
+</script>
 </body>
 </html>

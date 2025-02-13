@@ -18,7 +18,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 그래프 버튼 클릭 시 팝업 열기
     graphBtn.addEventListener('click', function(event) {
-        graphPopup.style.display = 'block'; //팝업 표시
+        graphPopup.style.display = 'block';
+        fetch('/orders/api/productiongraph')
+            .then(response => response.json())
+            .then(data => {
+                orderData = data;
+                createGraph();
+            })
+            .catch(error => console.error('Error loading graph data:', error));
     });
 
     // 취소 버튼 클릭 시 팝업 닫기
