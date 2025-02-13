@@ -86,6 +86,22 @@ public class ProductionOrderController {
         log.info("Simulation completed");
         return "/orders/productionorder";
     }
+    // 주문 생성
+    @PostMapping("/create")
+    public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
+        log.info("Received new order: {}", orderDTO);
+    }
+
+    @GetMapping("/productionorder/{orderId}")
+    public String read(@PathVariable Long orderId, Model model){
+        ProductionOrderDTO productionOrderDTO = productionOrderService.readOne(orderId);
+
+        log.info(productionOrderDTO);
+
+        model.addAttribute("poread",productionOrderDTO);
+        return "poread";
+    }
+
 
     @PostMapping("/remove")
     public String removeOrder(Long id, RedirectAttributes redirectAttributes) {

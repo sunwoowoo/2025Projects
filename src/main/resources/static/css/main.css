@@ -261,6 +261,11 @@ header {
     font-weight: bold;
 }
 
+.board-table > tbody > tr.selected {
+    background-color: royalblue !important;
+    color: white;
+}
+
 /* 프로그래스 바 컨테이너 */
 .progress-bar-container {
     width: 100%; /* 프로그레스 바의 너비 */
