@@ -14,11 +14,11 @@
 </head>
 <body>
 <header>
-    <div class="topbar">
+    <div class="t-bar">
         <nav class="menu">
             <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
             <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
-            <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
+            <a href="/materials" th:classappend="${#httpServletRequest.requestURI == '/materials' ? 'active' : ''}">자재관리</a>
         </nav>
     </div>
 </header>
@@ -139,7 +139,7 @@
             <td th:text="${order.endDate}"></td>
             <td>
                 <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
-                   th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
+                   th:href="@{/orders/simulate/{id}(id=${order.id})}">Simulate</a>
             </td>
         </tr>
         </tbody>
