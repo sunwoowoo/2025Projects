@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.ProductionOrder;
@@ -18,6 +19,8 @@ import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
+
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,26 +85,34 @@ public class ProductionOrderController {
         ProductionOrder order = productionOrderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         log.info("Order found: {} : {}", orderId, order);
+
+        // processType이 null일 경우 기본값 설정
+        if (order.getProcessType() == null) {
+            order.setProcessType(ProcessType.PRESSING); // 기본값을 PRESSING으로 설정
+        }
+
         simulator.simulateProductionOrder(order);
         log.info("Simulation completed");
-        return "/orders/productionorder";
+
+        return "redirect:/orders/productionorder"; // 리다이렉트 시 경로 수정
     }
     // 주문 생성
     @PostMapping("/create")
-    public String createOrder(@ModelAttribute ProductionOrderDTO orderDTO) {
-        log.info("Received new order: {}", orderDTO);
+    public String createOrder(@Valid ProductionOrder productionOrder, BindingResult bindingResult
+            , RedirectAttributes redirectAttributes) {
+        log.info("productionorder POST create..........");
+
+        if(bindingResult.hasErrors()) {
+            log.info("has errors..............");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/orders/create";
+        }
+
+        log.info("ProductionOrder: {}", productionOrder);
+        productionOrderService.saveOrder(productionOrder);
+
+        return "redirect:/orders/productionorder";
     }
-
-    @GetMapping("/productionorder/{orderId}")
-    public String read(@PathVariable Long orderId, Model model){
-        ProductionOrderDTO productionOrderDTO = productionOrderService.readOne(orderId);
-
-        log.info(productionOrderDTO);
-
-        model.addAttribute("poread",productionOrderDTO);
-        return "poread";
-    }
-
 
     @PostMapping("/remove")
     public String removeOrder(Long id, RedirectAttributes redirectAttributes) {
@@ -149,4 +160,14 @@ public class ProductionOrderController {
             return "error"; // 예외 발생 시 error 페이지로 리디렉션
         }
     }
+
+    @GetMapping("/api/productiongraph")
+    @ResponseBody
+    public List<ProductionOrderDTO> getGraphData() {
+        List<ProductionOrder> orders = productionOrderService.getAllOrdersAsEntity();
+        return orders.stream()
+                .map(ProductionOrderDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }

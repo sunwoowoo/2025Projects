@@ -8,52 +8,142 @@
     <title>홈</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+        #processTypeChart {
+            width: 100% !important;
+            height: 300px !important;
+            border: 1px solid black;
+            margin-bottom: 10px;
+            display: block; 
+        }
+
+        .merge {
+            display: flex !important;
+            justify-content: space-around !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+            margin: 0 auto !important;
+            width: 100% !important;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 공지사항 테이블 스타일 */
+        .notice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .notice-table th, .notice-table td {
+            border: 1px solid silver;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .notice-table th {
+            background-color: silver
+        }
+
+        .notice-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .notice-table tr:hover {
+            background-color: silver;
+        }
+    </style>
 </head>
 <body>
 <header>
-    <div class="topbar">
+    <div class="t-bar">
         <nav class="menu">
             <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
             <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
-            <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
+            <a href="/materials" th:classappend="${#httpServletRequest.requestURI == '/materials' ? 'active' : ''}">자재관리</a>
         </nav>
     </div>
 </header>
+<h3>Welcome, <span th:text="${userId}">User</span>!</h3>
 
-<h1>Board List</h1>
-<h2>Welcome, <span th:text="${userId}">User</span>!</h2>
-<table class="board-table">
+<!-- 그래프 영역 -->
+<div class="merge">
+    <div class="chart-container">
+        <canvas id="processTypeChart1"></canvas>  <!-- 첫 번째 그래프 표시 영역 -->
+        <h2>Process Type 분포</h2>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="processTypeChart2"></canvas>  <!-- 두 번째 그래프 표시 영역 -->
+        <h2>자재별 수량 분포</h2>
+    </div>
+</div>
+<hr>
+<!-- 공지사항 테이블 영역 -->
+<h2>공지사항</h2>
+<table class="notice-table">
     <thead>
     <tr>
-        <th>____ 번호___________ </th>
-        <th>___ _공정 (Assembly)_______ </th>
-        <th>___- 진행률____________ </th>
-        <th>____- 진행률 (막대 그래프)____ </th>
-        <th>___- 설명 </th>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="board, stat : ${boards}">
-        <td th:text="${stat.count}"></td>
-        <td>
-            <a th:href="@{/assembly/{ano}(ano=${board.assembly.Ano})}" th:text="${board.assembly.title}"></a>
-            <a th:href="@{/painting/{pno}(pno=${board.painting.Pno})}" th:text="${board.painting.title}"></a>
-        </td>
-        <td>
-            <span th:if="${board.assembly.atE and board.assembly.SM}" th:text="'100%'"></span>
-            <span th:if="${board.assembly.atE != board.assembly.SM}" th:text="'50%'"></span>
-            <span th:if="${!board.assembly.atE and !board.assembly.SM}" th:text="'0%'"></span>
-        </td>
-        <td>
-            <div class="progress-bar">
-                <div class="progress-fill"
-                     th:style="'width:' + (${board.assembly.atE and board.assembly.SM} ? '100%' :
-                                         (${board.assembly.atE != board.assembly.SM} ? '50%' : '0%'))"></div>
-            </div>
-        </td>
-        <td th:text="${board.cf}"></td>
+    <tr>
+        <td>1</td>
+        <td>공지사항</td>
+        <td>admin</td>
+        <td>2025-01-10</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>공지사항</td>
+        <td>admin</td>
+        <td>2025-02-10</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>**긴급 공지**</td>
+        <td>admin</td>
+        <td>2025-02-24</td>
     </tr>
     </tbody>
 </table>
+
+<script th:inline="javascript">
+    var processTypes = [[${processTypes}]];  // 서버에서 받아온 데이터
+
+    var counts = {};
+    processTypes.forEach(function(type) {
+        counts[type] = (counts[type] || 0) + 1;
+    });
+
+    var labels = Object.keys(counts);
+    var data = Object.values(counts);
+
+    var ctx1 = document.getElementById('processTypeChart1').getContext('2d');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Process Type Count',
+                data: data,
+                backgroundColor: ['red', 'blue', 'green', 'purple', 'orange']
+            }]
+        }
+    });
+
+    var ctx2 = document.getElementById('processTypeChart2').getContext('2d');
+    // 두 번째 그래프 설정 추가
+</script>
+
 </body>
 </html>

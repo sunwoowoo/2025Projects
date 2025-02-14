@@ -5,19 +5,27 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.projects.domain.Material;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.domain.machines.TaskType;
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.dto.ProductionOrderDTO;
+import org.zerock.projects.repository.MaterialRepository;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.domain.machines.TaskType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 
 @Log4j2
 @Service
@@ -105,5 +113,18 @@ public class ProductionOrderService {
         order.setCarModel(orderDTO.getCarModel());
         order.setQuantity(orderDTO.getQuantity());
 
+    }
+
+    public List<ProductionOrder> getAllOrdersAsEntity() {
+        return productionOrderRepository.findAll();
+    }
+
+    public List<String> getProcessTypes() {
+        List<ProductionOrder> orders = productionOrderRepository.findAll();
+        return orders.stream()
+                .map(ProductionOrder::getProcessType)
+                .filter(Objects::nonNull)  // null 값이 있는 경우 제외
+                .map(Enum::name)  // Enum의 name()을 호출해서 String 값으로 변환
+                .collect(Collectors.toList());
     }
 }

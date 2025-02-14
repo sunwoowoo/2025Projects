@@ -29,7 +29,7 @@ public enum TaskType {
                 return List.of(SPOT_WELDING, ARC_WELDING, SEAM_WELDING);
             case PAINTING:
                 return List.of(SURFACE_PREPARATION, PRIMER_APPLICATION, COLOR_COATING, CLEAR_COATING);
-            case ASSEMBLING:
+            case ASSEMBLY:
                 return List.of(COMPONENT_FITTING, FASTENING, ELECTRICAL_WIRING, QUALITY_CHECK);
             default:
                 throw new IllegalArgumentException("Unknown process type: " + processType);

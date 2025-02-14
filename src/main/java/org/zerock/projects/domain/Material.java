@@ -17,15 +17,15 @@ public class Material {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String mid;            // 자재 ID
+    private Long mid;            // 자재 ID
 
     private String mname;           // 자재명
 
     private String mcategory;       // 카테고리
 
-    private int mquantity;          // 수량
+    private Integer mquantity;          // 수량
 
-    private double mprice;          // 가격
+    private Double mprice;          // 가격
 
     private String mwarehouse;       // 자재창고위치
 
