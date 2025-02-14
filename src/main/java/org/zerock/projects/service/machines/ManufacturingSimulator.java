@@ -38,6 +38,7 @@ public class ManufacturingSimulator {
     @Autowired
     private ProcessRepository processRepository;
 
+    // 진행률 업데이트
     public void updateTaskProgress(Task task) {
         log.info("Starting updateTaskProgress for task type: {}, current progress: {}",
                 task.getTaskType(), task.getProgress());
@@ -59,6 +60,7 @@ public class ManufacturingSimulator {
         }
     }
 
+    // 주문제작 실시
     public void simulateProductionOrder(ProductionOrder order) {
         productionOrderRepository.save(order);
         List<Process> processes = createProcesses(order);
@@ -68,10 +70,12 @@ public class ManufacturingSimulator {
             order.setOrderStatus(OrderStatus.IN_PROGRESS);
             order.setProcessType(process.getType());
             order.setStartDate(LocalDate.now());
+            productionOrderRepository.save(order);
 
             for (Task task : process.getTasks()) {
                 while (!task.isCompleted()) {
                     updateTaskProgress(task);
+                    order.setProgress(calculateOverallProgress(order));
 
                     if (task.isCompleted()) {
                         log.info("Task {} completed. Moving to next task.", task.getTaskType());
@@ -94,6 +98,7 @@ public class ManufacturingSimulator {
         productionOrderRepository.save(order);
     }
 
+    // 주문제품에 모든 공정과정 저장
     public List<Process> createProcesses(ProductionOrder order) {
         productionOrderRepository.save(order);
         List<Process> processes = new ArrayList<>();
@@ -124,4 +129,29 @@ public class ManufacturingSimulator {
         }
         return processes;
     }
+
+    public double calculateOverallProgress(ProductionOrder productionOrder) {
+        List<Process> processes = productionOrder.getProcesses();
+
+        if (processes == null || processes.isEmpty()) {
+            return 0.0;
+        }
+
+        int totalTasks = 0;
+        double totalProgress = 0.0;
+
+        for (Process process : processes) {
+            for (Task task : process.getTasks()) {
+                totalTasks++;
+                totalProgress += task.getProgress();
+            }
+        }
+
+        if (totalTasks == 0) {
+            return 0.0;
+        }
+
+        return (totalProgress / (totalTasks * 100)) * 100;
+    }
+
 }
