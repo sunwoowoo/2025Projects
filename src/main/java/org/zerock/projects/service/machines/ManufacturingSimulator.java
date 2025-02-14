@@ -44,7 +44,7 @@ public class ManufacturingSimulator {
 
         // Add randomization to progress increment
         Random random = new Random();
-        int increment = random.nextInt(15);
+        int increment = random.nextInt(40);
         int newProgress = Math.min(task.getProgress() + increment, 100);
 
         log.info("Increment: {}, New progress: {}", increment, newProgress);
@@ -65,6 +65,7 @@ public class ManufacturingSimulator {
 
         for (Process process : processes) {
             log.info("Process phase : {}", process.getType());
+            order.setOrderStatus(OrderStatus.IN_PROGRESS);
             order.setProcessType(process.getType());
 
             for (Task task : process.getTasks()) {
@@ -91,6 +92,7 @@ public class ManufacturingSimulator {
         }
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setEndDate(LocalDate.now());
+        productionOrderRepository.save(order);
     }
 
     public List<Process> createProcesses(ProductionOrder order) {
