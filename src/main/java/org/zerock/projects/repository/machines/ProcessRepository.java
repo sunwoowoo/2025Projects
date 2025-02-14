@@ -6,7 +6,12 @@ import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long> {
     Process findByProductionOrderAndType(ProductionOrder order, ProcessType processType);
+    Optional<Process> findByProductionOrderAndCompletedFalse(ProductionOrder order);
+    List<Process> findByProductionOrder(ProductionOrder order);
 }

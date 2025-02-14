@@ -155,8 +155,8 @@
             </li>
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
                 <a class="page-link" th:href="@{/orders/productionorder(page=${pageNum}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}"
-                                     th:text="${pageNum}"
-                                     th:classappend="${pageNum == currentPage ? 'active' : ''}">
+                   th:text="${pageNum}"
+                   th:classappend="${pageNum == currentPage ? 'active' : ''}">
                 </a>
             </li>
             <li class="page-item" th:if="${currentPage < totalPages}">

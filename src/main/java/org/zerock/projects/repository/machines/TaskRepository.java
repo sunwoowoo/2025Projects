@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByProcess(Process process);
-    List<Task> findByProcessOrderByIdAsc(Process process);
 }

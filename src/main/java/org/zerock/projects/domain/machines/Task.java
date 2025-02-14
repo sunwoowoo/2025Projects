@@ -16,7 +16,7 @@ public class Task {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
-    @JoinColumn(name = "process_id")
+    @JoinColumn(name = "process_id", nullable = false)
     private Process process;
 
     @Enumerated(EnumType.STRING)

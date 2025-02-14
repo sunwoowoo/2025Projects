@@ -36,7 +36,7 @@ public class ProductionOrder {      // 들어온 주문
     @Enumerated(EnumType.STRING)
     private ProcessType processType; // Track the current process (e.g., Pressing, Welding, Painting, Assembling)
 
-    @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Process> processes = new ArrayList<>();
 
