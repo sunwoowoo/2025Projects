@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+import static org.zerock.projects.domain.machines.TaskType.COMPLETED;
 import static org.zerock.projects.domain.machines.TaskType.getTasksForProcess;
 
 @Log4j2
@@ -63,11 +64,17 @@ public class ManufacturingSimulator {
         List<Process> processes = createProcesses(order);
 
         for (Process process : processes) {
+            log.info("Process phase : {}", process.getType());
+            order.setProcessType(process.getType());
+
             for (Task task : process.getTasks()) {
                 while (!task.isCompleted()) {
                     updateTaskProgress(task);
 
                     if (task.isCompleted()) {
+                        if (task.getTaskType() == TaskType.QUALITY_CHECK) {
+
+                        }
                         log.info("Task {} completed. Moving to next task.", task.getTaskType());
                         break;  // Exit the while loop and move to the next task
                     }
@@ -80,7 +87,10 @@ public class ManufacturingSimulator {
                     }
                 }
             }
+            log.info("Process {} is Completed", process.getType());
         }
+        order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setEndDate(LocalDate.now());
     }
 
     public List<Process> createProcesses(ProductionOrder order) {
