@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자재관리</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <nav class="menu">
+            <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
+            <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
+            <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="header-container">
+        <h2>자재관리 리스트</h2>
+        <button class="btn2" id="orderBtn">자재 관리</button>
+    </div>
+
+    <!-- 자재 목록 테이블 -->
+    <table class="board-table">
+        <thead>
+        <tr>
+            <th>고유번호</th>
+            <th>자재명</th>
+            <th>카테고리</th>
+            <th>필요수량</th>
+            <th>단가</th>
+            <th>창고</th>
+            <th>재고</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="material : ${materials}">
+            <td th:text="${material.mid}"></td>
+            <td th:text="${material.mname}"></td>
+            <td th:text="${material.mcategory}"></td>
+            <td th:text="${material.mquantity}"></td>
+            <td th:text="${material.mprice}"></td>
+            <td th:text="${material.mwarehouse}"></td>
+            <td th:text="${material.mstockstatus}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 검색 박스 -->
+    <footer>
+        <div class="search-container">
+            <div class="search-box-group">
+                <select id="searchType" class="select" th:value="${searchType}">
+                    <option value="mid">고유번호</option>
+                    <option value="mname">자재명</option>
+                    <option value="mcategory">카테고리</option>
+                    <option value="mprice">단가</option>
+                    <option value="mwarehouse">창고</option>
+                    <option value="mstockstatus">재고</option>
+                </select>
+                <input type="text" id="searchInput" class="search-box" placeholder="Search"  th:value="${searchInput}">
+                <button class="btn" id="searchBtn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 페이지네이션 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- 이전 페이지 버튼 -->
+            <li class="page-item" th:if="${currentPage > 0}">
+                <a class="page-link"
+                   th:href="@{/materials/search(page=${currentPage - 1}, type=${searchType != null ? searchType : ''}, keyword=${searchInput != null ? searchInput : ''})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- 페이지 번호 링크들 -->
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                <a class="page-link"
+                   th:href="@{/materials/search(page=${pageNum}, type=${searchType != null ? searchType : ''}, keyword=${searchInput != null ? searchInput : ''})}"
+                   th:text="${pageNum + 1}"
+                   th:classappend="${pageNum == currentPage ? 'active' : ''}">
+                </a>
+            </li>
+
+            <!-- 다음 페이지 버튼 -->
+            <li class="page-item" th:if="${currentPage < totalPages - 1}">
+                <a class="page-link"
+                   th:href="@{/materials/search(page=${currentPage + 1}, type=${searchType != null ? searchType : ''}, keyword=${searchInput != null ? searchInput : ''})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
+</main>
+
+<script th:src="@{/js/material.js}"></script>
+<script>
+    // 검색 버튼 클릭 시, 검색 파라미터로 서버에 요청
+    document.getElementById("searchBtn").addEventListener("click", function () {
+        const searchType = document.getElementById("searchType").value;
+        const searchInput = document.getElementById("searchInput").value;
+
+        // 검색 URL을 생성하고 페이지를 새로고침하여 검색을 수행
+        window.location.href = "/materials/search?page=0&type=" + searchType + "&keyword=" + searchInput;
+    });
+</script>
+</body>
+</html>

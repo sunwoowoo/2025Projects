@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Process List</title>
+</head>
+<body>
+<h1>Process List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Process Type</th>
+        <th>Status</th>
+        <th>Start Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="process : ${processes}">
+        <td th:text="${process.id}"></td>
+        <td th:text="${process.description}"></td>
+        <td th:text="${process.processType}"></td>
+        <td th:text="${process.progress}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

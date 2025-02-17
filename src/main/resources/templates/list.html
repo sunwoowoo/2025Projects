@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홈</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <nav class="menu">
+            <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
+            <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
+            <a href="/materials/material" th:classappend="${#httpServletRequest.requestURI == '/materials/material' ? 'active' : ''}">자재관리</a>
+        </nav>
+    </div>
+</header>
+
+<h1>Board List</h1>
+<h2>Welcome, <span th:text="${userId}">User</span>!</h2>
+<table class="board-table">
+    <thead>
+    <tr>
+        <th>____ 번호___________ </th>
+        <th>___ _공정 (Assembly)_______ </th>
+        <th>___- 진행률____________ </th>
+        <th>____- 진행률 (막대 그래프)____ </th>
+        <th>___- 설명 </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="board, stat : ${boards}">
+        <td th:text="${stat.count}"></td>
+        <td>
+            <a th:href="@{/assembly/{ano}(ano=${board.assembly.Ano})}" th:text="${board.assembly.title}"></a>
+            <a th:href="@{/painting/{pno}(pno=${board.painting.Pno})}" th:text="${board.painting.title}"></a>
+        </td>
+        <td>
+            <span th:if="${board.assembly.atE and board.assembly.SM}" th:text="'100%'"></span>
+            <span th:if="${board.assembly.atE != board.assembly.SM}" th:text="'50%'"></span>
+            <span th:if="${!board.assembly.atE and !board.assembly.SM}" th:text="'0%'"></span>
+        </td>
+        <td>
+            <div class="progress-bar">
+                <div class="progress-fill"
+                     th:style="'width:' + (${board.assembly.atE and board.assembly.SM} ? '100%' :
+                                         (${board.assembly.atE != board.assembly.SM} ? '50%' : '0%'))"></div>
+            </div>
+        </td>
+        <td th:text="${board.cf}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
