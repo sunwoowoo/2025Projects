@@ -115,11 +115,15 @@
             <th>Simulate</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody th:with="link = ${pageRequestDTO.getLink()}">
         <tr th:each="order : ${orders}">
-            <td th:text="${order.id}"></td>
             <td>
-                <a th:href="@{/orders/productionorder/{orderId}(orderId=${order.id})}"
+                <a th:href="@{|/orders/productionorder/${order.id}|} + ${link}">
+                    [[${order.id}]]
+                </a>
+            </td>
+            <td>
+                <a th:href="@{|/orders/productionorder/${order.id}|} + ${link}"
                    th:text="${order.carModel}">
                 </a>
             </td>

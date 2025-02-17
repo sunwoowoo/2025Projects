@@ -37,24 +37,23 @@ public class PageRequestDTO {
 
     }
     public String getLink(){
-        if(link == null) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("page=" + this.page);
-            builder.append("&size=" + this.size);
+        StringBuilder builder = new StringBuilder();
+        builder.append("?page=").append(this.page);
+        builder.append("&size=").append(this.size);
 
-            if(type != null && type.length() > 0) {
-                builder.append("&type=" + type);
-            }
-            if(keyword != null) {
-                try {
-                    builder.append("&keyword=" + URLEncoder.encode(keyword,"UTF-8"));  // 한글처리를 위한 코드
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            link = builder.toString();
+        if(type != null && !type.isEmpty()) {
+            builder.append("&type=").append(type);
         }
+        if(keyword != null && !keyword.isEmpty()) {
+            try {
+                builder.append("&keyword=").append(URLEncoder.encode(keyword,"UTF-8"));  // 한글처리를 위한 코드
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        link = builder.toString();
+
         return link;
     }
 }

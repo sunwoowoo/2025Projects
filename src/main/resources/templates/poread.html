@@ -47,8 +47,8 @@
     </table>
     <div id="chart-container"></div>
 </div>
-<div id="Btns" th:with="link = ${pageRequestDTO.getLink()}">
-    <a th:href="|@{/orders/productionorder(${link})}|">
+<div id="Btns">
+    <a th:href="@{|/orders/productionorder${pageRequestDTO.getLink()}|}">
         <button type="button">List</button>
     </a>
 </div>

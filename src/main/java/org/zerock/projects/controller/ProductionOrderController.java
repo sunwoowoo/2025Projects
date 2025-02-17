@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,9 +22,7 @@ import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -47,7 +44,8 @@ public class ProductionOrderController {
     public String list(@RequestParam(required = false, defaultValue = "") String types,
                        @RequestParam(required = false, defaultValue = "") String keyword,
                        @RequestParam(defaultValue = "1") int page,
-                       Model model) {
+                       Model model,
+                       PageRequestDTO pageRequestDTO) {
         int pageSize = 10; // 한 페이지에 10개씩 표시
         Pageable pageable = PageRequest.of(page - 1, pageSize);
         Page<ProductionOrder> orderPage;
