@@ -82,6 +82,10 @@ public class ProductionOrderService {
         return productionOrderRepository.findAll(pageable);
     }
 
+    public List<ProductionOrder> getAllOrdersAsEntity() {
+        return productionOrderRepository.findAll();
+    }
+
     // 주문 삭제
     @Transactional
     public void removeOrder(Long id) {

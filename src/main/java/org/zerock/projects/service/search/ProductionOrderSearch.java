@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.repository.ProductionOrderRepository;
@@ -15,7 +16,6 @@ import java.util.List;
 public class ProductionOrderSearch {
 
     private final ProductionOrderRepository productionOrderRepository;
-
 
     // 특정 차량 모델, 공정 타입, 진행률을 기준으로 조회
     public List<ProductionOrder> searchByCarModelProcessTypeProgress(String carModel, ProcessType processType, double progress) {
@@ -45,5 +45,10 @@ public class ProductionOrderSearch {
     // 특정 키워드가 포함된 차량 모델을 검색 (LIKE 사용, 페이징 포함)
     public Page<ProductionOrder> searchByKeyword(String keyword, Pageable pageable) {
         return productionOrderRepository.findKeyword(keyword, pageable);
+    }
+
+    // 주문 현황에 따라 검색
+    public Page<ProductionOrder> searchByStatus(List<OrderStatus> orderStatuses, Pageable pageable) {
+        return productionOrderRepository.findByOrderStatus(orderStatuses, pageable);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductionOrderRepository extends JpaRepository<ProductionOrder, Long> {
     //  특정 차량 모델, 공정 타입, 진행률을 기준으로 조회

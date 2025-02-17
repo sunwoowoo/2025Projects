@@ -7,11 +7,13 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.dto.ProductionOrderDTO;
@@ -22,6 +24,7 @@ import org.zerock.projects.service.search.ProductionOrderSearch;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -56,6 +59,10 @@ public class ProductionOrderController {
                 case "processType":
                     ProcessType processType = ProcessType.valueOf(keyword.toUpperCase());
                     orderPage = productionOrderSearch.searchFromProcessTypes(List.of(processType), pageable);
+                    break;
+                case "orderStatus":
+                    OrderStatus orderStatus = OrderStatus.valueOf(keyword.toUpperCase());
+                    orderPage = productionOrderSearch.searchByStatus(List.of(orderStatus), pageable);
                     break;
                 default:
                     orderPage = productionOrderService.getAllOrders(pageable);

@@ -9,13 +9,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 @Builder
+@ToString(exclude = "process")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne      // 한 Process 안 많은 Task들
-    @JoinColumn(name = "process_id")
+    @ManyToOne(fetch = FetchType.LAZY)      // 한 Process 안 많은 Task들
+    @JoinColumn(name = "process_id", nullable = false)
     private Process process;
 
     @Enumerated(EnumType.STRING)

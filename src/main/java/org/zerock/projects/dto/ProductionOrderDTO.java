@@ -28,6 +28,13 @@ public class ProductionOrderDTO {
     private Double progress;
     private List<ProcessDTO> processes;
 
+    // Constructors
+    public ProductionOrderDTO(String carModel, int quantity, OrderStatus orderStatus) {
+        this.carModel = carModel;
+        this.quantity = quantity;
+        this.orderStatus = orderStatus;
+    }
+
     // Constructor for entity conversion
     public static ProductionOrderDTO fromEntity(ProductionOrder order) {
         ProductionOrderDTO dto = ProductionOrderDTO.builder()
