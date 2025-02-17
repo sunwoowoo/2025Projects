@@ -42,14 +42,6 @@ public class ListController {
             return "redirect:/login";
         }
 
-        // processType 데이터 개수 그래프
-        List<String> processTypes = productionOrderService.getProcessTypes();
-        model.addAttribute("processTypes", processTypes);
-
-        // mname 별 재고수량 그래프
-        Map<String, Integer> materialData = materialService.getMaterialQuantities();
-        model.addAttribute("materialData", materialData);
-
         return "list";
     }
 }

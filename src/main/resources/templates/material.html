@@ -25,8 +25,37 @@
 
 <main>
     <div class="header-container">
-        <h2>자재관리 리스트</h2>
-        <button class="btn2" id="orderBtn">자재 관리</button>
+        <h2>자재 리스트</h2>
+    </div>
+    <div class="navigator">
+        <!-- 검색 폼 -->
+        <form action="/materials" method="get">
+            <div class="search-container">
+                <div class="search-box-group">
+                    <select id="searchType" name="types" class="select">
+                        <option value="mid" th:selected="${types != null and types.contains('mid')}">고유번호</option>
+                        <option value="mname" th:selected="${types != null and types.contains('mname')}">자재명</option>
+                        <option value="mcategory" th:selected="${types != null and types.contains('mcategory')}">카테고리</option>
+                        <option value="mprice" th:selected="${types != null and types.contains('mprice')}">단가</option>
+                        <option value="mwarehouse" th:selected="${types != null and types.contains('mwarehouse')}">창고</option>
+                        <option value="mstockstatus" th:selected="${types != null and types.contains('mstockstatus')}">재고</option>
+                    </select>
+                    <input type="text" name="keyword" id="searchInput" class="search-box" placeholder="Search">
+                    <button class="btn" type="submit" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!--  주문 접수, 삭제 버튼 폼  -->
+        <form id="btnForm">
+            <div>
+                <input type="hidden" name="mid" id="mid">
+                <button id="orderBtn">자재 추가</button>
+                <button id="deleteBtn">삭제</button>
+            </div>
+        </form>
     </div>
 
     <!-- 주문 접수 팝업 -->
@@ -35,7 +64,7 @@
             <div class="popup-title">
                 <h3>자재 추가</h3>
             </div>
-            <form id="orderForm" method="post" action="/orders/create2">
+            <form id="orderForm" method="post" action="/materials/create">
                 <div class="form-group">
                     <label for="mname">자재명:</label>
                     <input type="text" id="mname" name="mname" required>
@@ -58,11 +87,7 @@
 
                 <div class="form-group">
                     <label for="mwarehouse">창고:</label>
-                    <select id="mwarehouse" name="mwarehouse">
-                        <option value="A1">A-1</option>
-                        <option value="A2">A-2</option>
-                        <option value="A3">A-3</option>
-                    </select>
+                    <input type="text" id="mwarehouse" name="mwarehouse" required>
                 </div>
 
                 <div class="form-group">
@@ -89,43 +114,41 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="material : ${materials}">
-            <td th:text="${material.mid}"></td>
-            <td>
-                <a th:href="@{/materials/{orderId}(orderId=${material.mid})}"
-                   th:text="${material.mname}">
-                </a>
-            </td>
-            <td th:text="${material.mcategory}"></td>
-            <td th:text="${material.mquantity}"></td>
-            <td th:text="${material.mprice}"></td>
-            <td th:text="${material.mwarehouse}"></td>
-            <td th:text="${material.mstockstatus}"></td>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.mid}"></td>
+            <td th:text="${order.mname}"></td>
+            <td th:text="${order.mcategory}"></td>
+            <td th:text="${order.mquantity}"></td>
+            <td th:text="${order.mprice}"></td>
+            <td th:text="${order.mwarehouse}"></td>
+            <td th:text="${order.mstockstatus}"></td>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <footer>
-        <div class="search-container">
-            <div class="search-box-group">
-                <select id="searchType" class="select">
-                    <option value="mid">고유번호</option>
-                    <option value="mname">자재명</option>
-                    <option value="mcategory">카테고리</option>
-                    <option value="mprice">단가</option>
-                    <option value="mwarehouse">창고</option>
-                    <option value="mstockstatus">재고</option>
-                </select>
-                <input type="text" id="searchInput" class="search-box" placeholder="Search">
-                <button class="btn" id="searchBtn">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </footer>
+    <!-- 페이지네이션 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" th:if="${currentPage > 1}">
+                <a class="page-link" th:href="@{/materials(page=${currentPage - 1}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                <a class="page-link" th:href="@{/materials(page=${pageNum}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}"
+                   th:text="${pageNum}"
+                   th:classappend="${pageNum == currentPage ? 'active' : ''}">
+                </a>
+            </li>
+            <li class="page-item" th:if="${currentPage < totalPages}">
+                <a class="page-link" th:href="@{/materials(page=${currentPage + 1}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </main>
-
-<script th:src="@{/js/order2.js}"></script>
+<script th:src="@{/js/material-order.js}"></script>
 </body>
 </html>

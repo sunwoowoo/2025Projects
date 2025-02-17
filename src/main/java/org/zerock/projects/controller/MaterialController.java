@@ -2,16 +2,24 @@ package org.zerock.projects.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.Material;
 import org.zerock.projects.dto.MaterialDTO;
+import org.zerock.projects.repository.MaterialRepository;
 import org.zerock.projects.service.MaterialService;
+import org.zerock.projects.service.search.MaterialSearch;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,57 +27,74 @@ import java.util.List;
 @RequestMapping("/materials")
 public class MaterialController {
 
-    private final MaterialService materialService;
+    @Autowired
+    MaterialSearch materialSearch;
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public String handleEntityNotFoundException(EntityNotFoundException e, Model model) {
-        model.addAttribute("error", e.getMessage());
-        return "errorPage";
-    }
+    @Autowired
+    private MaterialService materialService;
 
-    @GetMapping  // URL: /materials
-    public String list(Model model) {
-        List<MaterialDTO> materials = materialService.getAllMaterials();
-        model.addAttribute("materials", materials);
+    @Autowired
+    private MaterialRepository materialRepository;
+
+    // 자재 리스트 화면
+    @GetMapping
+    public String list(@RequestParam(required = false, defaultValue = "") String types,
+                       @RequestParam(required = false, defaultValue = "") String keyword,
+                       @RequestParam(defaultValue = "1") int page,
+                       Model model) {
+        int pageSize = 10; // 한 페이지에 10개씩 표시
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<Material> orderPage;
+        // 검색 조건 처리
+        if (types != null && keyword != null && !keyword.isEmpty()) {
+            switch (types) {
+                case "mname":
+                    orderPage = materialSearch.searchByKeyword(keyword, pageable);
+                    break;
+
+                default:
+                    orderPage = materialService.getAllOrders(pageable);
+            }
+        } else {
+            orderPage = materialService.getAllOrders(pageable);
+        }
+
+        // DTO 변환 후 모델에 추가
+        List<MaterialDTO> orders = orderPage.stream()
+                .map(MaterialDTO::fromEntity2)
+                .collect(Collectors.toList());
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("types", types);
+        model.addAttribute("keyword", keyword);
+
         return "material";
     }
 
-    @GetMapping("/{orderId}")  // URL: /materials/{orderId}
-    public String read(@PathVariable Long orderId, Model model) {
+    @PostMapping("/remove")
+    public String removeMaterial(Long mid, RedirectAttributes redirectAttributes) {
 
-        // 자재 정보를 조회
-        MaterialDTO materialDTO = materialService.readOne2(orderId);
+        materialService.removeMaterial(mid);
 
-        // 로그 추가 (materialDTO의 값 확인)
-        log.info("MaterialDTO: {}", materialDTO);
+        redirectAttributes.addFlashAttribute("result", "removed");
 
-        // 창고 및 카테고리 목록 정의
-        List<String> availableWarehouse = Arrays.asList("A-1", "A-2", "A-3");
-        List<String> availableCategory = Arrays.asList("재료", "완성품목", "타이어", "조립품목");
-
-        log.info("Material: {}", materialDTO);  // mread 객체의 값 확인
-        log.info("Available Categories: {}", availableCategory);
-        log.info("Available Warehouses: {}", availableWarehouse);
-
-        // 모델에 데이터 추가
-        model.addAttribute("availableWarehouse", availableWarehouse);
-        model.addAttribute("availableCategory", availableCategory);
-        model.addAttribute("mread", materialDTO);
-
-        return "mread";  // Thymeleaf 템플릿 이름
+        return "redirect:/materials";
     }
 
-    @GetMapping("/material_modify/{orderId}")   // 자재 수정 페이지
-    public String modifyOrder2(@PathVariable Long orderId, Model model) {
-        try {
-            // 자재 정보 조회
-            Material material = materialService.getOrderById(orderId);
-            MaterialDTO materialDTO = MaterialDTO.fromEntity2(material);
-            model.addAttribute("mread", materialDTO);
-            return "material_modify";  // 수정 페이지로 리턴
-        } catch (Exception e) {
-            log.error("Error occurred while fetching order with ID: {}", orderId, e);
-            return "error"; // error.html로 페이지를 리턴하거나 적절한 처리를 합니다.
+    @PostMapping("/create")
+    public String createMaterial(@Valid Material material, BindingResult bindingResult
+            , RedirectAttributes redirectAttributes) {
+
+        if(bindingResult.hasErrors()) {
+            log.info("has errors..............");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/materials/create";
         }
+
+        materialService.saveMaterial(material);
+
+        return "redirect:/materials";
     }
 }

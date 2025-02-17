@@ -1,6 +1,8 @@
 package org.zerock.projects.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.Material;
@@ -73,17 +75,20 @@ public class MaterialService {
 
     }
 
-    public Map<String, Integer> getMaterialQuantities() {
-        List<Object[]> resultList = materialRepository.findMaterialQuantities();
-
-        Map<String, Integer> materialData = new HashMap<>();
-        for (Object[] row : resultList) {
-            String mid = (String) row[0]; // Material ID
-            Integer quantity = ((Number) row[1]).intValue(); // Material Quantity
-            materialData.put(mid, quantity);
-        }
-        return materialData;
+    public Page<Material> getAllOrders(Pageable pageable) {
+        return materialRepository.findAll(pageable);
     }
 
+    // 주문 삭제
+    @Transactional
+    public void removeMaterial(Long mid) {
+        materialRepository.deleteByMid(mid);
+    }
+
+    //팝업주문 저장
+    public void saveMaterial(Material material){
+
+        materialRepository.save(material);
+    }
 
 }
