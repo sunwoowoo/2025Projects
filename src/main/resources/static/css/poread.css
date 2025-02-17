@@ -1,0 +1,44 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: silver;
+  border-radius: 5px;
+  height: 50px;
+  color: white;
+}
+
+body {
+  height: 90vh;
+}
+
+body > #content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+table {
+  border: none;
+  width: 40%;
+  height: 10vh;
+  margin-top: 15px;
+}
+
+#Btns {
+  float: right;
+}
+
+button {
+  width: 97.8px;
+  height: 38px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}

@@ -16,6 +16,7 @@ import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.dto.ProductionOrderDTO;
+import org.zerock.projects.dto.search.PageRequestDTO;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.machines.ManufacturingSimulator;
@@ -98,7 +99,7 @@ public class ProductionOrderController {
     }
 
     @GetMapping("/productionorder/{orderId}")
-    public String read(@PathVariable Long orderId, Model model){
+    public String read(@PathVariable Long orderId, PageRequestDTO pageRequestDTO, Model model){
         ProductionOrderDTO productionOrderDTO = productionOrderService.readOne(orderId);
 
         log.info(productionOrderDTO);

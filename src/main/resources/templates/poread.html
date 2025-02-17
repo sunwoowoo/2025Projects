@@ -3,42 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>주문 상세 페이지</title>
-    <style>
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: silver;
-            border-radius: 5px;
-            height: 50px;
-            color: white;
-        }
-
-        table {
-            border: 1px solid black;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        th, td {
-            border: 1px solid black;
-            width: 50%;
-            height: 80px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        p {
-            text-align: center;
-        }
-    </style>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
 </head>
 <body>
 <header>
     <div class="topbar">
-        <h1>주문 상세</h1>
+        <h1 th:text="'No.' + ${poread.id}"></h1>
     </div>
+</header>
+<div id="content">
     <table>
+        <caption>주문 상세</caption>
         <tr>
             <th>MODEL</th>
             <td th:text="${poread.carModel}"></td> <!-- poread.carModel -->
@@ -68,6 +45,69 @@
             <td th:text="${poread.endDate}"></td> <!-- poread.endDate -->
         </tr>
     </table>
-    <p><a href="/orders/productionorder">주문 목록으로 돌아가기</a></p>
+    <div id="chart-container"></div>
+</div>
+<div id="Btns" th:with="link = ${pageRequestDTO.getLink()}">
+    <a th:href="|@{/orders/productionorder(${link})}|">
+        <button type="button">List</button>
+    </a>
+</div>
 </body>
+<script>
+    const chartContainer = document.querySelector('#chart-container');
+
+    window.createPieGraph = function(containerId) {
+    Highcharts.chart(containerId, {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Car Component Composition'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Components',
+            colorByPoint: true,
+            data: [{
+                name: 'Body (Pressing)',
+                y: 40,
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Frame (Welding)',
+                y: 25
+            }, {
+                name: 'Paint',
+                y: 10
+            }, {
+                name: 'Interior (Assembly)',
+                y: 15
+            }, {
+                name: 'Electronics (Assembly)',
+                y: 10
+            }]
+        }]
+    });
+};
+
+    window.createPieGraph(chartContainer.id);
+
+</script>
 </html>
