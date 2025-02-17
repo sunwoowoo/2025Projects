@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자재 상세 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
+</head>
+<body>
+<header>
+    <div class="t-bar">
+        <h1>자재 상세</h1>
+    </div>
+</header>
+<table>
+    <tr>
+        <th>고유번호</th>
+        <td th:text="${materialread.mid}"></td>
+    </tr>
+    <tr>
+        <th>자재명</th>
+        <td th:text="${materialread.mname}"></td>
+    </tr>
+    <tr>
+        <th>카테고리</th>
+        <td th:text="${materialread.mcategory}"></td>
+    </tr>
+    <tr>
+        <th>필요수량</th>
+        <td th:text="${materialread.mquantity}"></td>
+    </tr>
+    <tr>
+        <th>단가</th>
+        <td th:text="${materialread.mprice}"></td>
+    </tr>
+    <tr>
+        <th>창고</th>
+        <td th:text="${materialread.mwarehouse}"></td>
+    </tr>
+    <tr>
+        <th>재고</th>
+        <td th:text="${materialread.mstockstatus}"></td>
+    </tr>
+</table>
+
+<div class="btn">
+    <a th:href="@{/materials/modify/{mid}(mid=${materialread.mid})}" class="btn-class modify-btn" style="text-decoration:none;">Modify</a>
+    <form th:action="@{/materials/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="mid" th:value="${materialread.mid}" />
+        <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
+    </form>
+
+    <button type="button" class="btn-class back-btn" onclick="window.location.href='/materials';">Back</button>
+</div>
+
+</body>
+</html>

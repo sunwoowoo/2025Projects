@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자재 상세 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
+</head>
+<body>
+<header>
+    <div class="t-bar">
+        <h1>자재 상세</h1>
+    </div>
+</header>
+
+<!-- 수정 폼 -->
+<form th:action="@{/materials/modify/{mid}(mid=${materialread.mid})}" method="post">
+    <table>
+        <tr>
+            <th>고유번호</th>
+            <td th:text="${materialread.mid}"></td>
+        </tr>
+        <tr>
+            <th>자재명</th>
+            <td>
+                <input type="text" name="mname" th:value="${materialread.mname}">
+            </td>
+        </tr>
+        <tr>
+            <th>카테고리</th>
+            <td>
+                <input type="text" name="mcategory" th:value="${materialread.mcategory}">
+            </td>
+        </tr>
+        <tr>
+            <th>필요수량</th>
+            <td>
+                <input type="number" name="mquantity" th:value="${materialread.mquantity}">
+            </td>
+        </tr>
+        <tr>
+            <th>단가</th>
+            <td>
+                <input type="number" name="mprice" th:value="${materialread.mprice}">
+            </td>
+        </tr>
+        <tr>
+            <th>창고</th>
+            <td>
+                <input type="text" name="mwarehouse" th:value="${materialread.mwarehouse}">
+            </td>
+        </tr>
+        <tr>
+            <th>재고</th>
+            <td>
+                <input type="radio" id="inStock" name="mstockstatus" value="IN_STOCK" th:checked="${materialread.mstockstatus == 'IN_STOCK'}">
+                <label for="inStock">In Stock</label>
+
+                <input type="radio" id="outStock" name="mstockstatus" value="OUT_STOCK" th:checked="${materialread.mstockstatus == 'OUT_STOCK'}">
+                <label for="outStock">Out of Stock</label>
+            </td>
+        </tr>
+    </table>
+
+    <!-- 수정 버튼 (Submit 버튼으로 변경) -->
+    <div class="btn">
+        <button type="submit" class="btn-class modify-btn">Modify</button>
+    <!-- 돌아가기 버튼 -->
+        <button type="button" class="btn-class back-btn" onclick="history.back();">Back</button>
+        </div>
+</form>
+
+
+
+</body>
+</html>

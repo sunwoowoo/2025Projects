@@ -30,4 +30,6 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     // 주문 상태에 따라 검색
     @Query("SELECT b FROM ProductionOrder b WHERE b.orderStatus IN :orderStatus")
     Page<ProductionOrder> findByOrderStatus(@Param("orderStatus") List<OrderStatus> orderStatus, Pageable pageable);
+
+    void deleteByProcesses_Id(Long processId);
 }

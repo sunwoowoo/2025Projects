@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MaterialDTO {
-    private String mid;
+    private Long mid;
     private String mname;
     private String mcategory;
-    private double mquantity;
-    private double mprice;
+    private Integer mquantity;
+    private Double mprice;
     private String mwarehouse;
     private String mstockstatus;
 
-    public static MaterialDTO fromEntity(Material material) {
+    public static MaterialDTO fromEntity2(Material material) {
         return MaterialDTO.builder()
                 .mid(material.getMid())
                 .mname(material.getMname())

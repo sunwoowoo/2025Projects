@@ -5,20 +5,27 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.projects.domain.Material;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.domain.machines.TaskType;
 import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.dto.ProductionOrderDTO;
+import org.zerock.projects.repository.MaterialRepository;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.domain.machines.TaskType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 
 @Log4j2
 @Service
@@ -80,12 +87,48 @@ public class ProductionOrderService {
     }
 
     // 주문 삭제
+    @Transactional
     public void removeOrder(Long id) {
-        productionOrderRepository.deleteById(id);
+         productionOrderRepository.deleteById(id);
     }
 
     //팝업주문 저장
     public void saveOrder(ProductionOrder productionOrder){
         productionOrderRepository.save(productionOrder);
+    }
+
+    // 수정페이지 save 메소드 추가
+    public ProductionOrder save(ProductionOrder order) {
+        return productionOrderRepository.save(order);  // JpaRepository의 save 메소드 사용
+    }
+
+    // 주문 ID로 주문 조회
+    public ProductionOrder getOrderById(Long id) {
+        return productionOrderRepository.findById(id).orElse(null);  // ID에 해당하는 주문을 찾고, 없으면 null 반환
+    }
+
+    @Transactional
+    public void updateOrder(Long orderId, ProductionOrderDTO orderDTO) {
+        // 주문을 ID로 찾아오기
+        ProductionOrder order = productionOrderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found:"+ orderId));
+
+        // 주문 정보 업데이트 (carModel , quantity)
+        order.setCarModel(orderDTO.getCarModel());
+        order.setQuantity(orderDTO.getQuantity());
+
+    }
+
+    public List<ProductionOrder> getAllOrdersAsEntity() {
+        return productionOrderRepository.findAll();
+    }
+
+    public List<String> getProcessTypes() {
+        List<ProductionOrder> orders = productionOrderRepository.findAll();
+        return orders.stream()
+                .map(ProductionOrder::getProcessType)
+                .filter(Objects::nonNull)  // null 값이 있는 경우 제외
+                .map(Enum::name)  // Enum의 name()을 호출해서 String 값으로 변환
+                .collect(Collectors.toList());
     }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세 페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
+</head>
+<body>
+<header>
+    <div class="t-bar">
+        <h1>주문 상세</h1>
+    </div>
+</header>
+<table>
+    <tr>
+        <th>MODEL</th>
+        <td th:text="${productionorderread.carModel}"></td>
+    </tr>
+    <tr>
+        <th>ORDER STATUS</th>
+        <td th:text="${productionorderread.orderStatus}"></td>
+    </tr>
+    <tr>
+        <th>PROCESS TYPE</th>
+        <td th:text="${productionorderread.processType}"></td>
+    </tr>
+    <tr>
+        <th>PROGRESS</th>
+        <td th:text="${productionorderread.progress}"></td>
+    </tr>
+    <tr>
+        <th>QUANTITY</th>
+        <td th:text="${productionorderread.quantity}"></td>
+    </tr>
+    <tr>
+        <th>STARTDATE</th>
+        <td th:text="${productionorderread.startDate}"></td>
+    </tr>
+    <tr>
+        <th>ENDDATE</th>
+        <td th:text="${productionorderread.endDate}"></td>
+    </tr>
+</table>
+
+<div class="btn">
+    <a th:href="@{/orders/modify/{id}(id=${productionorderread.id})}" class="btn-class modify-btn" style="text-decoration:none;">Modify</a>
+    <form th:action="@{/orders/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${productionorderread.id}" />
+        <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
+    </form>
+
+    <button type="button" class="btn-class back-btn" onclick="window.location.href='/orders/productionorder';">Back</button>
+
+</body>
+</html>
