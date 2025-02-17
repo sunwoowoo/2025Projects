@@ -19,6 +19,7 @@
             <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
             <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
             <a href="/materials" th:classappend="${#httpServletRequest.requestURI == '/materials' ? 'active' : ''}">자재관리</a>
+            <a href="/complete" th:classappend="${#httpServletRequest.requestURI == '/complete' ? 'active' : ''}">출고대기</a>
         </nav>
     </div>
 </header>
@@ -116,7 +117,11 @@
         <tbody>
         <tr th:each="order : ${orders}">
             <td th:text="${order.mid}"></td>
-            <td th:text="${order.mname}"></td>
+            <td>
+                <a th:href="@{/materials/read/{mid}(mid=${order.mid})}"
+                   th:text="${order.mname}">
+                </a>
+            </td>
             <td th:text="${order.mcategory}"></td>
             <td th:text="${order.mquantity}"></td>
             <td th:text="${order.mprice}"></td>

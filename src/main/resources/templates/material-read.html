@@ -15,42 +15,40 @@
 <table>
     <tr>
         <th>고유번호</th>
-        <td th:text="${mread.mid}"></td>
+        <td th:text="${materialread.mid}"></td>
     </tr>
     <tr>
         <th>자재명</th>
-        <td th:text="${mread.mname}"></td>
+        <td th:text="${materialread.mname}"></td>
     </tr>
     <tr>
         <th>카테고리</th>
-        <td th:text="${mread.mcategory}"></td>
+        <td th:text="${materialread.mcategory}"></td>
     </tr>
     <tr>
         <th>필요수량</th>
-        <td th:text="${mread.mquantity}"></td>
+        <td th:text="${materialread.mquantity}"></td>
     </tr>
     <tr>
         <th>단가</th>
-        <td th:text="${mread.mprice}"></td>
+        <td th:text="${materialread.mprice}"></td>
     </tr>
     <tr>
         <th>창고</th>
-        <td th:text="${mread.mwarehouse}"></td>
+        <td th:text="${materialread.mwarehouse}"></td>
     </tr>
     <tr>
         <th>재고</th>
-        <td th:text="${mread.mstockstatus}"></td>
+        <td th:text="${materialread.mstockstatus}"></td>
     </tr>
 </table>
 
 <div class="btn">
-    <!-- Modify 버튼은 <a> 태그로 대체하여 GET 방식으로 페이지 이동 -->
-    <a th:href="@{/materials/material_modify/{orderId}(orderId=${mread.mid})}" class="btn-class modify-btn">Modify</a>
-
-    <!-- Delete 버튼은 POST 방식으로 처리 -->
-    <form method="post" th:action="@{/orders/remove}">
-        <input type="hidden" name="id" th:value="${mread.mid}"/> <!-- 삭제할 주문 ID -->
+    <a th:href="@{/materials/modify/{mid}(mid=${materialread.mid})}" class="btn-class modify-btn" style="text-decoration:none;">Modify</a>
+    <form th:action="@{/materials/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="mid" th:value="${materialread.mid}" />
         <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
     </form>
 
     <button type="button" class="btn-class back-btn" onclick="window.location.href='/materials';">Back</button>

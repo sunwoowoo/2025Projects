@@ -1,4 +1,4 @@
-package org.zerock.projects.controller.Sign;
+package org.zerock.projects.controller.sign;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

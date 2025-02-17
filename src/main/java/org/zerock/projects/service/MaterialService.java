@@ -34,10 +34,10 @@ public class MaterialService {
                 .collect(Collectors.toList());
     }
 
-    public MaterialDTO readOne2(Long orderId) {
-        return materialRepository.findById(orderId)
+    public MaterialDTO readOne(Long mid) {
+        return materialRepository.findById(mid)
                 .map(MaterialDTO::fromEntity2)
-                .orElseThrow(() -> new EntityNotFoundException("Material not found with ID: " + orderId));
+                .orElseThrow(() -> new EntityNotFoundException("Material not found with ID: " + mid));
     }
 
     public Material getOrderById(Long mid) {

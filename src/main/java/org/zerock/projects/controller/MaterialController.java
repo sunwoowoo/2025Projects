@@ -12,7 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.projects.domain.Material;
+import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.dto.MaterialDTO;
+import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.MaterialRepository;
 import org.zerock.projects.service.MaterialService;
 import org.zerock.projects.service.search.MaterialSearch;
@@ -74,7 +76,7 @@ public class MaterialController {
     }
 
     @PostMapping("/remove")
-    public String removeMaterial(Long mid, RedirectAttributes redirectAttributes) {
+    public String removeMaterial(@RequestParam("mid") Long mid, RedirectAttributes redirectAttributes) {
 
         materialService.removeMaterial(mid);
 
@@ -96,5 +98,33 @@ public class MaterialController {
         materialService.saveMaterial(material);
 
         return "redirect:/materials";
+    }
+
+    @GetMapping("/read/{mid}")
+    public String readMaterial(@PathVariable Long mid, Model model) {
+
+        // 서비스 호출
+        MaterialDTO materialDTO = materialService.readOne(mid);
+
+        model.addAttribute("materialread", materialDTO);
+        return "material-read";
+    }
+
+    @GetMapping("/modify/{mid}")
+    public String modifyOrder(@PathVariable Long mid, Model model) {
+        log.info("Received material ID: {}", mid);
+        Material material = materialService.getOrderById(mid);
+        MaterialDTO materialDTO = MaterialDTO.fromEntity2(material);
+        model.addAttribute("materialread", materialDTO);
+        return "material-modify";
+    }
+
+    @PostMapping("/modify/{mid}")
+    public String updateOrder(@PathVariable Long mid, @ModelAttribute MaterialDTO materialDTO) {
+        // 자재 수정 처리
+        materialService.updateOrder(mid, materialDTO);
+
+        // 수정 후 자재 상세 페이지로 리디렉션 (정확한 경로 설정)
+        return "redirect:/materials/read/" + mid;
     }
 }

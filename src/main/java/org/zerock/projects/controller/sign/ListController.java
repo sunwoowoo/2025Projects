@@ -1,4 +1,4 @@
-package org.zerock.projects.controller.Sign;
+package org.zerock.projects.controller.sign;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,8 +10,6 @@ import org.zerock.projects.service.subprocesses.BoardService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor

@@ -131,22 +131,18 @@ public class ProductionOrderController {
 
         log.info(productionOrderDTO);
 
-        model.addAttribute("poread", productionOrderDTO);
-        return "poread";
+        model.addAttribute("productionorderread", productionOrderDTO);
+        return "productionorder-read";
     }
 
     // 수정 페이지로 이동하는 메소드
     @GetMapping("/modify/{orderId}")
     public String modifyOrder(@PathVariable Long orderId, Model model) {
-        try {
+
             ProductionOrder productionOrder = productionOrderService.getOrderById(orderId);
             ProductionOrderDTO productionOrderDTO = ProductionOrderDTO.fromEntity(productionOrder);
-            model.addAttribute("poread", productionOrderDTO);
-            return "modify";
-        } catch (Exception e) {
-            log.error("Error occurred while fetching order with ID: {}", orderId, e);
-            return "error"; // error.html로 페이지를 리턴하거나 적절한 처리를 합니다.
-        }
+            model.addAttribute("productionorderread", productionOrderDTO);
+            return "productionorder-modify";
     }
 
     @PostMapping("/modify/{orderId}")

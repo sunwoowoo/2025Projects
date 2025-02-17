@@ -25,7 +25,7 @@ public class Process {
     @JoinColumn(name = "production_order_id")
     private ProductionOrder productionOrder;
 
-    @OneToMany(mappedBy = "process")    // Process 안에 여러개의 task (task1, task2, task3 task4)
+    @OneToMany(mappedBy = "process", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 

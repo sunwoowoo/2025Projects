@@ -15,45 +15,43 @@
 <table>
     <tr>
         <th>MODEL</th>
-        <td th:text="${poread.carModel}"></td>
+        <td th:text="${productionorderread.carModel}"></td>
     </tr>
     <tr>
         <th>ORDER STATUS</th>
-        <td th:text="${poread.orderStatus}"></td>
+        <td th:text="${productionorderread.orderStatus}"></td>
     </tr>
     <tr>
         <th>PROCESS TYPE</th>
-        <td th:text="${poread.processType}"></td>
+        <td th:text="${productionorderread.processType}"></td>
     </tr>
     <tr>
         <th>PROGRESS</th>
-        <td th:text="${poread.progress}"></td>
+        <td th:text="${productionorderread.progress}"></td>
     </tr>
     <tr>
         <th>QUANTITY</th>
-        <td th:text="${poread.quantity}"></td>
+        <td th:text="${productionorderread.quantity}"></td>
     </tr>
     <tr>
         <th>STARTDATE</th>
-        <td th:text="${poread.startDate}"></td>
+        <td th:text="${productionorderread.startDate}"></td>
     </tr>
     <tr>
         <th>ENDDATE</th>
-        <td th:text="${poread.endDate}"></td>
+        <td th:text="${productionorderread.endDate}"></td>
     </tr>
 </table>
 
 <div class="btn">
-    <!-- Modify 버튼은 <a> 태그로 대체하여 GET 방식으로 페이지 이동 -->
-    <a th:href="@{/orders/modify/{orderId}(orderId=${poread.id})}" class="btn-class modify-btn">Modify</a>
-
-    <!-- Delete 버튼은 POST 방식으로 처리 -->
-    <form method="post" th:action="@{/orders/remove}">
-        <input type="hidden" name="id" th:value="${poread.id}"/> <!-- 삭제할 주문 ID -->
+    <a th:href="@{/orders/modify/{id}(id=${productionorderread.id})}" class="btn-class modify-btn" style="text-decoration:none;">Modify</a>
+    <form th:action="@{/orders/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${productionorderread.id}" />
         <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
     </form>
 
     <button type="button" class="btn-class back-btn" onclick="window.location.href='/orders/productionorder';">Back</button>
-</div>
+
 </body>
 </html>
