@@ -45,7 +45,7 @@ public class ManufacturingSimulator {
 
         // Add randomization to progress increment
         Random random = new Random();
-        int increment = random.nextInt(40) + 30;
+        int increment = random.nextInt(100) + 50;
         int newProgress = Math.min(task.getProgress() + increment, 100);
 
         log.info("Increment: {}, New progress: {}", increment, newProgress);

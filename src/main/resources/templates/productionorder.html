@@ -101,13 +101,12 @@
                 <h3>기간별 생산량</h3>
             </div>
             <div id="container">
-                <form id="orderGraphForm" action="/orders/productionorder" method="get">
-                    
-                </form>
+                <form id="orderGraphForm" action="/orders/productionorder" method="get"></form>
             </div>
         </div>
     </div>
 
+    <!-- 제작 리스트 -->
     <table class="board-table">
         <thead>
         <tr>
@@ -117,6 +116,7 @@
             <th>Process Type</th>
             <th>Progress</th>
             <th>Quantity</th>
+            <th>RegDate</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Simulate</th>
@@ -145,11 +145,14 @@
                 </div>
             </td>
             <td th:text="${order.quantity}"></td>
+            <td th:text="${order.regDate}"></td>
             <td th:text="${order.startDate}"></td>
             <td th:text="${order.endDate}"></td>
             <td>
                 <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
-                   th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
+                   th:href="@{'/orders/simulate/' + ${order.id}}">
+                    <button type="button">Simulate</button>
+                </a>
             </td>
         </tr>
         </tbody>
@@ -184,8 +187,19 @@
    /*]]>*/
 
    window.createGraph = function() {
-       const categories = orderData.map(order => order.carModel);
-       const quantities = orderData.map(order => order.quantity);
+       // Aggregate data
+       let aggregatedData = {};
+       orderData.forEach(order => {
+            if (aggregatedData[order.carModel]) {
+                aggregatedData[order.carModel] += order.quantity;
+            } else {
+                aggregatedData[order.carModel] = order.quantity;
+            }
+       });
+
+        // Convert aggregated data to arrays for Highcharts
+        const categories = Object.keys(aggregatedData);
+        const quantities = Object.values(aggregatedData);
 
        Highcharts.chart('container', {
            chart: {

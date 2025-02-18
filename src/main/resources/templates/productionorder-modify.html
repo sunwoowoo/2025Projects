@@ -18,7 +18,7 @@
     <table>
         <th>Model</th>
         <td>
-            <input type="text" name="carModel" th:value="${productionorderread.carModel}">
+            <input type="text" name="carModel" th:value="${productionorderread.carModel}"/>
         </td>
         <tr>
             <th>Order status</th>
@@ -34,8 +34,14 @@
         </tr>
         <th>Quantity</th>
         <td>
-            <input type="number" name="quantity" th:value="${productionorderread.quantity}">
+            <input type="number" name="quantity" th:value="${productionorderread.quantity}"/>
         </td>
+        <tr>
+            <th>RegDate</th>
+            <td>
+                <input type="date" name="regDate" th:value="${productionorderread.regDate}" placeholder="YYYY-MM-DD"/>
+            </td>
+        </tr>
         <tr>
             <th>STARTDATE</th>
             <td th:text="${productionorderread.startDate}"></td>

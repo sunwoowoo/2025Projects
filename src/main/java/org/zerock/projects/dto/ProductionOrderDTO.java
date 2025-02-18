@@ -21,6 +21,7 @@ public class ProductionOrderDTO {
     private Long id;
     private String carModel;
     private int quantity;
+    private LocalDate regDate;
     private LocalDate startDate;
     private LocalDate endDate;
     private OrderStatus orderStatus;
@@ -41,6 +42,7 @@ public class ProductionOrderDTO {
                 .id(order.getId())
                 .carModel(order.getCarModel())
                 .quantity(order.getQuantity())
+                .regDate(order.getRegDate())
                 .startDate(order.getStartDate())
                 .endDate(order.getEndDate())
                 .orderStatus(order.getOrderStatus())

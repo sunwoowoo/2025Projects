@@ -27,6 +27,8 @@ public class ProductionOrder {      // 들어온 주문
     private LocalDate startDate;
     // 생산완료날짜
     private LocalDate endDate;
+    //수주날짜
+    private LocalDate regDate;
     // 진행율
     private double progress;
     // 주문제품상태 (대기, 제작중, 완료)

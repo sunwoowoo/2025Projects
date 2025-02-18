@@ -29,6 +29,7 @@ public class ProductionOrderRepositoryTests {
                     .processType(null)
                     .processes(null)
                     .progress(0.0)
+                    .regDate(LocalDate.now())
                     .startDate(null)
                     .endDate(null)
                     .build();
