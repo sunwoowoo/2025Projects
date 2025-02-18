@@ -103,13 +103,16 @@ public class ProductionOrderController {
 
         return "redirect:/orders/productionorder"; // 리다이렉트 시 경로 수정
     }
+
     // 주문 생성
     @PostMapping("/create")
-    public String createOrder(@Valid ProductionOrder productionOrder, BindingResult bindingResult
-            , RedirectAttributes redirectAttributes) {
+    public String createOrder(@Valid ProductionOrder productionOrder, BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "10") int size) {
         log.info("productionorder POST create..........");
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors..............");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/orders/create";
@@ -118,7 +121,8 @@ public class ProductionOrderController {
         log.info("ProductionOrder: {}", productionOrder);
         productionOrderService.saveOrder(productionOrder);
 
-        return "redirect:/orders/productionorder";
+        return "redirect:/orders/productionorder?page=" + page;
+    }
 
     @GetMapping("/productionorder/{orderId}")
     public String read(@PathVariable Long orderId, PageRequestDTO pageRequestDTO, Model model){
@@ -143,20 +147,28 @@ public class ProductionOrderController {
 
     // 수정 페이지로 이동하는 메소드
     @GetMapping("/modify/{orderId}")
-    public String modifyOrder(@PathVariable Long orderId, Model model) {
+    public String modifyOrder(@PathVariable Long orderId,
+                              PageRequestDTO pageRequestDTO, Model model,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "10") int size) {
 
             ProductionOrder productionOrder = productionOrderService.getOrderById(orderId);
             ProductionOrderDTO productionOrderDTO = ProductionOrderDTO.fromEntity(productionOrder);
             model.addAttribute("productionorderread", productionOrderDTO);
+            model.addAttribute("page", page);
+            model.addAttribute("size", size);
             return "productionorder-modify";
     }
 
     @PostMapping("/modify/{orderId}")
-    public String updateOrder(@PathVariable Long orderId, @ModelAttribute ProductionOrderDTO orderDTO) {
+    public String updateOrder(@PathVariable Long orderId, @ModelAttribute ProductionOrderDTO orderDTO,
+                              PageRequestDTO pageRequestDTO,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "10") int size) {
         try {
             // 모델과 수량만 수정하도록 처리
             productionOrderService.updateOrder(orderId, orderDTO);
-            return "redirect:/orders/productionorder/" + orderId;
+            return "redirect:/orders/productionorder?page=" + page + "&size=" + size ;
         } catch (Exception e) {
             log.error("Error while updating order: ", e);
             return "error"; // 예외 발생 시 error 페이지로 리디렉션

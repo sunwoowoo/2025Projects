@@ -119,10 +119,6 @@ public class ProductionOrderService {
 
     }
 
-    public List<ProductionOrder> getAllOrdersAsEntity() {
-        return productionOrderRepository.findAll();
-    }
-
     public List<String> getProcessTypes() {
         List<ProductionOrder> orders = productionOrderRepository.findAll();
         return orders.stream()

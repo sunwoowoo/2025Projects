@@ -48,6 +48,14 @@
     <div id="chart-container"></div>
 </div>
 <div id="Btns">
+    <a th:href="@{|/orders/modify/${poread.id}${pageRequestDTO.getLink()}|}" class="btn-class modify-btn" style="text-decoration:none;">
+        <button type="button">Modify</button>
+    </a>
+    <form th:action="@{/orders/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${poread.id}" />
+        <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
+
     <a th:href="@{|/orders/productionorder${pageRequestDTO.getLink()}|}">
         <button type="button">List</button>
     </a>

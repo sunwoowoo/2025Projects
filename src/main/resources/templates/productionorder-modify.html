@@ -13,36 +13,38 @@
     </div>
 </header>
 <form th:action="@{/orders/modify/{id}(id=${productionorderread.id})}" method="post">
-<table>
-    <th>Model</th>
-    <td>
-        <input type="text" name="carModel" th:value="${productionorderread.carModel}">
-    </td>
-    <tr>
-        <th>Order status</th>
-        <td th:text="${productionorderread.orderStatus}"></td>
-    </tr>
-    <tr>
-        <th>Process type</th>
-        <td th:text="${productionorderread.processType}"></td>
-    </tr>
-    <tr>
-        <th>Progress</th>
-        <td th:text="${productionorderread.progress}"></td>
-    </tr>
-    <th>Quantity</th>
-    <td>
-        <input type="number" name="quantity" th:value="${productionorderread.quantity}">
-    </td>
-    <tr>
-        <th>STARTDATE</th>
-        <td th:text="${productionorderread.startDate}"></td>
-    </tr>
-    <tr>
-        <th>ENDDATE</th>
-        <td th:text="${productionorderread.endDate}"></td>
-    </tr>
-</table>
+    <input type="hidden" name="page" th:value="${page}">
+    <input type="hidden" name="size" th:value="${size}">
+    <table>
+        <th>Model</th>
+        <td>
+            <input type="text" name="carModel" th:value="${productionorderread.carModel}">
+        </td>
+        <tr>
+            <th>Order status</th>
+            <td th:text="${productionorderread.orderStatus}"></td>
+        </tr>
+        <tr>
+            <th>Process type</th>
+            <td th:text="${productionorderread.processType}"></td>
+        </tr>
+        <tr>
+            <th>Progress</th>
+            <td th:text="${productionorderread.progress}"></td>
+        </tr>
+        <th>Quantity</th>
+        <td>
+            <input type="number" name="quantity" th:value="${productionorderread.quantity}">
+        </td>
+        <tr>
+            <th>STARTDATE</th>
+            <td th:text="${productionorderread.startDate}"></td>
+        </tr>
+        <tr>
+            <th>ENDDATE</th>
+            <td th:text="${productionorderread.endDate}"></td>
+        </tr>
+    </table>
     <!-- 수정 버튼 (Submit 버튼으로 변경) -->
     <div class="btn">
         <button type="submit" class="btn-class modify-btn">Modify</button>

@@ -66,7 +66,9 @@
             <div class="popup-title">
                 <h3>주문 추가</h3>
             </div>
-            <form id="orderForm" action="/orders/create" method="post">
+            <form id="orderForm" th:action="@{/orders/create}" method="post">
+                <input type="hidden" name="page" th:value="${param.page}">
+                <input type="hidden" name="size" th:value="${param.size}">
                 <div class="form-group">
                     <label for="carModel">Model:</label>
                     <input type="text" id="carModel" name="carModel" required>
@@ -96,14 +98,13 @@
     <div id="graphPopup" class="popup" style="display: none;">
         <div class="popup-content">
             <div class="popup-title">
-                <h3>모델별 주문량</h3>
+                <h3>기간별 생산량</h3>
             </div>
-<<<<<<< HEAD
-            <div id="container"></div>
-=======
             <div id="container">
+                <form id="orderGraphForm" action="/orders/productionorder" method="get">
+                    
+                </form>
             </div>
->>>>>>> dea22c37a35d9262554dd9ff20719e2168216180
         </div>
     </div>
 
@@ -148,7 +149,7 @@
             <td th:text="${order.endDate}"></td>
             <td>
                 <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
-                   th:href="@{/orders/simulate/{id}(id=${order.id})}">Simulate</a>
+                   th:href="@{'/orders/simulate/' + ${order.id}}">Simulate</a>
             </td>
         </tr>
         </tbody>
@@ -164,8 +165,8 @@
             </li>
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
                 <a class="page-link" th:href="@{/orders/productionorder(page=${pageNum}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}"
-                   th:text="${pageNum}"
-                   th:classappend="${pageNum == currentPage ? 'active' : ''}">
+                                     th:text="${pageNum}"
+                                     th:classappend="${pageNum == currentPage ? 'active' : ''}">
                 </a>
             </li>
             <li class="page-item" th:if="${currentPage < totalPages}">
@@ -176,11 +177,7 @@
         </ul>
     </nav>
 </main>
-<<<<<<< HEAD
 <script th:src="@{/js/order.js}"></script>
-=======
-<script th:src="@{/js/production-order.js}"></script>
->>>>>>> dea22c37a35d9262554dd9ff20719e2168216180
 <script th:inline="javascript">
     /*<![CDATA[*/
    var orderData = /*[[${orders}]]*/ [];
