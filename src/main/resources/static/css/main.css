@@ -121,6 +121,21 @@ form button:hover {
     text-align: center;
 }
 
+/* Window 기본 텍스트 하이라이트 해제하기 */
+.board-table tbody tr {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+::selection {
+    background: transparent;
+}
+
+::-moz-selection {
+    background: transparent;
+}
+
 /* 헤더 및 메뉴 스타일 */
 .t-bar {
     display: flex;

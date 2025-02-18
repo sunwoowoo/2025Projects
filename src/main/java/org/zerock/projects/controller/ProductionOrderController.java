@@ -1,5 +1,6 @@
 package org.zerock.projects.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,12 +137,27 @@ public class ProductionOrderController {
     }
 
     @PostMapping("/remove")
-    public String removeOrder(Long id, RedirectAttributes redirectAttributes) {
-        log.info("Order to delete with ID: {}", id);
+    public String removeOrder(@RequestParam("orderIds") String orderIdsJson, RedirectAttributes redirectAttributes) {
+        try {
+            // JSON으로 받은 String orderIDs를 개별의 Long datatype orderIds로 맵핑
+            ObjectMapper objectMapper = new ObjectMapper();
+            Long[] orderIds = objectMapper.readValue(orderIdsJson, Long[].class);
 
-        productionOrderService.removeOrder(id);
+            log.info("Order to delete with ID: {}", Arrays.toString(orderIds));
 
-        redirectAttributes.addFlashAttribute("result", "removed");
+            if (orderIds != null && orderIds.length > 0) {
+                for (Long id : orderIds) {
+                    productionOrderService.removeOrder(id);
+                }
+                redirectAttributes.addFlashAttribute("result", "removed");
+            } else {
+                log.warn("No order IDs received for deletion");
+                redirectAttributes.addFlashAttribute("result", "noOrdersSelected");
+            }
+        } catch (Exception e) {
+            log.error("Error parsing order IDs: ", e);
+            redirectAttributes.addFlashAttribute("result", "error");
+        }
 
         return "redirect:/orders/productionorder";
     }

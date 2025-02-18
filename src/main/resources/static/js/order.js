@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const graphPopup = document.getElementById('graphPopup');
     let selectedRows = [];
     const btnForm = document.querySelector('#btnForm');
+    let lastSelectedRow = null;
 
     fetch('/orders/productionorder')
       .then(response => response.json())
@@ -53,19 +54,43 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
         row.addEventListener("click", function(event) {
             event.stopPropagation();
-            //단일행 선택 동작
-            if (selectedRows.includes(this)) {
-                //선택 해제
-                selectedRows = selectedRows.filter(r => r != this);
-                this.classList.remove('selected');
-                console.log("selected Rows", selectedRows);
+            // 다수행 선택 동작
+            if (event.shiftKey && lastSelectedRow) {
+                // Shift key is pressed and we have a last selected row
+                const rows = Array.from(this.parentElement.children);
+                const currentIndex = rows.indexOf(this);
+                const lastIndex = rows.indexOf(lastSelectedRow);
 
+                const start = Math.min(currentIndex, lastIndex);
+                const end = Math.max(currentIndex, lastIndex);
+
+                selectedRows = rows.slice(start, end + 1);
+
+                // Clear previous selections
+                rows.forEach(r => r.classList.remove('selected'));
+
+                // Add 'selected' class to the new selection
+                selectedRows.forEach(r => r.classList.add('selected'));
             } else {
-                //행 선택
-                selectedRows.forEach(r => r.classList.remove('selected'));
-                selectedRows = [this];
-                this.classList.add('selected');
-                console.log("selected Rows", this);
+                //단일행 선택 동작
+                if (selectedRows.includes(this)) {
+                    //선택 해제
+                    selectedRows = selectedRows.filter(r => r != this);
+                    this.classList.remove('selected');
+                    console.log("selected Rows", selectedRows);
+                } else {
+                    //행 선택
+                    if (!event.ctrlKey) {
+                        // If Ctrl (or Cmd on Mac) is not pressed, clear previous selections
+                        selectedRows.forEach(r => r.classList.remove('selected'));
+                        selectedRows = [];
+                    }
+                    selectedRows.push(this);
+                    this.classList.add('selected');
+                }
+
+                lastSelectedRow = this;
+                console.log("Selected Rows", selectedRows);
             }
         });
     });
@@ -88,18 +113,18 @@ document.addEventListener("DOMContentLoaded", function() {
     			 alert("항목을 선택해주세요.");
     		 } else {
     			 if (confirm("정말 삭제하시겠습니까?")) {
-    				 for (i = 0; i < selectedRows.length; i++) {	// 모든 선택된 행
-    					 const orderId = selectedRows[i].children[0].textContent;
-    					 selectedRows[i].remove();
-    					 console.log("Deleting an order with ID:", orderId);
+    			     const orderIds = selectedRows.map(row => row.children[0].textContent.trim());
 
-    					 // Set hidden input value
-                         document.querySelector("#orderId").value = orderId;
+    				 // Remove all selected rows from the DOM
+                     selectedRows.forEach(row => row.remove());
 
-    				 	 btnForm.action = `/orders/remove`;
-    				 	 btnForm.method = 'post';
-    				 	 btnForm.submit();
-    				 }
+                     // Set hidden input value with all orderIds (JSON)
+                     document.querySelector("#orderId").value = JSON.stringify(orderIds);
+
+                     btnForm.action = `/orders/remove`;
+                     btnForm.method = 'post';
+                     btnForm.submit();
+
     				 selectedRows = [];	// 선택된 행들 집합 리셋
     			 } else {
     			    selectedRows = [];	// 선택된 행들 집합 리셋
