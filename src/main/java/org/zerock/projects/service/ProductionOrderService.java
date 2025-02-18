@@ -116,6 +116,7 @@ public class ProductionOrderService {
         // 주문 정보 업데이트 (carModel , quantity)
         order.setCarModel(orderDTO.getCarModel());
         order.setQuantity(orderDTO.getQuantity());
+        order.setRegDate(orderDTO.getRegDate());
 
     }
 

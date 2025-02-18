@@ -1,6 +1,7 @@
 package org.zerock.projects.domain;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 
@@ -28,6 +29,7 @@ public class ProductionOrder {      // 들어온 주문
     // 생산완료날짜
     private LocalDate endDate;
     //수주날짜
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate regDate;
     // 진행율
     private double progress;

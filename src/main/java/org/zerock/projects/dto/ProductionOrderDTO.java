@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
@@ -21,6 +22,7 @@ public class ProductionOrderDTO {
     private Long id;
     private String carModel;
     private int quantity;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate regDate;
     private LocalDate startDate;
     private LocalDate endDate;
