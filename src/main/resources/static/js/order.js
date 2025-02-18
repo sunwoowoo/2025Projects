@@ -131,4 +131,21 @@ document.addEventListener("DOMContentLoaded", function() {
     			 }
     		 }
     	  }, false);
+
+    // 검색 조건을 날짜검색으로 바꿀 시 검색상자를 날짜 형식으로 변환
+    document.getElementById('searchType').addEventListener('change', function() {
+        const searchInput = document.getElementById('searchInput');
+        const dateInput = document.getElementById('dateInput');
+        console.log("dateInput : ", dateInput);
+
+        console.log("Search type changed to:", this.value);
+        if (this.value === 'regDate') {
+            searchInput.style.display = 'none';
+            dateInput.style.display = 'inline-block';
+             console.log("Date input value:", dateInput.value);
+        } else {
+            searchInput.style.display = 'inline-block';
+            dateInput.style.display = 'none';
+        }
+    });
 });

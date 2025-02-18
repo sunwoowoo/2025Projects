@@ -117,7 +117,6 @@ public class ProductionOrderService {
         order.setCarModel(orderDTO.getCarModel());
         order.setQuantity(orderDTO.getQuantity());
         order.setRegDate(orderDTO.getRegDate());
-
     }
 
     public List<String> getProcessTypes() {

@@ -8,6 +8,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +26,7 @@ import org.zerock.projects.service.machines.ManufacturingSimulator;
 import org.zerock.projects.service.search.ProductionOrderSearch;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,13 +50,15 @@ public class ProductionOrderController {
     public String list(@RequestParam(required = false, defaultValue = "") String types,
                        @RequestParam(required = false, defaultValue = "") String keyword,
                        @RequestParam(defaultValue = "1") int page,
+                       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate regDate,
                        Model model,
                        PageRequestDTO pageRequestDTO) {
         int pageSize = 10; // 한 페이지에 10개씩 표시
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("regDate").ascending());
         Page<ProductionOrder> orderPage;
+
         // 검색 조건 처리
-        if (types != null && keyword != null && !keyword.isEmpty()) {
+        if (types != null && !types.isEmpty()) {
             switch (types) {
                 case "carModel":
                     orderPage = productionOrderSearch.searchByKeyword(keyword, pageable);
@@ -65,6 +70,14 @@ public class ProductionOrderController {
                 case "orderStatus":
                     OrderStatus orderStatus = OrderStatus.valueOf(keyword.toUpperCase());
                     orderPage = productionOrderSearch.searchByStatus(List.of(orderStatus), pageable);
+                    break;
+                case "regDate":
+                    log.info("regDate is : {}", regDate);
+                    if (regDate != null) {
+                        orderPage = productionOrderSearch.findByRegDate(regDate, pageable);
+                    } else {
+                        orderPage = productionOrderSearch.findAllOrderByRegDateAsc(pageable);
+                    }
                     break;
                 default:
                     orderPage = productionOrderService.getAllOrders(pageable);
@@ -83,6 +96,7 @@ public class ProductionOrderController {
         model.addAttribute("totalPages", orderPage.getTotalPages());
         model.addAttribute("types", types);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("regDate", regDate);
 
         return "productionorder";
     }

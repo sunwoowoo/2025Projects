@@ -9,6 +9,7 @@ import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.repository.ProductionOrderRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -50,5 +51,15 @@ public class ProductionOrderSearch {
     // 주문 현황에 따라 검색
     public Page<ProductionOrder> searchByStatus(List<OrderStatus> orderStatuses, Pageable pageable) {
         return productionOrderRepository.findByOrderStatus(orderStatuses, pageable);
+    }
+
+    // 등록 날짜 오름차순으로 정렬(검색)
+    public Page<ProductionOrder> findAllOrderByRegDateAsc(Pageable pageable) {
+        return productionOrderRepository.findAllOrderByRegDateAsc(pageable);
+    }
+
+    // 등록 날짜에 따라 검색
+    public Page<ProductionOrder> findByRegDate(LocalDate date, Pageable pageable) {
+        return productionOrderRepository.findByRegDate(date, pageable);
     }
 }

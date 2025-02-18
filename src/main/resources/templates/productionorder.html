@@ -40,8 +40,12 @@
                         <option value="processType" th:selected="${types != null and types.contains('processType')}">Process Type</option>
                         <option value="progress" th:selected="${types != null and types.contains('progress')}">Progress</option>
                         <option value="quantity" th:selected="${types != null and types.contains('quantity')}">Quantity</option>
+                        <option value="regDate" th:selected="${types != null and types.contains('regDate')}">regDate</option>
                     </select>
-                    <input type="text" name="keyword" id="searchInput" class="search-box" placeholder="Search">
+                    <input type="text" name="keyword" id="searchInput" class="search-box" placeholder="Search"
+                           th:style="${types == 'regDate'} ? 'display: none' : 'display: inline-block'">
+                    <input type="date" name="regDate" id="dateInput" class="search-box" placeholder="YYYY-mm-DD"
+                           th:style="${types == 'regDate'} ? 'display: inline-block' : 'display: none'">
                     <button class="btn" type="submit" id="searchBtn">
                         <i class="fas fa-search"></i>
                     </button>
