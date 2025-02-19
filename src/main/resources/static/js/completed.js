@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 그래프 버튼 클릭 시 팝업 열기
     graphBtn.addEventListener('click', function(event) {
         graphPopup.style.display = 'block'; //팝업 표시
-        fetch('/completed-orders/api/productiongraph')
+        fetch('/completed-orders/api/completedgraph')
                     .then(response => response.json())
                     .then(data => {
                         orderData = data;
