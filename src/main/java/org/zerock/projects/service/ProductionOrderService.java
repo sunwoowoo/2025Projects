@@ -118,17 +118,4 @@ public class ProductionOrderService {
         order.setQuantity(orderDTO.getQuantity());
 
     }
-
-    public List<ProductionOrder> getAllOrdersAsEntity() {
-        return productionOrderRepository.findAll();
-    }
-
-    public List<String> getProcessTypes() {
-        List<ProductionOrder> orders = productionOrderRepository.findAll();
-        return orders.stream()
-                .map(ProductionOrder::getProcessType)
-                .filter(Objects::nonNull)  // null 값이 있는 경우 제외
-                .map(Enum::name)  // Enum의 name()을 호출해서 String 값으로 변환
-                .collect(Collectors.toList());
-    }
 }

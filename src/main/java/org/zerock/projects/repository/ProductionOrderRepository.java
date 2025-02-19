@@ -27,8 +27,10 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     //  특정 키워드가 포함된 차량 모델을 검색 (LIKE 사용)
     @Query("SELECT b FROM ProductionOrder b WHERE b.carModel LIKE CONCAT('%', :keyword, '%')")
     Page<ProductionOrder> findKeyword(@Param("keyword") String keyword, Pageable pageable);
+    // 주문 상태에 따라 검색
+    @Query("SELECT b FROM ProductionOrder b WHERE b.orderStatus IN :orderStatus")
+    Page<ProductionOrder> findByOrderStatus(@Param("orderStatus") List<OrderStatus> orderStatus, Pageable pageable);
 
     void deleteByProcesses_Id(Long processId);
-
 
 }

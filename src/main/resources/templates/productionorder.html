@@ -19,10 +19,7 @@
             <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
             <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
             <a href="/materials" th:classappend="${#httpServletRequest.requestURI == '/materials' ? 'active' : ''}">자재관리</a>
-<<<<<<< HEAD
             <a href="/complete" th:classappend="${#httpServletRequest.requestURI == '/complete' ? 'active' : ''}">출고대기</a>
-=======
->>>>>>> master
         </nav>
     </div>
 </header>
@@ -171,11 +168,9 @@
         </ul>
     </nav>
 </main>
-<<<<<<< HEAD
+
 <script th:src="@{/js/production-order.js}"></script>
-=======
-<script th:src="@{/js/order.js}"></script>
->>>>>>> master
+
 <script th:inline="javascript">
     /*<![CDATA[*/
    var orderData = /*[[${orders}]]*/ [];
