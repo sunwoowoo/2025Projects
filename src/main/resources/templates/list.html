@@ -180,7 +180,7 @@
     <div class="chart-container">
         <div class="col">
             <div class="card mb-4">
-                <div class="card-header"><i class="fas fa-chart-pie me-1"></i> 자재 카테고리 비중</div>
+                <div class="card-header"><i class="fas fa-chart-pie me-1"></i> 자재 재고 상태</div>
                 <div class="card-body">
                     <canvas id="myPieChart"></canvas>
                 </div>
@@ -205,17 +205,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Thymeleaf에서 전달한 자재 재고 상태 차트 데이터
+    const inStockCount = [[${inStockCount}]];  // Thymeleaf 변수 처리
+    const outStockCount = [[${outStockCount}]];
+
+    // 파이 차트 그리기
     new Chart(document.getElementById('myPieChart').getContext('2d'), {
         type: 'pie',
         data: {
-            labels: ['Red', 'Blue', 'Yellow'],
+            labels: ['In Stock', 'Out Stock'],
             datasets: [{
-                data: [10, 20, 30],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 1)',  /* 선명한 색상 */
-                    'rgba(54, 162, 235, 1)',  /* 선명한 색상 */
-                    'rgba(255, 206, 86, 1)'   /* 선명한 색상 */
-                ],
+                data: [inStockCount, outStockCount],
+                backgroundColor: ['#36A2EB', '#FF5733'],
                 borderWidth: 1
             }]
         },
@@ -225,18 +226,24 @@
         }
     });
 
+    // 바 차트 그리기 (예시 데이터)
     new Chart(document.getElementById('myBarChart').getContext('2d'), {
         type: 'bar',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['Material 1', 'Material 2', 'Material 3'],  // 예시 자재
             datasets: [{
-                label: 'Sample Bar Chart',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: 'rgba(54, 162, 235, 1)', /* 선명한 색상 */
+                label: '재고 수량',
+                data: [inStockCount, outStockCount, 5],  // 예시 데이터
+                backgroundColor: ['#36A2EB', '#FF5733', '#FF8C00'],
                 borderWidth: 1
             }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 </script>
+
 </body>
 </html>
