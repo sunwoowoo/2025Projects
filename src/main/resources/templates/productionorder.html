@@ -40,12 +40,14 @@
                         <option value="processType" th:selected="${types != null and types.contains('processType')}">Process Type</option>
                         <option value="progress" th:selected="${types != null and types.contains('progress')}">Progress</option>
                         <option value="quantity" th:selected="${types != null and types.contains('quantity')}">Quantity</option>
-                        <option value="regDate" th:selected="${types != null and types.contains('regDate')}">regDate</option>
+                        <option value="regDate" th:selected="${types != null and types.contains('regDate')}">Registration Date</option>
                     </select>
                     <input type="text" name="keyword" id="searchInput" class="search-box" placeholder="Search"
-                           th:style="${types == 'regDate'} ? 'display: none' : 'display: inline-block'">
+                           th:style="${types == 'regDate'} ? 'display: none' : 'display: inline-block'"
+                           th:value="${keyword}" />
                     <input type="date" name="regDate" id="dateInput" class="search-box" placeholder="YYYY-mm-DD"
-                           th:style="${types == 'regDate'} ? 'display: inline-block' : 'display: none'">
+                           th:style="${types == 'regDate'} ? 'display: inline-block' : 'display: none'"
+                           th:value="${#temporals.format(regDate, 'yyyy-MM-dd')}" />
                     <button class="btn" type="submit" id="searchBtn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -166,18 +168,34 @@
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <li class="page-item" th:if="${currentPage > 1}">
-                <a class="page-link" th:href="@{/orders/productionorder(page=${currentPage - 1}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}" aria-label="Previous">
+                <a class="page-link" th:href="@{/orders/productionorder(
+                page=${currentPage - 1},
+                types=${types != null ? types : ''},
+                keyword=${keyword != null ? keyword : ''},
+                regDate=${regDate != null ? regDate : ''}
+                )}
+                "
+                   aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-                <a class="page-link" th:href="@{/orders/productionorder(page=${pageNum}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}"
-                                     th:text="${pageNum}"
-                                     th:classappend="${pageNum == currentPage ? 'active' : ''}">
+                <a class="page-link" th:href="@{/orders/productionorder(
+                page=${pageNum},
+                types=${types != null ? types : ''},
+                keyword=${keyword != null ? keyword : ''},
+                regDate=${regDate != null ? #temporals.format(regDate, 'yyyy-MM-dd') : ''})}"
+                   th:text="${pageNum}"
+                   th:classappend="${pageNum == currentPage ? 'active' : ''}">
                 </a>
             </li>
             <li class="page-item" th:if="${currentPage < totalPages}">
-                <a class="page-link" th:href="@{/orders/productionorder(page=${currentPage + 1}, types=${types != null ? types : ''}, keyword=${keyword != null ? keyword : ''})}" aria-label="Next">
+                <a class="page-link" th:href="@{/orders/productionorder(
+                page=${currentPage + 1},
+                types=${types != null ? types : ''},
+                keyword=${keyword != null ? keyword : ''},
+                regDate=${regDate != null ? regDate : ''})}"
+                   aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

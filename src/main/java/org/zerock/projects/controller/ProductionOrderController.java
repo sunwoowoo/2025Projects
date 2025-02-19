@@ -53,8 +53,14 @@ public class ProductionOrderController {
                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate regDate,
                        Model model,
                        PageRequestDTO pageRequestDTO) {
-        int pageSize = 10; // 한 페이지에 10개씩 표시
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("regDate").ascending());
+        pageRequestDTO.setType(types);
+        pageRequestDTO.setKeyword(keyword);
+        pageRequestDTO.setPage(page);
+        pageRequestDTO.setRegDate(regDate);
+        pageRequestDTO.setSize(10);
+
+        // Use pageRequestDTO's getPageable method instead of creating new PageRequest
+        Pageable pageable = pageRequestDTO.getPageable("regDate");  // This will handle the page, size, and sorting
         Page<ProductionOrder> orderPage;
 
         // 검색 조건 처리
@@ -92,11 +98,12 @@ public class ProductionOrderController {
                 .collect(Collectors.toList());
 
         model.addAttribute("orders", orders);
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", pageRequestDTO.getPage());
         model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
+        model.addAttribute("regDate", regDate);
         model.addAttribute("types", types);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("regDate", regDate);
 
         return "productionorder";
     }

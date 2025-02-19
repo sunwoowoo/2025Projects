@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 
 @Builder
 @Data
@@ -24,6 +26,8 @@ public class PageRequestDTO {
     private String link;
     private String type;
     private String keyword;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate regDate;
 
     public String[] getType(){
         if (type == null || type.isEmpty()){
@@ -33,7 +37,7 @@ public class PageRequestDTO {
     }
 
     public Pageable getPageable(String ... props){
-        return PageRequest.of(this.page - 1 , this.size, Sort.by(props).descending());
+        return PageRequest.of(this.page - 1 , this.size, Sort.by(props).ascending());
 
     }
     public String getLink(){
@@ -50,6 +54,9 @@ public class PageRequestDTO {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+        }
+        if(regDate != null) {
+            builder.append("&regDate=").append(regDate);
         }
 
         link = builder.toString();
