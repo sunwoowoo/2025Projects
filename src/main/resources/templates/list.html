@@ -1,144 +1,246 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>홈</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/main.css}">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
     <style>
-        #processTypeChart {
-            width: 100% !important;
-            height: 300px !important;
-            border: 1px solid black;
-            margin-bottom: 10px;
-            display: block; 
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
-        .merge {
-            display: flex !important;
-            justify-content: space-around !important;
-            align-items: flex-start !important;
-            gap: 20px !important;
-            margin: 0 auto !important;
+        .container-fluid {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .menu-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .col-xl-3 {
+            flex: 0 0 22%;
+            margin-bottom: 10px !important;
+            margin-top: 10px;
+            height: 130px !important;
+            border-radius:5px;
+        }
+
+        .card {
+            background-color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            background-color: #c0c0c0;
+            font-weight: bold;
+            color: white;
+        }
+
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .menu-card {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: black;
+            font-size: 1.25rem;
+            background-color: transparent;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .menu-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        canvas {
             width: 100% !important;
+            height: 100% !important;
+        }
+
+        #myPieChart {
+            width: 90% !important;
+            height: 90% !important;
+        }
+
+        #myBarChart {
+            width: 90% !important;
+            height: 90% !important;
         }
 
         .chart-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: space-evenly;
+            gap: 15px;
+            height: 400px;
         }
 
-        /* 공지사항 테이블 스타일 */
-        .notice-table {
+        /* 중앙 정렬 */
+        .navbar-nav {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .navbar-nav h3 {
+            margin: 0;
+            color: white;  /* 글자 색을 흰색으로 변경 */
+            background-color: transparent; /* 배경색 없애기 */
+        }
+
+        footer {
+            position: relative;
+            bottom: 0;
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .notice-table th, .notice-table td {
-            border: 1px solid silver;
-            padding: 8px;
             text-align: center;
-        }
-
-        .notice-table th {
-            background-color: silver
-        }
-
-        .notice-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .notice-table tr:hover {
-            background-color: silver;
+            padding: 10px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-top: auto; /* 화면 하단에 카피라이트 고정 */
         }
     </style>
 </head>
 <body>
 <header>
     <div class="t-bar">
-        <nav class="menu">
-            <a href="/list" th:classappend="${#httpServletRequest.requestURI == '/list' ? 'active' : ''}">홈</a>
-            <a href="/orders/productionorder" th:classappend="${#httpServletRequest.requestURI == '/orders/productionorder' ? 'active' : ''}">주문제작</a>
-            <a href="/materials" th:classappend="${#httpServletRequest.requestURI == '/materials' ? 'active' : ''}">자재관리</a>
-            <a href="/completed-orders/completed" th:classappend="${#httpServletRequest.requestURI == '/complete' ? 'active' : ''}">출고대기</a>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
+            <div class="navbar-nav" style="flex-grow: 1; display: flex; justify-content: center;">
+                <h3 style="color: white; padding-bottom: 10px;">3조 MES 프로젝트</h3>
+            </div>
         </nav>
     </div>
 </header>
-<h3>Welcome, <span th:text="${userId}">User</span>!</h3>
 
-<!-- 그래프 영역 -->
-<div class="merge">
-    <div class="chart-container">
-        <canvas id="processTypeChart1"></canvas>  <!-- 첫 번째 그래프 표시 영역 -->
-        <h2>Process Type 분포</h2>
+<div class="container-fluid">
+    <div class="menu-row">
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card">
+                <a href="/list" class="menu-card">
+                    <i class="fas fa-home fa-3x"></i><br>홈
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card">
+                <a href="/orders/productionorder" class="menu-card">
+                    <i class="fas fa-cogs fa-3x"></i><br>주문제작
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card">
+                <a href="/materials" class="menu-card">
+                    <i class="fas fa-cogs fa-3x"></i><br>자재관리
+                </a>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card">
+                <a href="/complete" class="menu-card">
+                    <i class="fas fa-truck fa-3x"></i><br>출고대기
+                </a>
+            </div>
+        </div>
     </div>
 
     <div class="chart-container">
-        <canvas id="processTypeChart2"></canvas>  <!-- 두 번째 그래프 표시 영역 -->
-        <h2>자재별 수량 분포</h2>
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-header"><i class="fas fa-chart-pie me-1"></i> 자재 재고 상태</div>
+                <div class="card-body">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-header"><i class="fas fa-chart-bar me-1"></i> 모델 별 출고가능 수량</div>
+                <div class="card-body">
+                    <canvas id="myBarChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<hr>
-<!-- 공지사항 테이블 영역 -->
-<h2>공지사항</h2>
-<table class="notice-table">
-    <thead>
-    <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>작성자</th>
-        <th>작성일</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>1</td>
-        <td>공지사항</td>
-        <td>admin</td>
-        <td>2025-01-10</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>공지사항</td>
-        <td>admin</td>
-        <td>2025-02-10</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>**긴급 공지**</td>
-        <td>admin</td>
-        <td>2025-02-24</td>
-    </tr>
-    </tbody>
-</table>
 
-<script th:inline="javascript">
-    var processTypes = [[${processTypes}]];  // 서버에서 받아온 데이터
+<footer style="position: fixed; bottom: 0; width: 100%; text-align: center; padding: 10px; background-color: #f8f9fa; color: #6c757d; font-size: 0.875rem;">
+    <p>&copy; 2025 Group3. All rights reserved.</p>
+</footer>
 
-    var counts = {};
-    processTypes.forEach(function(type) {
-        counts[type] = (counts[type] || 0) + 1;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Thymeleaf에서 전달한 자재 재고 상태 차트 데이터
+    const inStockCount = [[${inStockCount}]];  // Thymeleaf 변수 처리
+    const outStockCount = [[${outStockCount}]];
+
+    // 파이 차트 그리기
+    new Chart(document.getElementById('myPieChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: ['In Stock', 'Out Stock'],
+            datasets: [{
+                data: [inStockCount, outStockCount],
+                backgroundColor: ['#36A2EB', '#FF5733'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 
-    var labels = Object.keys(counts);
-    var data = Object.values(counts);
-
-    var ctx1 = document.getElementById('processTypeChart1').getContext('2d');
-    new Chart(ctx1, {
+    // 바 차트 그리기 (예시 데이터)
+    new Chart(document.getElementById('myBarChart').getContext('2d'), {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: ['Material 1', 'Material 2', 'Material 3'],  // 예시 자재
             datasets: [{
-                label: 'Process Type Count',
-                data: data,
-                backgroundColor: ['green']
+                label: '재고 수량',
+                data: [inStockCount, outStockCount, 5],  // 예시 데이터
+                backgroundColor: ['#36A2EB', '#FF5733', '#FF8C00'],
+                borderWidth: 1
             }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 </script>

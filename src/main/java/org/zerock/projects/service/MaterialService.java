@@ -91,4 +91,26 @@ public class MaterialService {
         materialRepository.save(material);
     }
 
+    // 재고 상태가 'in-stock'인 자재 리스트 반환
+    public List<Material> getInStockMaterials() {
+        List<Material> materials = materialRepository.findByMstockstatus("in-stock");
+        return (materials != null && !materials.isEmpty()) ? materials : null;  // 빈 리스트도 null로 처리
+    }
+
+    // 재고 상태가 'out-stock'인 자재 리스트 반환
+    public List<Material> getOutStockMaterials() {
+        List<Material> materials = materialRepository.findByMstockstatus("out-stock");
+        return (materials != null && !materials.isEmpty()) ? materials : null;  // 빈 리스트도 null로 처리
+    }
+
+    // 재고 상태가 'in-stock'인 자재 개수 반환
+    public Long getInStockCount() {
+        return materialRepository.countByMstockstatus("in-stock");
+    }
+
+    // 재고 상태가 'out-stock'인 자재 개수 반환
+    public Long getOutStockCount() {
+        return materialRepository.countByMstockstatus("out-stock");
+    }
 }
+
