@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세 페이지</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/poread.css}">
+</head>
+<body>
+<header>
+    <div class="topbar">
+        <h1 th:text="'No.' + ${completeRead.id}"></h1>
+    </div>
+</header>
+<div id="content">
+    <table>
+        <caption>주문 상세</caption>
+        <tr>
+            <th>MODEL</th>
+            <td th:text="${completeRead.carModel}"></td> <!-- complete-read.carModel -->
+        </tr>
+        <tr>
+            <th>QUANTITY</th>
+            <td th:text="${completeRead.quantity}"></td> <!-- complete-read.quantity -->
+        </tr>
+        <tr>
+            <th>REGISTER DATE</th>
+            <td th:text="${completeRead.startDate}"></td> <!-- complete-read.startDate -->
+        </tr>
+        <tr>
+            <th>STARTDATE</th>
+            <td th:text="${completeRead.startDate}"></td> <!-- complete-read.startDate -->
+        </tr>
+        <tr>
+            <th>ENDDATE</th>
+            <td th:text="${completeRead.endDate}"></td> <!-- complete-read.endDate -->
+        </tr>
+    </table>
+    <div id="chart-container"></div>
+</div>
+<div id="Btns">
+    <a th:href="@{|/completed-orders/modify/${completeRead.id}${pageRequestDTO.getLink()}|}" class="btn-class modify-btn" style="text-decoration:none;">
+        <button type="button">Modify</button>
+    </a>
+    <form th:action="@{/completed-orders/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${completeRead.id}" />
+        <button type="submit" class="btn-class delete-btn">Delete</button>
+    </form>
+
+    <a th:href="@{|/completed-orders/completed${pageRequestDTO.getLink()}|}">
+        <button type="button">List</button>
+    </a>
+</div>
+</body>
+<script>
+    const chartContainer = document.querySelector('#chart-container');
+
+    window.createPieGraph = function(containerId) {
+    Highcharts.chart(containerId, {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: 'Car Component Composition'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Components',
+            colorByPoint: true,
+            data: [{
+                name: 'Body (Pressing)',
+                y: 40,
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Frame (Welding)',
+                y: 25
+            }, {
+                name: 'Paint',
+                y: 10
+            }, {
+                name: 'Interior (Assembly)',
+                y: 15
+            }, {
+                name: 'Electronics (Assembly)',
+                y: 10
+            }]
+        }]
+    });
+};
+
+    window.createPieGraph(chartContainer.id);
+
+</script>
+</html>

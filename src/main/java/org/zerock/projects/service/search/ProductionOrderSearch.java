@@ -62,4 +62,14 @@ public class ProductionOrderSearch {
     public Page<ProductionOrder> findByRegDate(LocalDate date, Pageable pageable) {
         return productionOrderRepository.findByRegDate(date, pageable);
     }
+
+    // OrderStatus 별 차량 모델 검색
+    public Page<ProductionOrder> findByKeywordAndStatus(String keyword, List<OrderStatus> statuses, Pageable pageable) {
+        return productionOrderRepository.findByKeywordAndStatus(keyword, statuses, pageable);
+    };
+
+    // OrderStatus 별 제품 등록 날짜로 검색
+    public Page<ProductionOrder> findByRegDateAndStatus(LocalDate regDate, List<OrderStatus> statuses, Pageable pageable) {
+        return productionOrderRepository.findByRegDateAndStatus(regDate, statuses, pageable);
+    };
 }

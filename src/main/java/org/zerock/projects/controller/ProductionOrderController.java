@@ -158,7 +158,10 @@ public class ProductionOrderController {
     }
 
     @PostMapping("/remove")
-    public String removeOrder(@RequestParam("orderIds") String orderIdsJson, RedirectAttributes redirectAttributes) {
+    public String removeOrder(@RequestParam("orderIds") String orderIdsJson,
+                              RedirectAttributes redirectAttributes,
+                              @RequestParam(defaultValue = "1") int page,
+                              @RequestParam(defaultValue = "10") int size) {
         try {
             // JSON으로 받은 String orderIDs를 개별의 Long datatype orderIds로 맵핑
             ObjectMapper objectMapper = new ObjectMapper();
@@ -180,7 +183,7 @@ public class ProductionOrderController {
             redirectAttributes.addFlashAttribute("result", "error");
         }
 
-        return "redirect:/orders/productionorder";
+        return "redirect:/orders/productionorder?page=" + page + "&size=" + size;
     }
 
     // 수정 페이지로 이동하는 메소드
@@ -198,6 +201,7 @@ public class ProductionOrderController {
             return "productionorder-modify";
     }
 
+    // 수정 페이지 업데이트 method
     @PostMapping("/modify/{orderId}")
     public String updateOrder(@PathVariable Long orderId, @ModelAttribute ProductionOrderDTO orderDTO,
                               PageRequestDTO pageRequestDTO,
@@ -206,13 +210,14 @@ public class ProductionOrderController {
         try {
             // 모델과 수량만 수정하도록 처리
             productionOrderService.updateOrder(orderId, orderDTO);
-            return "redirect:/orders/productionorder?page=" + page + "&size=" + size ;
+            return "redirect:/orders/productionorder?page=" + page + "&size=" + size;
         } catch (Exception e) {
             log.error("Error while updating order: ", e);
             return "error"; // 예외 발생 시 error 페이지로 리디렉션
         }
     }
 
+    // 그래프 데이터 method
     @GetMapping("/api/productiongraph")
     @ResponseBody
     public List<ProductionOrderDTO> getGraphData() {
@@ -221,4 +226,6 @@ public class ProductionOrderController {
                 .map(ProductionOrderDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
 }

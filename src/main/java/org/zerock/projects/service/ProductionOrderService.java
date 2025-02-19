@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.projects.domain.Material;
+import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
@@ -19,6 +20,7 @@ import org.zerock.projects.domain.machines.TaskType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,5 +128,15 @@ public class ProductionOrderService {
                 .filter(Objects::nonNull)  // null 값이 있는 경우 제외
                 .map(Enum::name)  // Enum의 name()을 호출해서 String 값으로 변환
                 .collect(Collectors.toList());
+    }
+
+    // 완성된 제품들만 골라내기
+    public Page<ProductionOrder> getCompletedOrders(Pageable pageable, List<OrderStatus> orderStatuses) {
+        if (orderStatuses == null || orderStatuses.isEmpty()) {
+            orderStatuses = List.of(OrderStatus.COMPLETED);
+        } else if (!orderStatuses.contains(OrderStatus.COMPLETED)) {
+            orderStatuses.add(OrderStatus.COMPLETED);
+        }
+        return productionOrderRepository.findByOrderStatusIn(orderStatuses, pageable);
     }
 }

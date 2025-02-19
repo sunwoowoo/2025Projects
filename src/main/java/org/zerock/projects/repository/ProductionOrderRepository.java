@@ -47,4 +47,15 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     Page<ProductionOrder> findByRegDate(@Param("date") LocalDate date, Pageable pageable);
 
     void deleteByProcesses_Id(Long processId);
+
+    // 특정 OrderStatus가 포함된 주문 고르기
+    Page<ProductionOrder> findByOrderStatusIn(List<OrderStatus> statuses, Pageable pageable);
+
+    // OrderStatus 별 차량 모델 검색
+    @Query("SELECT b FROM ProductionOrder b WHERE b.carModel LIKE CONCAT('%', :keyword, '%') AND b.orderStatus IN :orderStatuses")
+    Page<ProductionOrder> findByKeywordAndStatus(@Param("keyword") String keyword, @Param("orderStatuses") List<OrderStatus> orderStatuses, Pageable pageable);
+
+    // OrderStatus 별 제품 등록 날짜로 검색
+    @Query("SELECT b FROM ProductionOrder b WHERE DATE(b.regDate) = DATE(:date) AND b.orderStatus IN :orderStatuses ORDER BY b.regDate ASC")
+    Page<ProductionOrder> findByRegDateAndStatus(@Param("date") LocalDate date, @Param("orderStatuses") List<OrderStatus> orderStatuses, Pageable pageable);
 }
