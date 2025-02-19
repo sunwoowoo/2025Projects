@@ -168,6 +168,15 @@ form button:hover {
     background-color: white;
 }
 
+.logout {
+    background-color:red !important;
+    width:100px !important;
+    text-align:center !important;
+    border:1px solid silver !important;
+    display: inline-block !important;  /* 블록 대신 inline-block 사용 */
+    margin-left: auto !important;  /* 자동 여백으로 우측 정렬 */
+}
+
 /* 검색 컨테이너 스타일 */
 .search-container {
     display: flex;
