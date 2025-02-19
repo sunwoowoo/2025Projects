@@ -4,7 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.zerock.projects.domain.Material;
+import org.zerock.projects.domain.OrderStatus;
+import org.zerock.projects.domain.ProductionOrder;
+import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.service.MaterialService;
 import org.zerock.projects.service.ProductionOrderService;
 import org.zerock.projects.service.subprocesses.BoardService;
@@ -12,6 +16,8 @@ import org.zerock.projects.service.subprocesses.BoardService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,19 +48,37 @@ public class ListController {
             return "redirect:/login";
         }
 
-        // 재고 상태에 따른 자재 데이터 (인스톡, 아웃스톡)
-        List<Material> inStockMaterials = materialService.getInStockMaterials();
-        List<Material> outStockMaterials = materialService.getOutStockMaterials();
+        List<OrderStatus> orderStatuses = List.of(OrderStatus.COMPLETED);
+        List<ProductionOrder> products = productionOrderService.getCompltedOrdersInList(orderStatuses);
+        List<ProductionOrderDTO> productsDTO = products.stream().map(ProductionOrderDTO::fromEntity)
+                .collect(Collectors.toList());
 
-        // null 체크 후 size() 호출
-        model.addAttribute("inStockCount", (inStockMaterials != null) ? inStockMaterials.size() : 0);
-        model.addAttribute("outStockCount", (outStockMaterials != null) ? outStockMaterials.size() : 0);
+        // Create a list or map of quantities
+        List<Integer> quantities = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
 
-        // 자재 리스트도 추가 (옵션)
-        model.addAttribute("inStockMaterials", inStockMaterials);
-        model.addAttribute("outStockMaterials", outStockMaterials);
+        for (int i = 0; i < products.size(); i++) {
+            ProductionOrder product = products.get(i);
+            quantities.add(product != null ? product.getQuantity() : 0);
+            labels.add(product != null ? product.getCarModel() : "Unknown");
+        }
+
+        // Add these to your model
+        model.addAttribute("productQuantities", quantities);
+        model.addAttribute("productLabels", labels);
+        model.addAttribute("productsDTO", productsDTO);
 
         return "list";  // list.html 페이지로 반환
+    }
+
+    @GetMapping("/api/products")
+    @ResponseBody
+    public List<ProductionOrderDTO> getProducts() {
+        List<OrderStatus> orderStatuses = List.of(OrderStatus.COMPLETED);
+        List<ProductionOrder> products = productionOrderService.getCompltedOrdersInList(orderStatuses);
+        return products.stream()
+                .map(ProductionOrderDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }
 

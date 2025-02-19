@@ -38,6 +38,9 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     @Query("SELECT b FROM ProductionOrder b WHERE b.orderStatus IN :orderStatus")
     Page<ProductionOrder> findByOrderStatus(@Param("orderStatus") List<OrderStatus> orderStatus, Pageable pageable);
 
+    @Query("SELECT b FROM ProductionOrder b WHERE b.orderStatus IN :orderStatus")
+    List<ProductionOrder> findByOrderStatusInList(@Param("orderStatus") List<OrderStatus> orderStatus);
+
     // 등록 날짜 오름차순으로 정렬
     @Query("SELECT b FROM ProductionOrder b ORDER BY b.regDate ASC")
     Page<ProductionOrder> findAllOrderByRegDateAsc(Pageable pageable);

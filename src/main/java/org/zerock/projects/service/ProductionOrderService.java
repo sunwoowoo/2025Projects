@@ -139,4 +139,8 @@ public class ProductionOrderService {
         }
         return productionOrderRepository.findByOrderStatusIn(orderStatuses, pageable);
     }
+
+    public List<ProductionOrder> getCompltedOrdersInList(List<OrderStatus> orderStatuses) {
+        return productionOrderRepository.findByOrderStatusInList(orderStatuses);
+    }
 }

@@ -159,4 +159,15 @@ public class CompleteController {
 
         return "redirect:/completed-orders/completed";
     }
+
+    // 그래프 데이터 method
+    @GetMapping("/api/completedgraph")
+    @ResponseBody
+    public List<ProductionOrderDTO> getGraphData(Pageable pageable) {
+        List<OrderStatus> orderStatuses = List.of(OrderStatus.COMPLETED);
+        List<ProductionOrder> orders = productionOrderService.getCompltedOrdersInList(orderStatuses);
+        return orders.stream()
+                .map(ProductionOrderDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 }
