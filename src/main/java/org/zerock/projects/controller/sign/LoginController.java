@@ -44,4 +44,15 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        // 쿠키 삭제
+        Cookie cookie = new Cookie("userId", null);
+        cookie.setMaxAge(0); // 쿠키 즉시 만료
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return "redirect:/login"; // 로그인 페이지로 리디렉션
+    }
+
 }
