@@ -30,6 +30,7 @@ public class ProductionOrderDTO {
     private ProcessType processType;
     private Double progress;
     private List<ProcessDTO> processes;
+    private Double productionCost;
 
     // Constructors
     public ProductionOrderDTO(String carModel, int quantity, OrderStatus orderStatus) {
@@ -51,6 +52,7 @@ public class ProductionOrderDTO {
                 .processType(order.getProcessType())
                 .progress(order.getProgress())
                 .processes(order.getProcesses().stream().map(ProcessDTO::fromEntity).collect(Collectors.toList()))
+                .productionCost(order.getProductionCost())
                 .build();
         return dto;
     }

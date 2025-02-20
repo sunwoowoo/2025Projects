@@ -48,6 +48,8 @@ public class ProductionOrder {      // 들어온 주문
     @Builder.Default
     private List<MaterialConsumption> materialConsumptions = new ArrayList<>();
 
+    private double productionCost;
+
     public ProductionOrder(Long id, String carModel, int quantity, OrderStatus orderStatus){
         this.id=id;
         this.carModel=carModel;

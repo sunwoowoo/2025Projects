@@ -120,6 +120,11 @@ public class ManufacturingSimulator {
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setEndDate(LocalDate.now());
         order.setProcessType(ProcessType.COMPLETED);
+
+        // Calculate and set the production cost
+        double productionCost = calculateProductionCost(order);
+        order.setProductionCost(productionCost);
+
         productionOrderRepository.save(order);
     }
 
@@ -180,6 +185,7 @@ public class ManufacturingSimulator {
         return (totalProgress / (totalTasks * 100)) * 100;
     }
 
+    // 한 대당 소모되는 재료들 모음
     private List<MaterialConsumption> simulateMaterialConsumption(ProductionOrder order) {
         List<MaterialConsumption> consumptions = new ArrayList<>();
         List<Material> materials = materialRepository.findAll();
@@ -248,4 +254,23 @@ public class ManufacturingSimulator {
                 return (int) (0.1 * material.getMquantity() * orderQuantity); // Default calculation
         }
     }
+
+    // 원가 계산
+    public double calculateProductionCost(ProductionOrder order) {
+        double totalCost = 0.0;
+        List<Material> materials = materialRepository.findAll();
+
+        for (Material material : materials) {
+            int quantityUsed = calculateQuantityUsed(material, order.getQuantity());
+            double materialCost = quantityUsed * material.getMprice();
+            totalCost += materialCost;
+        }
+
+        // Add a fixed cost for labor and overhead
+        double laborAndOverheadCost = 5000.0 * order.getQuantity(); // Assuming $5000 per car for labor and overhead
+        totalCost += laborAndOverheadCost;
+
+        return totalCost;
+    }
+
 }

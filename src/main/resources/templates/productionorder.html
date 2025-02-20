@@ -129,6 +129,7 @@
             <th>RegDate</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Production Cost</th>
             <th>Simulate</th>
         </tr>
         </thead>
@@ -158,6 +159,7 @@
             <td th:text="${order.regDate}"></td>
             <td th:text="${order.startDate}"></td>
             <td th:text="${order.endDate}"></td>
+            <td th:text="${order.productionCost}"></td>
             <td>
                 <a th:if="${order.orderStatus != T(org.zerock.projects.domain.OrderStatus).COMPLETED}"
                    th:href="@{'/orders/simulate/' + ${order.id}}">
