@@ -6,22 +6,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.projects.domain.Material;
+import org.zerock.projects.domain.MaterialConsumption;
 import org.zerock.projects.domain.OrderStatus;
 import org.zerock.projects.domain.ProductionOrder;
 import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 import org.zerock.projects.domain.machines.Task;
 import org.zerock.projects.domain.machines.TaskType;
+import org.zerock.projects.repository.MaterialRepository;
 import org.zerock.projects.repository.ProductionOrderRepository;
 import org.zerock.projects.repository.machines.ProcessRepository;
 import org.zerock.projects.repository.machines.TaskRepository;
 import org.zerock.projects.domain.machines.TaskType;
+import org.zerock.projects.repository.subprocesses.MaterialConsumptionRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static org.zerock.projects.domain.machines.TaskType.COMPLETED;
 import static org.zerock.projects.domain.machines.TaskType.getTasksForProcess;
@@ -37,6 +43,12 @@ public class ManufacturingSimulator {
 
     @Autowired
     private ProcessRepository processRepository;
+
+    @Autowired
+    private MaterialRepository materialRepository;
+
+    @Autowired
+    private MaterialConsumptionRepository materialConsumptionRepository;
 
     // 진행률 업데이트
     public void updateTaskProgress(Task task) {
@@ -92,6 +104,19 @@ public class ManufacturingSimulator {
             }
             log.info("Process {} is Completed", process.getType());
         }
+
+        // Material Consumption Logic
+        List<MaterialConsumption> consumptions = simulateMaterialConsumption(order);
+
+        // Update material quantities
+        for (MaterialConsumption consumption : consumptions) {
+            Material material = consumption.getMaterial();
+            material.setMquantity(material.getMquantity() - consumption.getQuantityUsed());
+            materialRepository.save(material);
+            materialConsumptionRepository.save(consumption); // Save the consumption record
+        }
+
+        order.getMaterialConsumptions().addAll(consumptions);
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setEndDate(LocalDate.now());
         order.setProcessType(ProcessType.COMPLETED);
@@ -130,6 +155,7 @@ public class ManufacturingSimulator {
         return processes;
     }
 
+    // 전체 진행률 계산 method
     public double calculateOverallProgress(ProductionOrder productionOrder) {
         List<Process> processes = productionOrder.getProcesses();
 
@@ -154,4 +180,72 @@ public class ManufacturingSimulator {
         return (totalProgress / (totalTasks * 100)) * 100;
     }
 
+    private List<MaterialConsumption> simulateMaterialConsumption(ProductionOrder order) {
+        List<MaterialConsumption> consumptions = new ArrayList<>();
+        List<Material> materials = materialRepository.findAll();
+
+        for (ProcessType processType : ProcessType.values()) {
+            List<Material> processMaterials = materials.stream()
+                    .filter(m -> m.getMprocess() == processType)
+                    .collect(Collectors.toList());
+
+            for (Material material : processMaterials) {
+                int quantityUsed = calculateQuantityUsed(material, order.getQuantity());
+                MaterialConsumption consumption = MaterialConsumption.builder()
+                        .productionOrder(order)
+                        .material(material)
+                        .quantityUsed(quantityUsed)
+                        .processType(processType)
+                        .consumptionDate(LocalDateTime.now())
+                        .build();
+                consumptions.add(consumption);
+            }
+        }
+        return consumptions;
+    }
+
+    // 차 한 대당 재료별 소모량 계산
+    private int calculateQuantityUsed(Material material, int orderQuantity) {
+        switch (material.getMname()) {
+            case "Steel Sheet":
+            case "Aluminum Panel":
+                return 2 * orderQuantity; // 2 sheets per car
+            case "Rubber Seal":
+                return 10 * orderQuantity; // 10 seals per car
+            case "Windshield":
+                return orderQuantity; // 1 windshield per car
+            case "Paint - Red":
+            case "Paint - Blue":
+                return (int) (2.5 * orderQuantity); // 2.5 units of paint per car
+            case "Welding Rod":
+                return 50 * orderQuantity; // 50 welding rods per car
+            case "Engine Block":
+            case "Transmission":
+                return orderQuantity; // 1 per car
+            case "Seat Fabric":
+                return 5 * orderQuantity; // 5 units per car (for multiple seats)
+            case "Headlight Assembly":
+                return 2 * orderQuantity; // 2 per car
+            case "Tire":
+                return 4 * orderQuantity; // 4 tires per car
+            case "Brake Pad":
+                return 4 * orderQuantity; // 4 brake pads per car
+            case "Steering Wheel":
+                return orderQuantity; // 1 per car
+            case "Catalytic Converter":
+                return orderQuantity; // 1 per car
+            case "Door Handle":
+                return 4 * orderQuantity; // 4 door handles per car
+            case "Airbag":
+                return 6 * orderQuantity; // Assuming 6 airbags per car
+            case "Wiring Harness":
+                return orderQuantity; // 1 main harness per car
+            case "Shock Absorber":
+                return 4 * orderQuantity; // 4 shock absorbers per car
+            case "Fuel Injector":
+                return 4 * orderQuantity; // Assuming 4-cylinder engine
+            default:
+                return (int) (0.1 * material.getMquantity() * orderQuantity); // Default calculation
+        }
+    }
 }

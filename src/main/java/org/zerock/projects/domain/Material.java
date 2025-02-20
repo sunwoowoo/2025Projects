@@ -1,6 +1,7 @@
 package org.zerock.projects.domain;
 
 import lombok.*;
+import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 
 import javax.persistence.*;

@@ -44,6 +44,10 @@ public class ProductionOrder {      // 들어온 주문
     @Builder.Default
     private List<Process> processes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<MaterialConsumption> materialConsumptions = new ArrayList<>();
+
     public ProductionOrder(Long id, String carModel, int quantity, OrderStatus orderStatus){
         this.id=id;
         this.carModel=carModel;
