@@ -94,7 +94,12 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 const processTypes = ['PRESSING', 'WELDING', 'PAINTING', 'ASSEMBLING'];
-                const processColors = getRandomColors(processTypes.length);
+                const processColors = [
+                    'rgb(255, 99, 132)',  // Red for PRESSING
+                    'rgb(54, 162, 235)',  // Blue for WELDING
+                    'rgb(255, 206, 86)',  // Yellow for PAINTING
+                    'rgb(75, 192, 192)'   // Green for ASSEMBLING
+                ];
 
                 // Aggregate materials with the same name and process
                 const aggregatedData = data.reduce((acc, item) => {
@@ -120,7 +125,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 );
                 const innerData = sortedData.map(item => item.mquantity);
                 const innerLabels = sortedData.map(item => item.mname);
-                const innerColors = sortedData.map(item => processColors[processTypes.indexOf(item.mprocess)]);
+                const innerColors = sortedData.map(item => {
+                    const processIndex = processTypes.indexOf(item.mprocess);
+                    return lightenColor(processColors[processIndex], 0.7);
+                });
 
                 const ctx = document.getElementById('materialChart').getContext('2d');
                 new Chart(ctx, {
@@ -187,12 +195,15 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error('Error:', error));
     });
 
-    function getRandomColors(count) {
-        const colors = [];
-        for (let i = 0; i < count; i++) {
-            colors.push(`hsl(${Math.random() * 360}, 70%, 50%)`);
-        }
-        return colors;
+    function lightenColor(color, factor) {
+        // Convert rgb(r, g, b) to [r, g, b]
+        const rgb = color.match(/\d+/g).map(Number);
+
+        // Lighten each component
+        const lightenedRgb = rgb.map(value => Math.round(value + (255 - value) * factor));
+
+        // Return the new color as rgb(r, g, b)
+        return `rgb(${lightenedRgb.join(', ')})`;
     }
 });
 
