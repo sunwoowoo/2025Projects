@@ -137,4 +137,14 @@ public class MaterialController {
                 .map(MaterialDTO::fromEntity2)
                 .collect(Collectors.toList());
     }
+
+    // 홈 페이지 그래프 데이터 보내기
+    @GetMapping("/api/materials")
+    @ResponseBody
+    public List<MaterialDTO> getAllMaterials() {
+        List<Material> materials = materialService.getAll();
+        return materials.stream()
+                .map(MaterialDTO::fromEntity2)
+                .collect(Collectors.toList());
+    }
 }
