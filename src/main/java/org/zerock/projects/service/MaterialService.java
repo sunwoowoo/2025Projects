@@ -112,5 +112,8 @@ public class MaterialService {
     public Long getOutStockCount() {
         return materialRepository.countByMstockstatus("out-stock");
     }
+
+    // 모든 자재
+    public List<Material> getAll() {return materialRepository.findAll();}
 }
 

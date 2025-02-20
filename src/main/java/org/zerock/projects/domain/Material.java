@@ -1,11 +1,9 @@
 package org.zerock.projects.domain;
 
 import lombok.*;
+import org.zerock.projects.domain.machines.ProcessType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -22,6 +20,9 @@ public class Material {
     private String mname;           // 자재명
 
     private String mcategory;       // 카테고리
+
+    @Enumerated(EnumType.STRING)
+    private ProcessType mprocess;        // 소요부문
 
     private Integer mquantity;          // 수량
 

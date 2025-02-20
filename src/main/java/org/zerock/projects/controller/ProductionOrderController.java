@@ -226,6 +226,4 @@ public class ProductionOrderController {
                 .map(ProductionOrderDTO::fromEntity)
                 .collect(Collectors.toList());
     }
-
-
 }

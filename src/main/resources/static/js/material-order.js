@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const orderForm = document.getElementById('orderForm');
     const orderTable = document.querySelector('.board-table tbody');
     const deleteBtn = document.getElementById('deleteBtn');
+    const graphBtn = document.getElementById('graphBtn');
+    const graphPopup = document.getElementById('graphPopup');
 
     let selectedRows = [];
     const btnForm = document.querySelector('#btnForm');
@@ -84,4 +86,113 @@ document.addEventListener("DOMContentLoaded", function() {
     			 }
     		 }
     	  }, false);
+
+    // 그래프 생성
+    graphBtn.addEventListener('click', function(event) {
+        graphPopup.style.display = 'block'; //팝업 표시
+        fetch('materials/api/materialgraph')
+            .then(response => response.json())
+            .then(data => {
+                const processTypes = ['PRESSING', 'WELDING', 'PAINTING', 'ASSEMBLING'];
+                const processColors = getRandomColors(processTypes.length);
+
+                // Aggregate materials with the same name and process
+                const aggregatedData = data.reduce((acc, item) => {
+                    const key = `${item.mname}-${item.mprocess}`;
+                    if (!acc[key]) {
+                        acc[key] = {...item};
+                    } else {
+                        acc[key].mquantity += item.mquantity;
+                    }
+                    return acc;
+                }, {});
+
+                // Prepare data for outer ring (ProcessTypes)
+                const outerData = processTypes.map(process =>
+                    Object.values(aggregatedData)
+                        .filter(item => item.mprocess === process)
+                        .reduce((sum, item) => sum + item.mquantity, 0)
+                );
+
+                // Prepare data for inner ring (Materials)
+                const sortedData = Object.values(aggregatedData).sort((a, b) =>
+                    processTypes.indexOf(a.mprocess) - processTypes.indexOf(b.mprocess)
+                );
+                const innerData = sortedData.map(item => item.mquantity);
+                const innerLabels = sortedData.map(item => item.mname);
+                const innerColors = sortedData.map(item => processColors[processTypes.indexOf(item.mprocess)]);
+
+                const ctx = document.getElementById('materialChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: outerData,
+                            backgroundColor: processColors,
+                            label: 'Process Types'
+                        }, {
+                            data: innerData,
+                            backgroundColor: innerColors,
+                            label: 'Materials'
+                        }],
+                        labels: innerLabels
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    generateLabels: function(chart) {
+                                        return processTypes.map((type, i) => ({
+                                            text: type,
+                                            fillStyle: processColors[i],
+                                            hidden: false,
+                                            index: i
+                                        }));
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: '공정별 자재소요표'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const datasetIndex = context.datasetIndex;
+                                        const index = context.dataIndex;
+                                        if (datasetIndex === 0) {
+                                            return `${processTypes[index]}: ${context.formattedValue}`;
+                                        } else {
+                                            const material = sortedData[index];
+                                            return `${material.mname}: ${context.formattedValue}`;
+                                        }
+                                    },
+                                    title: function(context) {
+                                        const datasetIndex = context[0].datasetIndex;
+                                        const index = context[0].dataIndex;
+                                        if (datasetIndex === 0) {
+                                            return processTypes[index];
+                                        } else {
+                                            return sortedData[index].mprocess;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function getRandomColors(count) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            colors.push(`hsl(${Math.random() * 360}, 70%, 50%)`);
+        }
+        return colors;
+    }
 });
+

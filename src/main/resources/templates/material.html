@@ -11,6 +11,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
 <header>
@@ -39,6 +41,7 @@
                         <option value="mid" th:selected="${types != null and types.contains('mid')}">고유번호</option>
                         <option value="mname" th:selected="${types != null and types.contains('mname')}">자재명</option>
                         <option value="mcategory" th:selected="${types != null and types.contains('mcategory')}">카테고리</option>
+                        <option value="mprocess" th:selected="${types != null and types.contains('mprocess')}">소요부문</option>
                         <option value="mprice" th:selected="${types != null and types.contains('mprice')}">단가</option>
                         <option value="mwarehouse" th:selected="${types != null and types.contains('mwarehouse')}">창고</option>
                         <option value="mstockstatus" th:selected="${types != null and types.contains('mstockstatus')}">재고</option>
@@ -51,12 +54,13 @@
             </div>
         </form>
 
-        <!--  주문 접수, 삭제 버튼 폼  -->
+        <!--  주문 접수, 삭제, 그래프 버튼 폼  -->
         <form id="btnForm">
             <div>
                 <input type="hidden" name="mid" id="mid">
                 <button id="orderBtn">자재 추가</button>
                 <button id="deleteBtn">삭제</button>
+                <button id="graphBtn" type="button"><i class="fa-solid fa-chart-simple"></i></button>
             </div>
         </form>
     </div>
@@ -76,6 +80,11 @@
                 <div class="form-group">
                     <label for="mcaterogy">카테고리:</label>
                     <input type="text" id="mcaterogy" name="mcaterogy" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mprocess">소요부문:</label>
+                    <input type="text" id="mprocess" name="mprocess" required>
                 </div>
 
                 <div class="form-group">
@@ -104,12 +113,26 @@
         </div>
     </div>
 
+    <!--  그래프 팝업  -->
+    <div id="graphPopup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <div class="popup-title">
+                <h3>공정별 자재소요</h3>
+            </div>
+            <canvas id="materialChart">
+
+            </canvas>
+
+        </div>
+    </div>
+
     <table class="board-table">
         <thead>
         <tr>
             <th>고유번호</th>
             <th>자재명</th>
             <th>카테고리</th>
+            <th>소요부문</th>
             <th>필요수량</th>
             <th>단가</th>
             <th>창고</th>
@@ -125,6 +148,7 @@
                 </a>
             </td>
             <td th:text="${order.mcategory}"></td>
+            <td th:text="${order.mprocess}"></td>
             <td th:text="${order.mquantity}"></td>
             <td th:text="${order.mprice}"></td>
             <td th:text="${order.mwarehouse}"></td>

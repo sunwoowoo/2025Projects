@@ -127,4 +127,14 @@ public class MaterialController {
         // 수정 후 자재 상세 페이지로 리디렉션 (정확한 경로 설정)
         return "redirect:/materials/read/" + mid;
     }
+
+    // 그래프 데이터 method
+    @GetMapping("/api/materialgraph")
+    @ResponseBody
+    public List<MaterialDTO> getGraphData() {
+        List<Material> materials = materialService.getAll();
+        return materials.stream()
+                .map(MaterialDTO::fromEntity2)
+                .collect(Collectors.toList());
+    }
 }
