@@ -28,6 +28,12 @@ document.addEventListener("DOMContentLoaded", function() {
             orderPopup.style.display = 'none';  // 팝업 외부 클릭 시 팝업을 닫기
         }
     });
+    // 그래프 팝업 외부 클릭 시 팝업 닫기
+    window.addEventListener('click', function(event) {
+            if (event.target === graphPopup) {
+                graphPopup.style.display = 'none';  // 팝업 외부 클릭 시 팝업을 닫기
+            }
+        });
 
     //행 선택 동작
     document.querySelectorAll('.board-table > tbody > tr').forEach(row => {
@@ -153,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 labels: {
                                     generateLabels: function(chart) {
                                         return processTypes.map((type, i) => ({
-                                            text: type,
+                                            text: `${type}: ${outerData[i].toLocaleString()}`,
                                             fillStyle: processColors[i],
                                             hidden: false,
                                             index: i
@@ -196,13 +202,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function lightenColor(color, factor) {
-        // Convert rgb(r, g, b) to [r, g, b]
         const rgb = color.match(/\d+/g).map(Number);
-
-        // Lighten each component
         const lightenedRgb = rgb.map(value => Math.round(value + (255 - value) * factor));
-
-        // Return the new color as rgb(r, g, b)
         return `rgb(${lightenedRgb.join(', ')})`;
     }
 });
