@@ -54,6 +54,13 @@ public interface ProductionOrderRepository extends JpaRepository<ProductionOrder
     // 특정 OrderStatus가 포함된 주문 고르기
     Page<ProductionOrder> findByOrderStatusIn(List<OrderStatus> statuses, Pageable pageable);
 
+    // OrderStatus별 내림차순 정렬
+    @Query("SELECT p FROM ProductionOrder p ORDER BY CASE p.orderStatus " +
+            "WHEN 'PENDING' THEN 1 " +
+            "WHEN 'IN_PROGRESS' THEN 2 " +
+            "WHEN 'COMPLETED' THEN 3 END")
+    Page<ProductionOrder> findAllOrderedByOrderStatus(Pageable pageable);
+
     // OrderStatus 별 차량 모델 검색
     @Query("SELECT b FROM ProductionOrder b WHERE b.carModel LIKE CONCAT('%', :keyword, '%') AND b.orderStatus IN :orderStatuses")
     Page<ProductionOrder> findByKeywordAndStatus(@Param("keyword") String keyword, @Param("orderStatuses") List<OrderStatus> orderStatuses, Pageable pageable);

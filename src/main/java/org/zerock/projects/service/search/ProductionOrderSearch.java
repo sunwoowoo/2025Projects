@@ -2,6 +2,7 @@ package org.zerock.projects.service.search;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.projects.domain.OrderStatus;
@@ -72,4 +73,10 @@ public class ProductionOrderSearch {
     public Page<ProductionOrder> findByRegDateAndStatus(LocalDate regDate, List<OrderStatus> statuses, Pageable pageable) {
         return productionOrderRepository.findByRegDateAndStatus(regDate, statuses, pageable);
     };
+
+    // OrderStatus 별 정렬
+    public Page<ProductionOrder> sortByOrderStatus(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productionOrderRepository.findAllOrderedByOrderStatus(pageable);
+    }
 }

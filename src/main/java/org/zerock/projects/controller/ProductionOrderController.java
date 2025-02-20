@@ -50,6 +50,7 @@ public class ProductionOrderController {
     public String list(@RequestParam(required = false, defaultValue = "") String types,
                        @RequestParam(required = false, defaultValue = "") String keyword,
                        @RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "10") int size,
                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate regDate,
                        Model model,
                        PageRequestDTO pageRequestDTO) {
@@ -74,8 +75,12 @@ public class ProductionOrderController {
                     orderPage = productionOrderSearch.searchFromProcessTypes(List.of(processType), pageable);
                     break;
                 case "orderStatus":
-                    OrderStatus orderStatus = OrderStatus.valueOf(keyword.toUpperCase());
-                    orderPage = productionOrderSearch.searchByStatus(List.of(orderStatus), pageable);
+                    try {
+                        OrderStatus orderStatus = OrderStatus.valueOf(keyword.toUpperCase());
+                        orderPage = productionOrderSearch.searchByStatus(List.of(orderStatus), pageable);
+                    } catch (IllegalArgumentException e) {
+                        orderPage = productionOrderSearch.sortByOrderStatus(page, size);
+                    }
                     break;
                 case "regDate":
                     log.info("regDate is : {}", regDate);
