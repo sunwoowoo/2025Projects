@@ -28,7 +28,9 @@ import org.zerock.projects.service.search.ProductionOrderSearch;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -229,6 +231,22 @@ public class ProductionOrderController {
         List<ProductionOrder> orders = productionOrderService.getAllOrdersAsEntity();
         return orders.stream()
                 .map(ProductionOrderDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/orders/progress")
+    @ResponseBody
+    public List<Map<String, Object>> getOrdersProgress() {
+        List<ProductionOrder> orders = productionOrderRepository.findAll();
+        return orders.stream()
+                .map(order -> {
+                    Map<String, Object> progressData = new HashMap<>();
+                    progressData.put("id", order.getId());
+                    progressData.put("progress", order.getProgress());
+                    progressData.put("orderStatus", order.getOrderStatus());
+                    progressData.put("processType", order.getProcessType());
+                    return progressData;
+                })
                 .collect(Collectors.toList());
     }
 }

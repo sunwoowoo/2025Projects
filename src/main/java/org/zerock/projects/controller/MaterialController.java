@@ -1,5 +1,6 @@
 package org.zerock.projects.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.zerock.projects.service.MaterialService;
 import org.zerock.projects.service.search.MaterialSearch;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,12 +78,25 @@ public class MaterialController {
     }
 
     @PostMapping("/remove")
-    public String removeMaterial(@RequestParam("mid") Long mid, RedirectAttributes redirectAttributes) {
+    public String removeMaterial(@RequestParam("mid") String mid,
+                                 @RequestParam(defaultValue = "1") int page,
+                                 @RequestParam(defaultValue = "10") int size,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Long[] materialIds = objectMapper.readValue(mid, Long[].class);
 
-        materialService.removeMaterial(mid);
-
-        redirectAttributes.addFlashAttribute("result", "removed");
-
+            if (materialIds != null && materialIds.length > 0) {
+                materialService.removeMaterials(Arrays.asList(materialIds));
+                redirectAttributes.addFlashAttribute("result", "removed");
+            } else {
+                log.warn("No order IDs received for deletion");
+                redirectAttributes.addFlashAttribute("result", "noOrdersSelected");
+            }
+        } catch (Exception e) {
+            log.error("Error parsing order IDs: ", e);
+            redirectAttributes.addFlashAttribute("result", "removed");
+        }
         return "redirect:/materials";
     }
 
