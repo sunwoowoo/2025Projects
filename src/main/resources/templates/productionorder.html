@@ -134,7 +134,7 @@
         </tr>
         </thead>
         <tbody th:with="link = ${pageRequestDTO.getLink()}">
-        <tr th:each="order : ${orders}">
+        <tr th:each="order : ${orders}" th:data-id="${order.id}">
             <td>
                 <a th:href="@{|/orders/productionorder/${order.id}|} + ${link}">
                     [[${order.id}]]

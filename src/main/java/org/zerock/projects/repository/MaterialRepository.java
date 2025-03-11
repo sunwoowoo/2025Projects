@@ -1,6 +1,7 @@
 package org.zerock.projects.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.zerock.projects.domain.Material;
@@ -27,4 +28,8 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
     Long countByMstockstatus(String mstockstatus);
 
     void deleteByMid(Long mid);
+
+    @Modifying
+    @Query("DELETE FROM MaterialConsumption mc WHERE mc.material.mid IN :materialIds")
+    void deleteRelatedMaterialConsumptions(@Param("materialIds") List<Long> materialIds);
 }

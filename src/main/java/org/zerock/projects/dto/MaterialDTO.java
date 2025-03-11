@@ -7,6 +7,7 @@ import org.zerock.projects.domain.machines.ProcessType;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Min;
 import java.util.stream.Collectors;
 
 @Data
@@ -20,6 +21,7 @@ public class MaterialDTO {
     private String mcategory;
     @Enumerated(EnumType.STRING)
     private ProcessType mprocess;
+    @Min(value = 0, message = "Quantity must be at least 0")
     private Integer mquantity;
     private Double mprice;
     private String mwarehouse;

@@ -148,4 +148,35 @@ document.addEventListener("DOMContentLoaded", function() {
             dateInput.style.display = 'none';
         }
     });
+
+    // Polling function to update progress bars
+    function startProgressPolling() {
+        setInterval(function() {
+            fetch('/orders/api/orders/progress')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(order => {
+                        // Find the row with matching order ID
+                        const progressBar = document.querySelector(`tr[data-id="${order.id}"] .progress-bar`);
+                        const progressText = document.querySelector(`tr[data-id="${order.id}"] .progress-bar-text`);
+                        const statusCell = document.querySelector(`tr[data-id="${order.id}"] td:nth-child(3)`);
+                        const processTypeCell = document.querySelector(`tr[data-id="${order.id}"] td:nth-child(4)`);
+
+                        if (progressBar && progressText) {
+                            // Update progress bar
+                            progressBar.style.width = order.progress + '%';
+                            progressBar.style.backgroundColor = order.progress < 50 ? 'red' : 'green';
+                            progressText.textContent = order.progress.toFixed(1) + '%';
+
+                            // Update status and process type
+                            if (statusCell) statusCell.textContent = order.orderStatus;
+                            if (processTypeCell) processTypeCell.textContent = order.processType;
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching order progress:', error));
+        }, 3000); // Poll every 3 seconds to match your backend update frequency
+    }
+
+    startProgressPolling();
 });

@@ -12,9 +12,7 @@ import org.zerock.projects.dto.ProductionOrderDTO;
 import org.zerock.projects.repository.MaterialRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -82,7 +80,14 @@ public class MaterialService {
     // 주문 삭제
     @Transactional
     public void removeMaterial(Long mid) {
+        materialRepository.deleteRelatedMaterialConsumptions(Collections.singletonList(mid));
         materialRepository.deleteByMid(mid);
+    }
+
+    @Transactional
+    public void removeMaterials(List<Long> materialIds) {
+        materialRepository.deleteRelatedMaterialConsumptions(materialIds);
+        materialRepository.deleteAllById(materialIds);
     }
 
     //팝업주문 저장

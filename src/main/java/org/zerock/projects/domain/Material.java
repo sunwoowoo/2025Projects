@@ -5,6 +5,7 @@ import org.zerock.projects.domain.machines.Process;
 import org.zerock.projects.domain.machines.ProcessType;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Entity
 @NoArgsConstructor
@@ -13,7 +14,6 @@ import javax.persistence.*;
 @Getter
 @Builder
 public class Material {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mid;            // 자재 ID
@@ -25,6 +25,7 @@ public class Material {
     @Enumerated(EnumType.STRING)
     private ProcessType mprocess;        // 소요부문
 
+    @Min(value = 0, message = "Quantity must be at least 0")
     private Integer mquantity;          // 수량
 
     private Double mprice;          // 가격
